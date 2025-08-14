@@ -5,9 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class MBl5G4Su25Application {
-
     public static void main(String[] args) {
         SpringApplication.run(MBl5G4Su25Application.class, args);
     }
-
 }
