@@ -9,4 +9,4 @@ spring:
     url: jdbc:mysql://localhost:3306/driving_school_management
     driverClassName: "com.mysql.cj.jdbc.Driver"
     username: root
-    password: root
+    password: 123456
