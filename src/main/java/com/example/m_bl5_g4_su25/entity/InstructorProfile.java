@@ -13,7 +13,8 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-@Table(name = "InstructorProfiles")
+@Table(name = "instructorprofiles")
+
 public class InstructorProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -13,7 +13,9 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "Courses")
+
+@Table(name = "courses")
+
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
