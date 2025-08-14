@@ -13,8 +13,10 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+
 @Table(name = "courses")
-public class Cours {
+
+public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "course_id", nullable = false)

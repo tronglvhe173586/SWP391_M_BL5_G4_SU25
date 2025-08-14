@@ -1,7 +1,7 @@
 server:
   port: 8080
   servlet:
-      context-path: /driving-school-management
+    context-path: /driving-school-management
 spring:
   application:
     name: M_BL5_G4_SU25
@@ -9,4 +9,4 @@ spring:
     url: jdbc:mysql://localhost:3306/driving_school_management
     driverClassName: "com.mysql.cj.jdbc.Driver"
     username: root
-    password: root
+    password: 12345
