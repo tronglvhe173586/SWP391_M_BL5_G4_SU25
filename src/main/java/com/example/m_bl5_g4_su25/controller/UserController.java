@@ -26,14 +26,16 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @PutMapping("/editUser/{id}")
+    @PutMapping("/edit_User/{id}")
     public ResponseEntity<ListUserResponse> editUser(
             @PathVariable Long id,
             @Valid @RequestBody EditUserRequest request
     ) {
         return ResponseEntity.ok(userService.editUser(id, request));
     }
-    @PostMapping("/AddInstructor")
+
+
+    @PostMapping("/Add_Instructor")
     public ResponseEntity<String> addInstructor(@RequestBody AddInstructorRequest request) {
         userService.addInstructor(request);
         return ResponseEntity.ok("Instructor created successfully");
