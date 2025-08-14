@@ -14,7 +14,9 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-@Table(name = "LearnerProfiles")
+
+@Table(name = "learnerprofiles")
+
 public class LearnerProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
