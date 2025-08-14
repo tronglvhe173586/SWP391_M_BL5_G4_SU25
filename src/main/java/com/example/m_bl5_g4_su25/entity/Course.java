@@ -9,12 +9,14 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
+//cuong has commit here
 @Getter
 @Setter
 @Entity
+
 @Table(name = "Courses")
-public class Cours {
+
+public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "course_id", nullable = false)
