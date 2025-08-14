@@ -9,5 +9,6 @@ public class MBl5G4Su25Application {
     {
         System.out.println("Hello World");
         SpringApplication.run(MBl5G4Su25Application.class, args);
+        System.out.println("MBl5G4Su25 <UNK> <UNK> <UNK> <UNK> <UNK>");
     }
 }
