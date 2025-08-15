@@ -8,6 +8,9 @@ import com.example.m_bl5_g4_su25.entity.User;
 import com.example.m_bl5_g4_su25.repository.InstructorProfileRepository;
 import com.example.m_bl5_g4_su25.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -78,5 +81,26 @@ public class UserService implements IUserService{
         profile.setHireDate(request.getHireDate());
         profile.setCertificationInfo(request.getCertificationInfo());
         instructorProfileRepository.save(profile);
+    }
+
+    @Override
+    public Page<ListUserResponse> getAllUsersPagination(String keyword, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<User> userPage;
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            userPage = userRepository.findByUsernameContainingIgnoreCaseOrEmailContainingIgnoreCase(keyword, keyword, pageable);
+        } else {
+            userPage = userRepository.findAll(pageable);
+        }
+
+        return userPage.map(user -> new ListUserResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getFullName(),
+                user.getEmail(),
+                user.getRole(),
+                user.getIsActive()
+        ));
     }
 }
