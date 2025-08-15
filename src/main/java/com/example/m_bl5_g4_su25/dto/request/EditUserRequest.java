@@ -21,9 +21,6 @@ public class EditUserRequest {
     @Size(max = 255)
     private String email;
 
-    @NotBlank
-    private String role; // LEARNER, INSTRUCTOR, ADMIN
-
     private Boolean isActive;
 }
 

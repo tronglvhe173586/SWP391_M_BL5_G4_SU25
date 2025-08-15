@@ -46,5 +46,9 @@ public class UserController {
     ) {
         return userService.getAllUsersPagination(keyword, page, size);
     }
+    @GetMapping("/{id}")
+    public ListUserResponse getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
+    }
 }
 
