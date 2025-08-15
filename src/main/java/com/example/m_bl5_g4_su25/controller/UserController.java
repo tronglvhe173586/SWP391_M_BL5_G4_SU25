@@ -1,13 +1,44 @@
 package com.example.m_bl5_g4_su25.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.m_bl5_g4_su25.dto.request.AddInstructorRequest;
+import com.example.m_bl5_g4_su25.dto.request.EditUserRequest;
+import com.example.m_bl5_g4_su25.dto.response.ListUserResponse;
+import com.example.m_bl5_g4_su25.service.IUserService;
+import com.example.m_bl5_g4_su25.service.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
+@RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController {
-    @GetMapping("/hello")
-    public String hello() {
-        return "Hello from Spring Boot!";
+
+    private final IUserService userService;
+
+
+    // API lấy danh sách user
+    @GetMapping
+    public ResponseEntity<List<ListUserResponse>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+    @PutMapping("/edit_User/{id}")
+    public ResponseEntity<ListUserResponse> editUser(
+            @PathVariable Long id,
+            @Valid @RequestBody EditUserRequest request
+    ) {
+        return ResponseEntity.ok(userService.editUser(id, request));
+    }
+
+
+    @PostMapping("/Add_Instructor")
+    public ResponseEntity<String> addInstructor(@RequestBody AddInstructorRequest request) {
+        userService.addInstructor(request);
+        return ResponseEntity.ok("Instructor created successfully");
     }
 }
+
