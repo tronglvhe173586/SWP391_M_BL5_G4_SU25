@@ -16,13 +16,9 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-<<<<<<< HEAD
-@Table(name = "examschedules")
-=======
-
 @Table(name = "examschedules")
 
->>>>>>> 6eef93d50ba4d527324154db67ec77c514e53a4b
+
 public class ExamSchedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

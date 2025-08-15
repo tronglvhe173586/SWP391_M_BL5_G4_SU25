@@ -32,7 +32,7 @@ public class ExamResultService {
         
         // Exam information
         response.setExamName(examResult.getExamSchedule().getExam().getExamName());
-        response.setExamType(examResult.getExamSchedule().getExam().getExamType());
+        response.setExamType(examResult.getExamSchedule().getExam().getExamType().toString());
         response.setPassScore(examResult.getExamSchedule().getExam().getPassScore());
         response.setMaxScore(100); // Default max score for most exams
         

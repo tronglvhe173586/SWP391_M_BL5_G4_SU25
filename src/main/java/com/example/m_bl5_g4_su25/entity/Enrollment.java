@@ -15,13 +15,9 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-<<<<<<< HEAD
-@Table(name = "enrollments")
-=======
-
 @Table(name = "enrollments")
 
->>>>>>> 6eef93d50ba4d527324154db67ec77c514e53a4b
+
 public class Enrollment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

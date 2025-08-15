@@ -13,13 +13,11 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
-<<<<<<< HEAD
-@Table(name = "examregistrations")
-=======
 
 @Table(name = "examregistrations")
 
->>>>>>> 6eef93d50ba4d527324154db67ec77c514e53a4b
+
+
 public class ExamRegistration {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
