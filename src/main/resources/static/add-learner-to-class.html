@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Learner to Class - Driving School Management</title>
+    
+    <!-- React and Babel CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Bootstrap CSS for styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        .success-message {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+        .error-message {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 2s linear infinite;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 12px 30px;
+            font-weight: 600;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Get instructor ID from URL parameters
+        function getInstructorIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('instructorId') || '1'; // Default to 1 for testing
+        }
+
+        // Main App Component
+        function App() {
+            const [instructorId, setInstructorId] = useState(getInstructorIdFromUrl());
+            const [learnerId, setLearnerId] = useState('');
+            const [classId, setClassId] = useState('');
+            const [loading, setLoading] = useState(false);
+            const [message, setMessage] = useState('');
+            const [messageType, setMessageType] = useState(''); // 'success' or 'error'
+            const [availableLearners, setAvailableLearners] = useState([]);
+            const [instructorClasses, setInstructorClasses] = useState([]);
+
+            useEffect(() => {
+                fetchAvailableLearners();
+                // For now, we'll use hardcoded classes. In a real app, you'd fetch instructor's classes
+                setInstructorClasses([
+                    { id: 1, name: 'B2 Morning Batch' },
+                    { id: 2, name: 'A1 Evening Batch' }
+                ]);
+            }, []);
+
+            const fetchAvailableLearners = async () => {
+                try {
+                    // Fetch all users and filter learners on frontend for simplicity
+                    const response = await fetch('/driving-school-management/api/users/debug/all-users');
+                    if (response.ok) {
+                        const users = await response.json();
+                        const learners = users.filter(user => user.role === 'LEARNER');
+                        setAvailableLearners(learners);
+                    }
+                } catch (error) {
+                    console.error('Error fetching learners:', error);
+                }
+            };
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                
+                if (!learnerId || !classId) {
+                    setMessage('Please select both a learner and a class');
+                    setMessageType('error');
+                    return;
+                }
+
+                setLoading(true);
+                setMessage('');
+
+                try {
+                    const response = await fetch('/driving-school-management/api/enrollments/add-learner', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            instructorId: parseInt(instructorId),
+                            learnerId: parseInt(learnerId),
+                            classId: parseInt(classId)
+                        })
+                    });
+
+                    const result = await response.text();
+
+                    if (response.ok) {
+                        setMessage(result);
+                        setMessageType('success');
+                        // Reset form
+                        setLearnerId('');
+                        setClassId('');
+                    } else {
+                        setMessage(result);
+                        setMessageType('error');
+                    }
+                } catch (error) {
+                    setMessage('Network error: ' + error.message);
+                    setMessageType('error');
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            const handleInstructorIdChange = (e) => {
+                const newId = e.target.value;
+                setInstructorId(newId);
+                
+                // Update URL parameter
+                const url = new URL(window.location);
+                url.searchParams.set('instructorId', newId);
+                window.history.pushState({}, '', url);
+            };
+
+            return (
+                <div>
+                    <div className="header-section">
+                        <div className="container">
+                            <div className="row">
+                                <div className="col">
+                                    <h1 className="display-4 mb-0">Add Learner to Class</h1>
+                                    <p className="lead mb-0">Enroll a learner in one of your classes</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="container">
+                        <div className="form-container">
+                            <form onSubmit={handleSubmit}>
+                                <div className="form-group">
+                                    <label htmlFor="instructorId" className="form-label">
+                                        <strong>Instructor ID:</strong>
+                                    </label>
+                                    <input
+                                        type="number"
+                                        id="instructorId"
+                                        className="form-control"
+                                        value={instructorId}
+                                        onChange={handleInstructorIdChange}
+                                        required
+                                    />
+                                    <div className="form-text">Your instructor ID (logged-in user)</div>
+                                </div>
+
+                                <div className="form-group">
+                                    <label htmlFor="learnerId" className="form-label">
+                                        <strong>Select Learner:</strong>
+                                    </label>
+                                    <select
+                                        id="learnerId"
+                                        className="form-select"
+                                        value={learnerId}
+                                        onChange={(e) => setLearnerId(e.target.value)}
+                                        required
+                                    >
+                                        <option value="">-- Choose a learner --</option>
+                                        {availableLearners.map(learner => (
+                                            <option key={learner.id} value={learner.id}>
+                                                {learner.fullName} (@{learner.username}) - ID: {learner.id}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <div className="form-text">Select the learner you want to add to the class</div>
+                                </div>
+
+                                <div className="form-group">
+                                    <label htmlFor="classId" className="form-label">
+                                        <strong>Select Class:</strong>
+                                    </label>
+                                    <select
+                                        id="classId"
+                                        className="form-select"
+                                        value={classId}
+                                        onChange={(e) => setClassId(e.target.value)}
+                                        required
+                                    >
+                                        <option value="">-- Choose a class --</option>
+                                        {instructorClasses.map(cls => (
+                                            <option key={cls.id} value={cls.id}>
+                                                {cls.name} (ID: {cls.id})
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <div className="form-text">Select one of your classes</div>
+                                </div>
+
+                                {message && (
+                                    <div className={messageType === 'success' ? 'success-message' : 'error-message'}>
+                                        {message}
+                                    </div>
+                                )}
+
+                                <div className="d-grid">
+                                    <button
+                                        type="submit"
+                                        className="btn btn-primary btn-lg"
+                                        disabled={loading}
+                                    >
+                                        {loading && <div className="loading-spinner"></div>}
+                                        {loading ? 'Adding Learner...' : 'Add Learner to Class'}
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div className="mt-4 p-3 bg-light rounded">
+                                <h6>Quick Test Values:</h6>
+                                <ul className="mb-0">
+                                    <li><strong>Instructor ID:</strong> 1 (John Smith)</li>
+                                    <li><strong>Available Learners:</strong> Check dropdown for current learners</li>
+                                    <li><strong>Available Classes:</strong> 1 (B2 Morning Batch), 2 (A1 Evening Batch)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Render the app
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

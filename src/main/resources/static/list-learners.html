@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Learners - Driving School Management</title>
+    
+    <!-- React and Babel CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Bootstrap CSS for styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        .learner-card {
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+        .learner-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .status-badge {
+            font-size: 0.8em;
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Get instructor ID from URL parameters
+        function getInstructorIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('instructorId') || '1'; // Default to 1 for testing
+        }
+
+        // Learner Card Component
+        function LearnerCard({ learner }) {
+            const formatDate = (dateString) => {
+                if (!dateString) return 'N/A';
+                return new Date(dateString).toLocaleDateString();
+            };
+
+            const getStatusColor = (status) => {
+                switch(status?.toLowerCase()) {
+                    case 'pending': return 'warning';
+                    case 'active': return 'success';
+                    case 'completed': return 'primary';
+                    case 'suspended': return 'danger';
+                    default: return 'secondary';
+                }
+            };
+
+            return (
+                <div className="col-md-6 col-lg-4 mb-4">
+                    <div className="card learner-card h-100">
+                        <div className="card-body">
+                            <div className="d-flex align-items-center mb-3">
+                                <img 
+                                    src={learner.avatarUrl || 'https://via.placeholder.com/60x60?text=User'} 
+                                    alt="Avatar" 
+                                    className="avatar me-3"
+                                    onError={(e) => {
+                                        e.target.src = 'https://via.placeholder.com/60x60?text=User';
+                                    }}
+                                />
+                                <div>
+                                    <h5 className="card-title mb-1">{learner.fullName}</h5>
+                                    <small className="text-muted">@{learner.username}</small>
+                                </div>
+                            </div>
+                            
+                            <div className="mb-2">
+                                <strong>Email:</strong> {learner.email}
+                            </div>
+                            
+                            {learner.phoneNumber && (
+                                <div className="mb-2">
+                                    <strong>Phone:</strong> {learner.phoneNumber}
+                                </div>
+                            )}
+                            
+                            {learner.licenseType && (
+                                <div className="mb-2">
+                                    <strong>License Type:</strong> {learner.licenseType}
+                                </div>
+                            )}
+                            
+                            <div className="mb-2">
+                                <strong>Enrollment Date:</strong> {formatDate(learner.enrollmentDate)}
+                            </div>
+                            
+                            {learner.progressStatus && (
+                                <div className="mb-2">
+                                    <span className={`badge bg-${getStatusColor(learner.progressStatus)} status-badge`}>
+                                        {learner.progressStatus}
+                                    </span>
+                                </div>
+                            )}
+                            
+                            {learner.address && (
+                                <div className="mb-2">
+                                    <strong>Address:</strong> {learner.address}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Main App Component
+        function App() {
+            const [learners, setLearners] = useState([]);
+            const [loading, setLoading] = useState(true);
+            const [error, setError] = useState(null);
+            const [instructorId, setInstructorId] = useState(getInstructorIdFromUrl());
+
+            useEffect(() => {
+                fetchLearners();
+            }, [instructorId]);
+
+            const fetchLearners = async () => {
+                try {
+                    setLoading(true);
+                    setError(null);
+                    
+                    const response = await fetch(`/driving-school-management/api/users/instructor/${instructorId}/learners`);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    setLearners(data);
+                } catch (err) {
+                    setError(err.message);
+                    console.error('Error fetching learners:', err);
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            const handleInstructorIdChange = (e) => {
+                const newId = e.target.value;
+                setInstructorId(newId);
+                
+                // Update URL parameter
+                const url = new URL(window.location);
+                url.searchParams.set('instructorId', newId);
+                window.history.pushState({}, '', url);
+            };
+
+            return (
+                <div className="container mt-4">
+                    <div className="row mb-4">
+                        <div className="col">
+                            <h1 className="display-4">Learners List</h1>
+                            <p className="lead">View all learners enrolled in your classes</p>
+                        </div>
+                    </div>
+
+                    <div className="row mb-4">
+                        <div className="col-md-6">
+                            <div className="input-group">
+                                <span className="input-group-text">Instructor ID:</span>
+                                <input 
+                                    type="number" 
+                                    className="form-control" 
+                                    value={instructorId}
+                                    onChange={handleInstructorIdChange}
+                                    placeholder="Enter instructor ID"
+                                />
+                                <button 
+                                    className="btn btn-primary" 
+                                    onClick={fetchLearners}
+                                    disabled={loading}
+                                >
+                                    {loading ? 'Loading...' : 'Refresh'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {loading && (
+                        <div className="text-center">
+                            <div className="loading-spinner"></div>
+                            <p>Loading learners...</p>
+                        </div>
+                    )}
+
+                    {error && (
+                        <div className="alert alert-danger" role="alert">
+                            <h4 className="alert-heading">Error!</h4>
+                            <p>Failed to load learners: {error}</p>
+                            <button className="btn btn-outline-danger" onClick={fetchLearners}>
+                                Try Again
+                            </button>
+                        </div>
+                    )}
+
+                    {!loading && !error && (
+                        <>
+                            <div className="row mb-3">
+                                <div className="col">
+                                    <h3>
+                                        Found {learners.length} learner{learners.length !== 1 ? 's' : ''}
+                                        {instructorId && ` for Instructor ID: ${instructorId}`}
+                                    </h3>
+                                </div>
+                            </div>
+
+                            {learners.length === 0 ? (
+                                <div className="alert alert-info" role="alert">
+                                    <h4 className="alert-heading">No learners found</h4>
+                                    <p>There are no learners enrolled in classes for this instructor.</p>
+                                </div>
+                            ) : (
+                                <div className="row">
+                                    {learners.map(learner => (
+                                        <LearnerCard key={learner.id} learner={learner} />
+                                    ))}
+                                </div>
+                            )}
+                        </>
+                    )}
+                </div>
+            );
+        }
+
+        // Render the app
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

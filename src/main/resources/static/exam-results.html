@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Exam Results - Driving School Management</title>
+    
+    <!-- React and Babel CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Bootstrap CSS for styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        .result-card {
+            transition: transform 0.2s;
+            margin-bottom: 20px;
+        }
+        .result-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .passed {
+            border-left: 5px solid #28a745;
+        }
+        .failed {
+            border-left: 5px solid #dc3545;
+        }
+        .score-badge {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .exam-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Get learner ID from URL parameters
+        function getLearnerIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('learnerId') || '2'; // Default to 2 for testing
+        }
+
+        // Exam Result Card Component
+        function ExamResultCard({ result }) {
+            const formatDate = (dateString) => {
+                if (!dateString) return 'N/A';
+                return new Date(dateString).toLocaleDateString();
+            };
+
+            const formatTime = (timeString) => {
+                if (!timeString) return 'N/A';
+                return timeString;
+            };
+
+            const formatDateTime = (dateTimeString) => {
+                if (!dateTimeString) return 'N/A';
+                return new Date(dateTimeString).toLocaleString();
+            };
+
+            const getScoreColor = (score, passScore, isPassed) => {
+                if (isPassed) return 'success';
+                return 'danger';
+            };
+
+            return (
+                <div className="col-12 mb-4">
+                    <div className={`card result-card h-100 ${result.isPassed ? 'passed' : 'failed'}`}>
+                        <div className="card-header d-flex justify-content-between align-items-center">
+                            <h5 className="mb-0">{result.examName}</h5>
+                            <span className={`badge bg-${getScoreColor(result.score, result.passScore, result.isPassed)} score-badge`}>
+                                {result.isPassed ? 'PASSED' : 'FAILED'}
+                            </span>
+                        </div>
+                        <div className="card-body">
+                            <div className="row">
+                                <div className="col-md-6">
+                                    <div className="mb-3">
+                                        <strong>Exam Type:</strong> 
+                                        <span className="badge bg-info ms-2">{result.examType}</span>
+                                    </div>
+                                    
+                                    <div className="mb-3">
+                                        <strong>Score:</strong>
+                                        <span className={`badge bg-${getScoreColor(result.score, result.passScore, result.isPassed)} ms-2`}>
+                                            {result.score} / {result.maxScore || 100}
+                                        </span>
+                                    </div>
+                                    
+                                    <div className="mb-3">
+                                        <strong>Pass Score:</strong> {result.passScore}
+                                    </div>
+                                </div>
+                                
+                                <div className="col-md-6">
+                                    <div className="mb-3">
+                                        <strong>Exam Date:</strong> {formatDate(result.examDate)}
+                                    </div>
+                                    
+                                    <div className="mb-3">
+                                        <strong>Start Time:</strong> {formatTime(result.startTime)}
+                                    </div>
+                                    
+                                    {result.location && (
+                                        <div className="mb-3">
+                                            <strong>Location:</strong> {result.location}
+                                        </div>
+                                    )}
+                                    
+                                    <div className="mb-3">
+                                        <strong>Result Date:</strong> {formatDateTime(result.resultDate)}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Main App Component
+        function App() {
+            const [examResults, setExamResults] = useState([]);
+            const [loading, setLoading] = useState(true);
+            const [error, setError] = useState(null);
+            const [learnerId, setLearnerId] = useState(getLearnerIdFromUrl());
+            const [learnerInfo, setLearnerInfo] = useState(null);
+
+            useEffect(() => {
+                fetchExamResults();
+            }, [learnerId]);
+
+            const fetchExamResults = async () => {
+                try {
+                    setLoading(true);
+                    setError(null);
+                    
+                    const response = await fetch(`/driving-school-management/api/exam-results/learner/${learnerId}`);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    setExamResults(data);
+                    
+                    // Set learner info from first result
+                    if (data.length > 0) {
+                        setLearnerInfo({
+                            fullName: data[0].fullName,
+                            username: data[0].username,
+                            userId: data[0].userId
+                        });
+                    }
+                } catch (err) {
+                    setError(err.message);
+                    console.error('Error fetching exam results:', err);
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            const handleLearnerIdChange = (e) => {
+                const newId = e.target.value;
+                setLearnerId(newId);
+                
+                // Update URL parameter
+                const url = new URL(window.location);
+                url.searchParams.set('learnerId', newId);
+                window.history.pushState({}, '', url);
+            };
+
+            const getOverallStats = () => {
+                const totalExams = examResults.length;
+                const passedExams = examResults.filter(result => result.isPassed).length;
+                const failedExams = totalExams - passedExams;
+                const passRate = totalExams > 0 ? ((passedExams / totalExams) * 100).toFixed(1) : 0;
+                
+                return { totalExams, passedExams, failedExams, passRate };
+            };
+
+            const stats = getOverallStats();
+
+            return (
+                <div>
+                    <div className="exam-header">
+                        <div className="container">
+                            <div className="row">
+                                <div className="col">
+                                    <h1 className="display-4 mb-0">My Exam Results</h1>
+                                    {learnerInfo && (
+                                        <p className="lead mb-0">
+                                            {learnerInfo.fullName} (@{learnerInfo.username})
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="container">
+                        <div className="row mb-4">
+                            <div className="col-md-6">
+                                <div className="input-group">
+                                    <span className="input-group-text">Learner ID:</span>
+                                    <input 
+                                        type="number" 
+                                        className="form-control" 
+                                        value={learnerId}
+                                        onChange={handleLearnerIdChange}
+                                        placeholder="Enter learner ID"
+                                    />
+                                    <button 
+                                        className="btn btn-primary" 
+                                        onClick={fetchExamResults}
+                                        disabled={loading}
+                                    >
+                                        {loading ? 'Loading...' : 'Refresh'}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {!loading && !error && examResults.length > 0 && (
+                            <div className="row mb-4">
+                                <div className="col-md-3">
+                                    <div className="card text-center">
+                                        <div className="card-body">
+                                            <h5 className="card-title text-primary">{stats.totalExams}</h5>
+                                            <p className="card-text">Total Exams</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-md-3">
+                                    <div className="card text-center">
+                                        <div className="card-body">
+                                            <h5 className="card-title text-success">{stats.passedExams}</h5>
+                                            <p className="card-text">Passed</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-md-3">
+                                    <div className="card text-center">
+                                        <div className="card-body">
+                                            <h5 className="card-title text-danger">{stats.failedExams}</h5>
+                                            <p className="card-text">Failed</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-md-3">
+                                    <div className="card text-center">
+                                        <div className="card-body">
+                                            <h5 className="card-title text-info">{stats.passRate}%</h5>
+                                            <p className="card-text">Pass Rate</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {loading && (
+                            <div className="text-center">
+                                <div className="loading-spinner"></div>
+                                <p>Loading exam results...</p>
+                            </div>
+                        )}
+
+                        {error && (
+                            <div className="alert alert-danger" role="alert">
+                                <h4 className="alert-heading">Error!</h4>
+                                <p>Failed to load exam results: {error}</p>
+                                <button className="btn btn-outline-danger" onClick={fetchExamResults}>
+                                    Try Again
+                                </button>
+                            </div>
+                        )}
+
+                        {!loading && !error && (
+                            <>
+                                {examResults.length === 0 ? (
+                                    <div className="alert alert-info" role="alert">
+                                        <h4 className="alert-heading">No exam results found</h4>
+                                        <p>There are no exam results available for this learner.</p>
+                                    </div>
+                                ) : (
+                                    <div className="row">
+                                        {examResults.map((result, index) => (
+                                            <ExamResultCard key={index} result={result} />
+                                        ))}
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        // Render the app
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
