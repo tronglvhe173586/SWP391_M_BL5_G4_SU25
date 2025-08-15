@@ -4,9 +4,9 @@ import com.example.m_bl5_g4_su25.dto.request.AddInstructorRequest;
 import com.example.m_bl5_g4_su25.dto.request.EditUserRequest;
 import com.example.m_bl5_g4_su25.dto.response.ListUserResponse;
 import com.example.m_bl5_g4_su25.service.IUserService;
-import com.example.m_bl5_g4_su25.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +19,6 @@ public class UserController {
 
     private final IUserService userService;
 
-
-    // API lấy danh sách user
     @GetMapping
     public ResponseEntity<List<ListUserResponse>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
@@ -39,6 +37,18 @@ public class UserController {
     public ResponseEntity<String> addInstructor(@RequestBody AddInstructorRequest request) {
         userService.addInstructor(request);
         return ResponseEntity.ok("Instructor created successfully");
+    }
+    @GetMapping("/users_pagination")
+    public Page<ListUserResponse> getAllUsers(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return userService.getAllUsersPagination(keyword, page, size);
+    }
+    @GetMapping("/{id}")
+    public ListUserResponse getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
     }
 }
 

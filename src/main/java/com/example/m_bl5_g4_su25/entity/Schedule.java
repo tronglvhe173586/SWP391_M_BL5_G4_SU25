@@ -14,7 +14,7 @@ import java.time.LocalTime;
 @Setter
 @Entity
 
-@Table(name = "Schedules")
+@Table(name = "schedules")
 
 public class Schedule {
     @Id

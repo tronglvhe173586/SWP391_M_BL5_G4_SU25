@@ -32,3 +32,4 @@ public class ListUserResponse {
         this.isActive = isActive;
     }
 }
+
