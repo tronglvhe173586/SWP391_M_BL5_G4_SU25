@@ -2,7 +2,9 @@ package com.example.m_bl5_g4_su25.controller;
 
 import com.example.m_bl5_g4_su25.dto.request.AddInstructorRequest;
 import com.example.m_bl5_g4_su25.dto.request.EditUserRequest;
+import com.example.m_bl5_g4_su25.dto.request.UserCreationRequest;
 import com.example.m_bl5_g4_su25.dto.response.ListUserResponse;
+import com.example.m_bl5_g4_su25.dto.response.UserResponse;
 import com.example.m_bl5_g4_su25.service.IUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +34,6 @@ public class UserController {
         return ResponseEntity.ok(userService.editUser(id, request));
     }
 
-
     @PostMapping("/Add_Instructor")
     public ResponseEntity<String> addInstructor(@RequestBody AddInstructorRequest request) {
         userService.addInstructor(request);
@@ -49,6 +50,12 @@ public class UserController {
     @GetMapping("/{id}")
     public ListUserResponse getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<UserResponse> register(@RequestBody UserCreationRequest request) {
+        UserResponse response = userService.register(request);
+        return ResponseEntity.ok(response);
     }
 }
 
