@@ -17,6 +17,10 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "classes")
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6eef93d50ba4d527324154db67ec77c514e53a4b
 public class Class {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

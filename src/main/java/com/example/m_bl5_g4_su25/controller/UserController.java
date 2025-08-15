@@ -1,9 +1,13 @@
 package com.example.m_bl5_g4_su25.controller;
 
+<<<<<<< HEAD
 import com.example.m_bl5_g4_su25.dto.response.UserResponse;
 import com.example.m_bl5_g4_su25.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+=======
+//import org.springframework.stereotype.Controller;
+>>>>>>> 6eef93d50ba4d527324154db67ec77c514e53a4b
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

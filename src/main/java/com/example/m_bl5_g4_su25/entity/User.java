@@ -15,6 +15,10 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "users")
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6eef93d50ba4d527324154db67ec77c514e53a4b
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

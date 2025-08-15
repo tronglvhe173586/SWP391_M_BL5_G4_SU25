@@ -1,5 +1,8 @@
 package com.example.m_bl5_g4_su25.entity;
 
+
+import com.example.m_bl5_g4_su25.enums.ExamType;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -12,7 +15,13 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+<<<<<<< HEAD
 @Table(name = "exams")
+=======
+
+@Table(name = "exams")
+
+>>>>>>> 6eef93d50ba4d527324154db67ec77c514e53a4b
 public class Exam {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,9 +34,11 @@ public class Exam {
     private String examName;
 
     @NotNull
-    @Lob
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "exam_type", nullable = false)
-    private String examType;
+    private ExamType examType;
+
 
     @NotNull
     @Column(name = "pass_score", nullable = false)
