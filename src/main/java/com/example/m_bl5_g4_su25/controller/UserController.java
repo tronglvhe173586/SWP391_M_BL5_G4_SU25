@@ -4,7 +4,6 @@ import com.example.m_bl5_g4_su25.dto.request.AddInstructorRequest;
 import com.example.m_bl5_g4_su25.dto.request.EditUserRequest;
 import com.example.m_bl5_g4_su25.dto.response.ListUserResponse;
 import com.example.m_bl5_g4_su25.service.IUserService;
-import com.example.m_bl5_g4_su25.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -46,6 +45,10 @@ public class UserController {
             @RequestParam(defaultValue = "10") int size
     ) {
         return userService.getAllUsersPagination(keyword, page, size);
+    }
+    @GetMapping("/{id}")
+    public ListUserResponse getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
     }
 }
 
