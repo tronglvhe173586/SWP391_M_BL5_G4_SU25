@@ -13,10 +13,11 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "Users")
+@Table(name = "users")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -80,4 +81,5 @@ public class User {
 
     @OneToOne(mappedBy = "user")
     private LearnerProfile learnerProfile;
+
 }
