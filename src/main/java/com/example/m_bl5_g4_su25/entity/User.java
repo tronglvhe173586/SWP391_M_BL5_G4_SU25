@@ -3,8 +3,7 @@ package com.example.m_bl5_g4_su25.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
@@ -14,8 +13,10 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "users")
-
+@Table(name = "Users")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -79,5 +80,4 @@ public class User {
 
     @OneToOne(mappedBy = "user")
     private LearnerProfile learnerProfile;
-
 }
