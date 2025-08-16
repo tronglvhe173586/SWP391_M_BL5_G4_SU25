@@ -1,18 +1,20 @@
 import React, { useState } from "react";
-import {Container, TextField, Button, Typography, Box, CircularProgress, Alert, Link} from "@mui/material";
-import { useNavigate , Link as RouterLink} from "react-router-dom";
+import { Container, TextField, Button, Typography, Box, CircularProgress, Alert, Link } from "@mui/material";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 import axios from "axios";
 
 
-export default function Login() {
+export default function Register() {
     const navigate = useNavigate();
-
     const [form, setForm] = useState({
         username: "",
-        password: ""
+        password: "",
+        email: "",
+        fullName: ""
     });
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
 
     const handleChange = (e) => {
         setForm({
@@ -25,23 +27,13 @@ export default function Login() {
         e.preventDefault();
         setLoading(true);
         setErrorMessage("");
+        setSuccessMessage("");
 
         try {
-            const response = await axios.post(
-                "/driving-school-management/auth/token", // dùng proxy từ package.json
-                {
-                    username: form.username,
-                    password: form.password
-                }
-            );
-
-            console.log("Login response:", response.data);
-
-            const token = response.data.result?.token;
-            if (!token) throw new Error("Token not found in response");
-
-            localStorage.setItem("jwtToken", token);
-            navigate("/users");
+            await axios.post("/driving-school-management/users/register", form);
+            setTimeout(() => {
+                navigate("/login");
+            }, 2000);
         } catch (error) {
             console.error(error);
             if (error.response && error.response.data) {
@@ -57,16 +49,32 @@ export default function Login() {
     return (
         <Container maxWidth="sm" sx={{ mt: 4 }}>
             <Typography variant="h4" gutterBottom>
-                Login
+                Register
             </Typography>
 
             {errorMessage && <Alert severity="error" sx={{ mb: 2 }}>{errorMessage}</Alert>}
+            {successMessage && <Alert severity="success" sx={{ mb: 2 }}>{successMessage}</Alert>}
 
             <Box
                 component="form"
                 onSubmit={handleSubmit}
                 sx={{ display: "flex", flexDirection: "column", gap: 2 }}
             >
+                <TextField
+                    label="Full Name"
+                    name="fullName"
+                    value={form.fullName}
+                    onChange={handleChange}
+                    required
+                />
+                <TextField
+                    label="Email"
+                    name="email"
+                    type="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    required
+                />
                 <TextField
                     label="Username"
                     name="username"
@@ -83,14 +91,14 @@ export default function Login() {
                     required
                 />
                 <Button type="submit" variant="contained" disabled={loading}>
-                    {loading ? <CircularProgress size={24} /> : "Login"}
+                    {loading ? <CircularProgress size={24} /> : "Register"}
                 </Button>
-                <div style={{ marginTop: "10px" }}>
-                    Don't have an account?{" "}
-                    <Link component={RouterLink} to="/register" underline="none" color="primary">
-                        Register here!
+                <Typography variant="body2" align="center">
+                    Have an account?{" "}
+                    <Link component={RouterLink} to="/login">
+                        Login
                     </Link>
-                </div>
+                </Typography>
             </Box>
         </Container>
     );

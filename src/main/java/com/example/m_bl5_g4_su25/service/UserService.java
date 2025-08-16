@@ -2,7 +2,9 @@ package com.example.m_bl5_g4_su25.service;
 
 import com.example.m_bl5_g4_su25.dto.request.AddInstructorRequest;
 import com.example.m_bl5_g4_su25.dto.request.EditUserRequest;
+import com.example.m_bl5_g4_su25.dto.request.UserCreationRequest;
 import com.example.m_bl5_g4_su25.dto.response.ListUserResponse;
+import com.example.m_bl5_g4_su25.dto.response.UserResponse;
 import com.example.m_bl5_g4_su25.entity.InstructorProfile;
 import com.example.m_bl5_g4_su25.entity.User;
 import com.example.m_bl5_g4_su25.repository.InstructorProfileRepository;
@@ -11,6 +13,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -18,14 +21,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+
 public class UserService implements IUserService {
 
     private final UserRepository userRepository;
     private final InstructorProfileRepository instructorProfileRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, InstructorProfileRepository instructorProfileRepository) {
+    public UserService(UserRepository userRepository, InstructorProfileRepository instructorProfileRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.instructorProfileRepository = instructorProfileRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -117,5 +123,26 @@ public class UserService implements IUserService {
                 user.getRole(),
                 user.getIsActive()
         );
+    }
+
+    @Override
+    public UserResponse register(UserCreationRequest request) {
+        User user = User.builder()
+                .username(request.getUsername())
+                .passwordHash(passwordEncoder.encode(request.getPassword()))
+                .email(request.getEmail())
+                .fullName(request.getFullName())
+                .role("LEARNER")
+                .isActive(true)
+                .build();
+        user = userRepository.save(user);
+
+        UserResponse response = new UserResponse();
+        response.setId(user.getId());
+        response.setUsername(user.getUsername());
+        response.setEmail(user.getEmail());
+        response.setFullName(user.getFullName());
+        response.setRole(user.getRole());
+        return response;
     }
 }

@@ -10,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreationRequest {
     String username;
-    String passwordHash;
+    String password;
     String email;
     String fullName;
 }

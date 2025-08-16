@@ -40,6 +40,21 @@ export default function UserTable() {
           </Button>
       ),
     },
+    {
+      field: "View",
+      headerName: "View",
+      width: 150,
+      renderCell: (params) => (
+          <Button
+              variant="contained"
+              color="warning"
+              size="small"
+              onClick={() => navigate(`/users/${params.row.id}`)}
+          >
+            View
+          </Button>
+      ),
+    },
   ];
 
   const fetchUsers = async () => {

@@ -26,25 +26,34 @@ const EditUser = () => {
 
   // Fetch user data
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await axios.get(
-          `http://localhost:8080/driving-school-management/users/${id}`
-        );
-        setForm({
-          username: res.data.username,
-          fullName: res.data.fullName,
-          email: res.data.email,
-          isActive: res.data.isActive
-        });
-        setLoading(false);
-      } catch (err) {
-        console.error(err);
-        alert("Failed to fetch user data");
-      }
-    };
-    fetchUser();
-  }, [id]);
+  const fetchUser = async () => {
+    try {
+      const token = localStorage.getItem("jwtToken"); 
+      const res = await axios.get(
+        `http://localhost:8080/driving-school-management/users/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}` 
+          }
+        }
+      );
+
+      setForm({
+        username: res.data.username,
+        fullName: res.data.fullName,
+        email: res.data.email,
+        isActive: res.data.isActive
+      });
+
+      setLoading(false);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to fetch user data");
+    }
+  };
+  fetchUser();
+}, [id]);
+
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -55,19 +64,25 @@ const EditUser = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.put(
-        `http://localhost:8080/driving-school-management/users/edit_User/${id}`,
-        form
-      );
-      alert("User updated successfully!");
-      navigate("/users");
-    } catch (err) {
-      console.error(err);
-      alert("Failed to update user");
-    }
-  };
+  e.preventDefault();
+  try {
+    const token = localStorage.getItem("jwtToken"); 
+    await axios.put(
+      `http://localhost:8080/driving-school-management/users/edit_User/${id}`,
+      form,
+      {
+        headers: {
+          Authorization: `Bearer ${token}` 
+        }
+      }
+    );
+    alert("User updated successfully!");
+    navigate("/users");
+  } catch (err) {
+    console.error(err);
+    alert("Failed to update user");
+  }
+};
 
   if (loading) return <Typography>Loading user data...</Typography>;
 
