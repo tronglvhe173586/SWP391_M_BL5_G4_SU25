@@ -5,7 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class MBl5G4Su25Application {
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
+        System.out.println("Hello World");
         SpringApplication.run(MBl5G4Su25Application.class, args);
+        System.out.println("MBl5G4Su25 <UNK> <UNK> <UNK> <UNK> <UNK>");
     }
 }
