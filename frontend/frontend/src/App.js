@@ -8,7 +8,7 @@ import ExamList from "./pages/ExamList.js";
 import AddExam from "./pages/AddExam.js";
 import EditExam from "./pages/EditExam.js";
 import Login from './pages/Login.js';
-
+import UserDetails from "./pages/UserDetails.js";
 function App() {
   return (
     <Router>
@@ -23,6 +23,8 @@ function App() {
         <Route path="/exams/edit/:id" element={<EditExam />} />
         <Route path="/login" element={<Login />} />
 
+        <Route path="/users/:id" element={<UserDetails />} />
+          <Route path="/login" element={<Login />} />
       </Routes>
     </Router>
   );

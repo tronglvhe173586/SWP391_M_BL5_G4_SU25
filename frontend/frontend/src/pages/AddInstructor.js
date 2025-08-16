@@ -26,10 +26,17 @@ export default function AddInstructor() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const token = localStorage.getItem("jwtToken"); 
       await axios.post(
         "http://localhost:8080/driving-school-management/users/Add_Instructor",
-        form
+        form,
+        {
+        headers: {
+          Authorization: `Bearer ${token}` 
+        }
+      }
       );
+
       alert("Instructor added successfully!");
       setForm({
         username: "",
