@@ -9,6 +9,16 @@ spring:
     url: jdbc:mysql://localhost:3306/driving_school_management
     driverClassName: "com.mysql.cj.jdbc.Driver"
     username: root
-    password: 1234
+    password: root
+  jpa:
+    properties:
+      hibernate:
+        physical_naming_strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+
+jwt:
+  signerKey: "n6o81j7T49u61O2h2c7P1y3p0r1I9w8L2k5R8s3T4o2X3j5V9m7Q0e4A8b6C9d5H4v0F1z7E"
+  valid-duration: 36000 #in seconds
+  refreshable-duration: 36000 #in seconds
 
 

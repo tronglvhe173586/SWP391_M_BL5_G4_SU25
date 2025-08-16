@@ -1,4 +1,4 @@
-package com.example.m_bl5_g4_su25.dto.response;
+package com.example.m_bl5_g4_su25.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,10 +8,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserResponse {
-    String id;
+public class AuthenticationRequest {
     String username;
-    String fullName;
-    String email;
-    String address;
+    String password;
 }
