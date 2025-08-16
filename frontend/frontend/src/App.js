@@ -9,6 +9,7 @@ import AddExam from "./pages/AddExam.js";
 import EditExam from "./pages/EditExam.js";
 import Login from './pages/Login.js';
 import UserDetails from "./pages/UserDetails.js";
+import Register from "./pages/Register.js";
 function App() {
   return (
     <Router>
@@ -21,9 +22,8 @@ function App() {
         <Route path="/exams" element={<ExamList />} />
         <Route path="/exams/add" element={<AddExam />} />
         <Route path="/exams/edit/:id" element={<EditExam />} />
-        <Route path="/login" element={<Login />} />
-
-        <Route path="/users/:id" element={<UserDetails />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/users/:id" element={<UserDetails />} />
           <Route path="/login" element={<Login />} />
       </Routes>
     </Router>
