@@ -7,4 +7,10 @@ import java.util.List;
 
 public interface IExamService {
     public List<ExamResponse> getAllExams();
+
+    public ExamResponse getExamById(Long examId);
+
+    public ExamResponse createExam(Exam exam);
+
+    public ExamResponse updateExam(Long examId, Exam exam);
 }
