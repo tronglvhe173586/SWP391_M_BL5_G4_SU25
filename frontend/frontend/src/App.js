@@ -3,7 +3,12 @@ import ResponsiveAppBar from "./components/ResponsiveAppBar.js";
 import UserManagement from "./pages/userManagement.js";
 import AddInstructor from "./pages/AddInstructor.js";
 import EditUser from "./pages/editUser.js";
+
+import ExamList from "./pages/ExamList.js";
+import AddExam from "./pages/AddExam.js";
+import EditExam from "./pages/EditExam.js";
 import Login from './pages/Login.js';
+
 function App() {
   return (
     <Router>
@@ -12,7 +17,12 @@ function App() {
         <Route path="/users" element={<UserManagement />} />
         <Route path="/add-instructor" element={<AddInstructor />} />
         <Route path="/users/edit/:id" element={<EditUser />} />
-          <Route path="/login" element={<Login />} />
+
+        <Route path="/exams" element={<ExamList />} />
+        <Route path="/exams/add" element={<AddExam />} />
+        <Route path="/exams/edit/:id" element={<EditExam />} />
+        <Route path="/login" element={<Login />} />
+
       </Routes>
     </Router>
   );

@@ -17,6 +17,7 @@ import { Link } from 'react-router-dom';
 const pages = [
   { name: 'Home', path: '/' },
   { name: 'Users', path: '/users' },
+  { name: 'Exams', path: '/exams' },
 ];
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
