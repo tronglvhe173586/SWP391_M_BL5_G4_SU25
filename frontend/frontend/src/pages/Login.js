@@ -57,7 +57,7 @@ export default function Login() {
     return (
         <Container maxWidth="sm" sx={{ mt: 4 }}>
             <Typography variant="h4" gutterBottom>
-                Login
+                Đăng nhập
             </Typography>
 
             {errorMessage && <Alert severity="error" sx={{ mb: 2 }}>{errorMessage}</Alert>}
@@ -83,12 +83,12 @@ export default function Login() {
                     required
                 />
                 <Button type="submit" variant="contained" disabled={loading}>
-                    {loading ? <CircularProgress size={24} /> : "Login"}
+                    {loading ? <CircularProgress size={24} /> : "Đăng nhập"}
                 </Button>
                 <div style={{ marginTop: "10px" }}>
-                    Don't have an account?{" "}
+                    Chưa có tài khoản?{" "}
                     <Link component={RouterLink} to="/register" underline="none" color="primary">
-                        Register here!
+                        Đăng ký tại đây!
                     </Link>
                 </div>
             </Box>

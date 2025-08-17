@@ -24,7 +24,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/user-management" element={<UserManagement />} />
+        <Route path="/users" element={<UserManagement />} />
         <Route path="/add-instructor" element={<AddInstructor />} />
 
         <Route path="/edit-user/:id" element={<EditUser />} />
@@ -35,7 +35,6 @@ function App() {
         <Route path="/edit-class/:id" element={<EditClass />} />
 
         <Route path="/users/edit/:id" element={<EditUser />} />
-
         <Route path="/exams" element={<ExamList />} />
         <Route path="/exams/add" element={<AddExam />} />
         <Route path="/exams/edit/:id" element={<EditExam />} />

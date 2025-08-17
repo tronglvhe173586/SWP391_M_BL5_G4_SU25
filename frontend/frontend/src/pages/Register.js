@@ -14,7 +14,7 @@ export default function Register() {
         email: "",
         firstName: "",
         lastName: "",
-        gender: "Nam", // giữ đúng giá trị enum backend
+        gender: "Nam",
         dateOfBirth: "",
         provinceId: ""
     });
@@ -68,7 +68,7 @@ export default function Register() {
 
     return (
         <Container maxWidth="sm" sx={{ mt: 4 }}>
-            <Typography variant="h4" gutterBottom>Register</Typography>
+            <Typography variant="h4" gutterBottom>Đăng ký</Typography>
 
             {errorMessage && <Alert severity="error" sx={{ mb: 2 }}>{errorMessage}</Alert>}
             {successMessage && <Alert severity="success" sx={{ mb: 2 }}>{successMessage}</Alert>}
@@ -116,12 +116,12 @@ export default function Register() {
                 </TextField>
 
                 <Button type="submit" variant="contained" disabled={loading}>
-                    {loading ? <CircularProgress size={24} /> : "Register"}
+                    {loading ? <CircularProgress size={24} /> : "Đăng ký"}
                 </Button>
 
                 <Typography variant="body2" align="center">
-                    Have an account?{" "}
-                    <Link component={RouterLink} to="/login">Login</Link>
+                    Đã có tài khoản?{" "}
+                    <Link component={RouterLink} to="/login">Đăng nhập</Link>
                 </Typography>
             </Box>
         </Container>
