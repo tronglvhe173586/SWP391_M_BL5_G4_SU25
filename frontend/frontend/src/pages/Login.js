@@ -1,8 +1,12 @@
 import React, { useState } from "react";
-import {Container, TextField, Button, Typography, Box, CircularProgress, Alert, Link} from "@mui/material";
-import { useNavigate , Link as RouterLink} from "react-router-dom";
+import {
+    Container, TextField, Button, Typography, Box,
+    CircularProgress, Alert, Link
+} from "@mui/material";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
+import { Google } from "@mui/icons-material";
 import axios from "axios";
-
+import { OAuthConfig } from "../configurations/configuration";
 
 export default function Login() {
     const navigate = useNavigate();
@@ -28,7 +32,7 @@ export default function Login() {
 
         try {
             const response = await axios.post(
-                "/driving-school-management/auth/token", // dùng proxy từ package.json
+                "/driving-school-management/auth/token",
                 {
                     username: form.username,
                     password: form.password
@@ -52,6 +56,18 @@ export default function Login() {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleGoogleLogin = () => {
+        const callbackUrl = OAuthConfig.redirectUri;
+        const authUrl = OAuthConfig.authUri;
+        const googleClientId = OAuthConfig.clientId;
+
+        const targetUrl = `${authUrl}?redirect_uri=${encodeURIComponent(
+            callbackUrl
+        )}&response_type=code&client_id=${googleClientId}&scope=openid%20email%20profile`;
+
+        window.location.href = targetUrl;
     };
 
     return (
@@ -85,6 +101,19 @@ export default function Login() {
                 <Button type="submit" variant="contained" disabled={loading}>
                     {loading ? <CircularProgress size={24} /> : "Đăng nhập"}
                 </Button>
+
+                <Button
+                    variant="contained"
+                    startIcon={<Google />}
+                    onClick={handleGoogleLogin}
+                    sx={{
+                        backgroundColor: "#6a0dad",
+                        "&:hover": { backgroundColor: "#5b0cb3" }
+                    }}
+                >
+                    Đăng nhập bằng Google
+                </Button>
+
                 <div style={{ marginTop: "10px" }}>
                     Chưa có tài khoản?{" "}
                     <Link component={RouterLink} to="/register" underline="none" color="primary">

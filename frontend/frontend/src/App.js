@@ -15,6 +15,7 @@ import ClassManagement from './pages/ClassManagement';
 import AddClass from './pages/AddClass';
 import ViewClass from './pages/ViewClass';
 import EditClass from './pages/EditClass';
+import Authenticate from "./pages/Authenticate.js";
 
 
 function App() {
@@ -40,6 +41,8 @@ function App() {
         <Route path="/exams/edit/:id" element={<EditExam />} />
           <Route path="/register" element={<Register />} />
           <Route path="/users/:id" element={<UserDetails />} />
+        <Route path="/authenticate" element={<Authenticate />} />
+
       </Routes>
     </Router>
   );

@@ -15,6 +15,11 @@ spring:
       hibernate:
         physical_naming_strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
+outbound:
+  identity:
+    client-id: "189975487459-fsccp80lfnucmpue0auunupkf2c4h5pn.apps.googleusercontent.com"
+    client-secret: "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"
+    redirect-uri: "http://localhost:3000/authenticate"
 
 jwt:
   signerKey: "n6o81j7T49u61O2h2c7P1y3p0r1I9w8L2k5R8s3T4o2X3j5V9m7Q0e4A8b6C9d5H4v0F1z7E"

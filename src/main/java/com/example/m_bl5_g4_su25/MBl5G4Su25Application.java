@@ -2,8 +2,10 @@ package com.example.m_bl5_g4_su25;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
+@EnableFeignClients
 public class MBl5G4Su25Application {
     public static void main(String[] args)
     {
