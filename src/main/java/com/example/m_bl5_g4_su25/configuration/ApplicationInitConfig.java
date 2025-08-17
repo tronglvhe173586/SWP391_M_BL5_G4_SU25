@@ -33,7 +33,7 @@ public class ApplicationInitConfig {
                 var roles = new HashSet<String>();
                 User user = User.builder()
                         .username("admin")
-                        .fullName("Administrator")
+//                        .fullName("Administrator")
                         .email("admin@example.com")
                         .role("ADMIN")
                         .passwordHash(passwordEncoder.encode("admin"))

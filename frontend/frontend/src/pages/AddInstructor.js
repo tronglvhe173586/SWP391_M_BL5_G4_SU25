@@ -1,64 +1,71 @@
-import React, { use, useState } from "react";
-import { Container, TextField, Button, Typography, Box, MenuItem, Select } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Box,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function AddInstructor() {
-  
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     username: "",
     passwordHash: "",
     email: "",
-    fullName: "",
+    firstName: "",
+    lastName: "",
     employeeId: "",
-    certificationInfo: "Bằng lái hạng A1"
+    certificationInfo: "Bằng lái hạng A1",
   });
 
   const handleChange = (e) => {
     setForm({
       ...form,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("jwtToken"); 
+      const token = localStorage.getItem("jwtToken");
       await axios.post(
         "http://localhost:8080/driving-school-management/users/Add_Instructor",
         form,
         {
-        headers: {
-          Authorization: `Bearer ${token}` 
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      }
       );
 
-      alert("Instructor added successfully!");
+      alert("Thêm giảng viên thành công!");
       setForm({
         username: "",
         passwordHash: "",
         email: "",
-        fullName: "",
+        firstName: "",
+        lastName: "",
         employeeId: "",
-        certificationInfo: ""
-      }
-    );
-    navigate("/users");
+        certificationInfo: "",
+      });
+      navigate("/users");
     } catch (error) {
       console.error(error);
-      alert("Failed to add instructor");
-
+      alert("Thêm giảng viên thất bại!");
     }
   };
 
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom>
-        Add Instructor
+        Thêm Giảng Viên
       </Typography>
       <Box
         component="form"
@@ -66,18 +73,18 @@ export default function AddInstructor() {
         sx={{ display: "flex", flexDirection: "column", gap: 2 }}
       >
         <TextField
-          label="Username"
+          label="Tên đăng nhập"
           name="username"
           value={form.username}
           onChange={handleChange}
           required
         />
         <TextField
-          label="Password Hash"
+          label="Mật khẩu"
           name="passwordHash"
           value={form.passwordHash}
           onChange={handleChange}
-          type="text"
+          type="password"
           required
         />
         <TextField
@@ -89,14 +96,21 @@ export default function AddInstructor() {
           required
         />
         <TextField
-          label="Full Name"
-          name="fullName"
-          value={form.fullName}
+          label="Họ"
+          name="firstName"
+          value={form.firstName}
           onChange={handleChange}
           required
         />
         <TextField
-          label="Employee ID"
+          label="Tên"
+          name="lastName"
+          value={form.lastName}
+          onChange={handleChange}
+          required
+        />
+        <TextField
+          label="Mã nhân viên"
           name="employeeId"
           value={form.employeeId}
           onChange={handleChange}
@@ -104,21 +118,21 @@ export default function AddInstructor() {
         />
 
         <Select
-            name="certificationInfo"
-            value={form.certificationInfo}
-            onChange={handleChange}
-            >
-        <MenuItem value="Bằng lái hạng A1">Bằng lái hạng A1</MenuItem>
-        <MenuItem value="Bằng lái hạng A2">Bằng lái hạng A2</MenuItem>
-        <MenuItem value="Bằng lái hạng B1">Bằng lái hạng B1</MenuItem>
-        <MenuItem value="Bằng lái hạng B2">Bằng lái hạng B2</MenuItem>
-        <MenuItem value="Bằng lái hạng C">Bằng lái hạng C</MenuItem>
-        <MenuItem value="Bằng lái hạng D">Bằng lái hạng D</MenuItem>
-        <MenuItem value="Bằng lái hạng E">Bằng lái hạng E</MenuItem>
-        <MenuItem value="Bằng lái hạng F">Bằng lái hạng F</MenuItem>
-    </Select>
+          name="certificationInfo"
+          value={form.certificationInfo}
+          onChange={handleChange}
+        >
+          <MenuItem value="Bằng lái hạng A1">Bằng lái hạng A1</MenuItem>
+          <MenuItem value="Bằng lái hạng A2">Bằng lái hạng A2</MenuItem>
+          <MenuItem value="Bằng lái hạng B1">Bằng lái hạng B1</MenuItem>
+          <MenuItem value="Bằng lái hạng B2">Bằng lái hạng B2</MenuItem>
+          <MenuItem value="Bằng lái hạng C">Bằng lái hạng C</MenuItem>
+          <MenuItem value="Bằng lái hạng D">Bằng lái hạng D</MenuItem>
+          <MenuItem value="Bằng lái hạng E">Bằng lái hạng E</MenuItem>
+          <MenuItem value="Bằng lái hạng F">Bằng lái hạng F</MenuItem>
+        </Select>
         <Button type="submit" variant="contained">
-          Add Instructor
+          Thêm Giảng Viên
         </Button>
       </Box>
     </Container>

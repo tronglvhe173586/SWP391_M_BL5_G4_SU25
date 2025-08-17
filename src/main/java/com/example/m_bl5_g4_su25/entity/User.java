@@ -41,9 +41,14 @@ public class User {
 
     @Size(max = 255)
     @NotNull
-    @Column(name = "full_name", nullable = false)
-    private String fullName;
+    @Column(name = "first_name", nullable = false)
+    private String firstName;
 
+    @Size(max = 255)
+    @NotNull
+    @Column(name = "last_name", nullable = false)
+    private String lastName;
+    
     @NotNull
     @Lob
     @Column(name = "role", nullable = false)

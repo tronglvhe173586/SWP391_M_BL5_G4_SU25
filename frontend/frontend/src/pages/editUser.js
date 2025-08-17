@@ -17,42 +17,44 @@ const EditUser = () => {
 
   const [form, setForm] = useState({
     username: "",
-    fullName: "",
+    firstName: "",
+    lastName: "",
     email: "",
     isActive: true
   });
 
   const [loading, setLoading] = useState(true);
 
-  // Fetch user data
+  // Lấy dữ liệu người dùng
   useEffect(() => {
-  const fetchUser = async () => {
-    try {
-      const token = localStorage.getItem("jwtToken"); 
-      const res = await axios.get(
-        `http://localhost:8080/driving-school-management/users/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}` 
+    const fetchUser = async () => {
+      try {
+        const token = localStorage.getItem("jwtToken"); 
+        const res = await axios.get(
+          `http://localhost:8080/driving-school-management/users/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}` 
+            }
           }
-        }
-      );
+        );
 
-      setForm({
-        username: res.data.username,
-        fullName: res.data.fullName,
-        email: res.data.email,
-        isActive: res.data.isActive
-      });
+        setForm({
+          username: res.data.username,
+          firstName: res.data.firstName,
+          lastName: res.data.lastName,
+          email: res.data.email,
+          isActive: res.data.isActive
+        });
 
-      setLoading(false);
-    } catch (err) {
-      console.error(err);
-      alert("Failed to fetch user data");
-    }
-  };
-  fetchUser();
-}, [id]);
+        setLoading(false);
+      } catch (err) {
+        console.error(err);
+        alert("Không thể tải dữ liệu người dùng");
+      }
+    };
+    fetchUser();
+  }, [id]);
 
 
   const handleChange = (e) => {
@@ -64,32 +66,32 @@ const EditUser = () => {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    const token = localStorage.getItem("jwtToken"); 
-    await axios.put(
-      `http://localhost:8080/driving-school-management/users/edit_User/${id}`,
-      form,
-      {
-        headers: {
-          Authorization: `Bearer ${token}` 
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem("jwtToken"); 
+      await axios.put(
+        `http://localhost:8080/driving-school-management/users/edit_User/${id}`,
+        form,
+        {
+          headers: {
+            Authorization: `Bearer ${token}` 
+          }
         }
-      }
-    );
-    alert("User updated successfully!");
-    navigate("/users");
-  } catch (err) {
-    console.error(err);
-    alert("Failed to update user");
-  }
-};
+      );
+      alert("Cập nhật người dùng thành công!");
+      navigate("/users");
+    } catch (err) {
+      console.error(err);
+      alert("Cập nhật người dùng thất bại");
+    }
+  };
 
-  if (loading) return <Typography>Loading user data...</Typography>;
+  if (loading) return <Typography>Đang tải dữ liệu người dùng...</Typography>;
 
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
       <Typography variant="h4" mb={3}>
-        Edit User
+        Chỉnh sửa người dùng
       </Typography>
       <Box
         component="form"
@@ -97,7 +99,7 @@ const EditUser = () => {
         sx={{ display: "flex", flexDirection: "column", gap: 2 }}
       >
         <TextField
-          label="Username"
+          label="Tên đăng nhập"
           name="username"
           value={form.username}
           onChange={handleChange}
@@ -105,9 +107,17 @@ const EditUser = () => {
           required
         />
         <TextField
-          label="Full Name"
-          name="fullName"
-          value={form.fullName}
+          label="Họ"
+          name="firstName"
+          value={form.firstName}
+          onChange={handleChange}
+          fullWidth
+          required
+        />
+        <TextField
+          label="Tên"
+          name="lastName"
+          value={form.lastName}
           onChange={handleChange}
           fullWidth
           required
@@ -129,17 +139,17 @@ const EditUser = () => {
               onChange={handleChange}
             />
           }
-          label="Is Active"
+          label="Đang hoạt động"
         />
         <Button variant="contained" color="primary" type="submit">
-          Update User
+          Cập nhật
         </Button>
         <Button
           variant="outlined"
           color="secondary"
           onClick={() => navigate("/users")}
         >
-          Cancel
+          Hủy
         </Button>
       </Box>
     </Container>

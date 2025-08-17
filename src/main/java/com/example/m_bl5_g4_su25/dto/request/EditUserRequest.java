@@ -14,7 +14,11 @@ public class EditUserRequest {
 
     @NotBlank
     @Size(max = 255)
-    private String fullName;
+    private String firstName;
+
+    @NotBlank
+    @Size(max = 255)
+    private String lastName;
 
     @NotBlank
     @Email

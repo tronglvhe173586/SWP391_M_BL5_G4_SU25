@@ -40,7 +40,8 @@ public class UserService implements IUserService {
                 .map(user -> new ListUserResponse(
                         user.getId(),
                         user.getUsername(),
-                        user.getFullName(),
+                        user.getFirstName(),
+                        user.getLastName(),
                         user.getEmail(),
                         user.getRole(),
                         user.getIsActive()
@@ -54,7 +55,8 @@ public class UserService implements IUserService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
 
         user.setUsername(request.getUsername());
-        user.setFullName(request.getFullName());
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
         user.setEmail(request.getEmail());
         user.setIsActive(request.getIsActive());
 
@@ -63,7 +65,8 @@ public class UserService implements IUserService {
         return new ListUserResponse(
                 updated.getId(),
                 updated.getUsername(),
-                updated.getFullName(),
+                updated.getFirstName(),
+                updated.getLastName(),
                 updated.getEmail(),
                 updated.getRole(),
                 updated.getIsActive()
@@ -76,7 +79,8 @@ public class UserService implements IUserService {
         user.setUsername(request.getUsername());
         user.setPasswordHash(request.getPasswordHash());
         user.setEmail(request.getEmail());
-        user.setFullName(request.getFullName());
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
         user.setRole("INSTRUCTOR");
         user.setIsActive(true);
         userRepository.save(user);
@@ -103,7 +107,8 @@ public class UserService implements IUserService {
         return userPage.map(user -> new ListUserResponse(
                 user.getId(),
                 user.getUsername(),
-                user.getFullName(),
+                user.getFirstName(),
+                user.getLastName(),
                 user.getEmail(),
                 user.getRole(),
                 user.getIsActive()
@@ -118,7 +123,8 @@ public class UserService implements IUserService {
         return new ListUserResponse(
                 user.getId(),
                 user.getUsername(),
-                user.getFullName(),
+                user.getFirstName(),
+                user.getLastName(),
                 user.getEmail(),
                 user.getRole(),
                 user.getIsActive()
@@ -131,7 +137,8 @@ public class UserService implements IUserService {
                 .username(request.getUsername())
                 .passwordHash(passwordEncoder.encode(request.getPassword()))
                 .email(request.getEmail())
-                .fullName(request.getFullName())
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
                 .role("LEARNER")
                 .isActive(true)
                 .build();
@@ -141,7 +148,8 @@ public class UserService implements IUserService {
         response.setId(user.getId());
         response.setUsername(user.getUsername());
         response.setEmail(user.getEmail());
-        response.setFullName(user.getFullName());
+        response.setFirstName(user.getFirstName());
+        response.setLastName(user.getLastName());
         response.setRole(user.getRole());
         return response;
     }

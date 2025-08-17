@@ -7,12 +7,12 @@ export default function UserManagement() {
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom>
-        User Management
+        Quản lý người dùng
       </Typography>
       <UserTable />
       <Link to="/add-instructor">
         <Button variant="contained" color="success" sx={{ mt: 10 }}>
-          Add Instructor
+          Thêm giảng viên
         </Button>
       </Link>
     </Container>

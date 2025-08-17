@@ -11,7 +11,8 @@ public class AddInstructorRequest {
     private String username;
     private String passwordHash;
     private String email;
-    private String fullName;
+    private String firstName;
+    private String lastName;
     private Boolean isActive;
 
     private String employeeId;
