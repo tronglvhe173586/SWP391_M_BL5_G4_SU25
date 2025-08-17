@@ -49,7 +49,9 @@ public class UserService implements IUserService {
                         user.getLastName(),
                         user.getEmail(),
                         user.getRole(),
-                        user.getIsActive()
+                        user.getIsActive(),
+                        user.getGender(),
+                        user.getDateOfBirth()
                 ))
                 .collect(Collectors.toList());
     }
@@ -74,26 +76,38 @@ public class UserService implements IUserService {
                 updated.getLastName(),
                 updated.getEmail(),
                 updated.getRole(),
-                updated.getIsActive()
+                updated.getIsActive(),
+                updated.getGender(),
+                updated.getDateOfBirth()
         );
     }
 
     @Override
     public void addInstructor(AddInstructorRequest request) {
+        Provinces province = null;
+        if (request.getProvinceId() != null) {
+            province = provinceRepository.findById(request.getProvinceId())
+                    .orElseThrow(() -> new RuntimeException("Province not found"));
+        }
         User user = new User();
         user.setUsername(request.getUsername());
         user.setPasswordHash(request.getPasswordHash());
         user.setEmail(request.getEmail());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
+        user.setProvince(province);
+        user.setGender(Gender.valueOf(request.getGender()));
+        user.setDateOfBirth(request.getDateOfBirth());
         user.setRole("INSTRUCTOR");
         user.setIsActive(true);
         userRepository.save(user);
 
         InstructorProfile profile = new InstructorProfile();
         profile.setUser(user);
-        profile.setEmployeeId(request.getEmployeeId());
+        profile.setEmployeeId(generateEmployeeId());
         profile.setHireDate(LocalDate.now());
+        profile.setAddress(request.getAddress());
+        profile.setPhoneNumber(request.getPhoneNumber());
         profile.setCertificationInfo(request.getCertificationInfo());
         instructorProfileRepository.save(profile);
     }
@@ -116,7 +130,9 @@ public class UserService implements IUserService {
                 user.getLastName(),
                 user.getEmail(),
                 user.getRole(),
-                user.getIsActive()
+                user.getIsActive(),
+                user.getGender(),
+                user.getDateOfBirth()
         ));
     }
 
@@ -132,7 +148,9 @@ public class UserService implements IUserService {
                 user.getLastName(),
                 user.getEmail(),
                 user.getRole(),
-                user.getIsActive()
+                user.getIsActive(),
+                user.getGender(),
+                user.getDateOfBirth()
         );
     }
 
@@ -168,5 +186,10 @@ public class UserService implements IUserService {
                 .provinceId(province.getId())
                 .provinceName(province.getName())
                 .build();
+    }
+    private String generateEmployeeId() {
+        long count = instructorProfileRepository.count() + 1;
+        String year = String.valueOf(LocalDate.now().getYear());
+        return "EMP" + year + String.format("%04d", count);
     }
 }

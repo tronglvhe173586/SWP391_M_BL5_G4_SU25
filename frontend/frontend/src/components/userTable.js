@@ -103,7 +103,7 @@ export default function UserTable() {
         columns={columns}
         paginationMode="server"
         rowCount={totalElements}
-        pageSizeOptions={[10, 20]}
+        pageSizeOptions={[10, 20, 50]}
         paginationModel={{ page, pageSize }}
         onPaginationModelChange={(model) => {
           setPage(model.page);

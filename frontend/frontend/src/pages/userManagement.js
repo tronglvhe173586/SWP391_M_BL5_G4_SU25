@@ -7,7 +7,7 @@ export default function UserManagement() {
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom>
-        Quản lý người dùng
+        Quản lý tài khoản
       </Typography>
       <UserTable />
       <Link to="/add-instructor">

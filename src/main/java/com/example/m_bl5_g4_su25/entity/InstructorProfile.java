@@ -35,8 +35,17 @@ public class InstructorProfile {
     @Column(name = "hire_date")
     private LocalDate hireDate;
 
+    @Size(max = 255)
+    @Column(name = "address")
+    private String address;
+
+    @Size(max = 255)
+    @Column(name = "phone_number", length = 20)
+    private String phoneNumber;
+
     @Lob
     @Column(name = "certification_info")
     private String certificationInfo;
+
 
 }

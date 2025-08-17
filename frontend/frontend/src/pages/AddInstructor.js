@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   TextField,
@@ -7,6 +7,8 @@ import {
   Box,
   MenuItem,
   Select,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -20,9 +22,23 @@ export default function AddInstructor() {
     email: "",
     firstName: "",
     lastName: "",
-    employeeId: "",
+    gender: "Nam", // mặc định Enum Nam
+    provinceId: "", // id tỉnh
+    address: "",
+    phoneNumber: "",
     certificationInfo: "Bằng lái hạng A1",
+    dateOfBirth: "", // 👈 thêm ngày sinh
   });
+
+  const [provinces, setProvinces] = useState([]);
+
+  // Lấy danh sách provinces từ backend
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/driving-school-management/provinces")
+      .then((res) => setProvinces(res.data))
+      .catch((err) => console.error("Error loading provinces:", err));
+  }, []);
 
   const handleChange = (e) => {
     setForm({
@@ -52,13 +68,17 @@ export default function AddInstructor() {
         email: "",
         firstName: "",
         lastName: "",
-        employeeId: "",
+        gender: "Nam",
+        provinceId: "",
+        address: "",
+        phoneNumber: "",
         certificationInfo: "",
+        dateOfBirth: "", // reset ngày sinh
       });
       navigate("/users");
     } catch (error) {
       console.error(error);
-      alert("Thêm giảng viên thất bại!");
+      alert("Thêm giảng viên thất bại! Vui lòng kiểm tra lại username, email.");
     }
   };
 
@@ -109,28 +129,84 @@ export default function AddInstructor() {
           onChange={handleChange}
           required
         />
+
+        {/* Gender */}
+        <FormControl fullWidth>
+          <InputLabel>Giới tính</InputLabel>
+          <Select
+            name="gender"
+            value={form.gender}
+            onChange={handleChange}
+            label="Giới tính"
+          >
+            <MenuItem value="Nam">Nam</MenuItem>
+            <MenuItem value="Nữ">Nữ</MenuItem>
+          </Select>
+        </FormControl>
+
+        {/* Date of Birth */}
         <TextField
-          label="Mã nhân viên"
-          name="employeeId"
-          value={form.employeeId}
+          label="Ngày sinh"
+          name="dateOfBirth"
+          type="date"
+          InputLabelProps={{ shrink: true }}
+          value={form.dateOfBirth}
           onChange={handleChange}
           required
         />
 
-        <Select
-          name="certificationInfo"
-          value={form.certificationInfo}
+        {/* Province */}
+        <FormControl fullWidth>
+          <InputLabel>Tỉnh/Thành phố</InputLabel>
+          <Select
+            name="provinceId"
+            value={form.provinceId}
+            onChange={handleChange}
+            label="Tỉnh/Thành phố"
+            required
+          >
+            {provinces.map((p) => (
+              <MenuItem key={p.id} value={p.id}>
+                {p.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <TextField
+          label="Địa chỉ"
+          name="address"
+          value={form.address}
           onChange={handleChange}
-        >
-          <MenuItem value="Bằng lái hạng A1">Bằng lái hạng A1</MenuItem>
-          <MenuItem value="Bằng lái hạng A2">Bằng lái hạng A2</MenuItem>
-          <MenuItem value="Bằng lái hạng B1">Bằng lái hạng B1</MenuItem>
-          <MenuItem value="Bằng lái hạng B2">Bằng lái hạng B2</MenuItem>
-          <MenuItem value="Bằng lái hạng C">Bằng lái hạng C</MenuItem>
-          <MenuItem value="Bằng lái hạng D">Bằng lái hạng D</MenuItem>
-          <MenuItem value="Bằng lái hạng E">Bằng lái hạng E</MenuItem>
-          <MenuItem value="Bằng lái hạng F">Bằng lái hạng F</MenuItem>
-        </Select>
+          required
+        />
+        <TextField
+          label="Số điện thoại"
+          name="phoneNumber"
+          value={form.phoneNumber}
+          onChange={handleChange}
+          required
+        />
+
+        {/* Certification */}
+        <FormControl fullWidth>
+          <InputLabel>Chứng chỉ</InputLabel>
+          <Select
+            name="certificationInfo"
+            value={form.certificationInfo}
+            onChange={handleChange}
+          >
+            <MenuItem value="Bằng lái hạng A1">Bằng lái hạng A1</MenuItem>
+            <MenuItem value="Bằng lái hạng A2">Bằng lái hạng A2</MenuItem>
+            <MenuItem value="Bằng lái hạng B1">Bằng lái hạng B1</MenuItem>
+            <MenuItem value="Bằng lái hạng B2">Bằng lái hạng B2</MenuItem>
+            <MenuItem value="Bằng lái hạng C">Bằng lái hạng C</MenuItem>
+            <MenuItem value="Bằng lái hạng D">Bằng lái hạng D</MenuItem>
+            <MenuItem value="Bằng lái hạng E">Bằng lái hạng E</MenuItem>
+            <MenuItem value="Bằng lái hạng F">Bằng lái hạng F</MenuItem>
+          </Select>
+        </FormControl>
+
         <Button type="submit" variant="contained">
           Thêm Giảng Viên
         </Button>

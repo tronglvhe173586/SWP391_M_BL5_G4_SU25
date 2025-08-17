@@ -8,7 +8,7 @@ import {
   Card,
   CardContent,
   Grid,
-  Chip
+  Chip,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
@@ -16,6 +16,8 @@ import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
 import WorkIcon from "@mui/icons-material/Work";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
+import WcIcon from "@mui/icons-material/Wc";
+import CakeIcon from "@mui/icons-material/Cake";
 
 export default function UserDetails() {
   const { id } = useParams();
@@ -37,13 +39,15 @@ export default function UserDetails() {
         );
 
         setUser({
+          id: res.data.id,
           username: res.data.username,
-          fullName: res.data.fullName,
+          firstName: res.data.firstName,
+          lastName: res.data.lastName,
           email: res.data.email,
           role: res.data.role,
           isActive: res.data.isActive,
-          createdAt: res.data.createdAt,
-          updatedAt: res.data.updatedAt,
+          gender: res.data.gender,
+          dateOfBirth: res.data.dateOfBirth,
         });
 
         setLoading(false);
@@ -77,28 +81,36 @@ export default function UserDetails() {
             <Grid item xs={12}>
               <Box display="flex" alignItems="center" gap={1}>
                 <PersonIcon color="primary" />
-                <Typography><b>Tên tài khoản:</b> {user.username}</Typography>
+                <Typography>
+                  <b>Tên tài khoản:</b> {user.username}
+                </Typography>
               </Box>
             </Grid>
 
             <Grid item xs={12}>
               <Box display="flex" alignItems="center" gap={1}>
                 <PersonIcon color="secondary" />
-                <Typography><b>Họ tên:</b> {user.fullName}</Typography>
+                <Typography>
+                  <b>Họ:</b> {user.firstName} | <b>Tên:</b> {user.lastName}
+                </Typography>
               </Box>
             </Grid>
 
             <Grid item xs={12}>
               <Box display="flex" alignItems="center" gap={1}>
                 <EmailIcon color="action" />
-                <Typography><b>Email:</b> {user.email}</Typography>
+                <Typography>
+                  <b>Email:</b> {user.email}
+                </Typography>
               </Box>
             </Grid>
 
             <Grid item xs={12}>
               <Box display="flex" alignItems="center" gap={1}>
                 <WorkIcon color="success" />
-                <Typography><b>Vai trò:</b> {user.role}</Typography>
+                <Typography>
+                  <b>Vai trò:</b> {user.role}
+                </Typography>
               </Box>
             </Grid>
 
@@ -112,6 +124,27 @@ export default function UserDetails() {
                     color={user.isActive ? "success" : "error"}
                     size="small"
                   />
+                </Typography>
+              </Box>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Box display="flex" alignItems="center" gap={1}>
+                <WcIcon color="info" />
+                <Typography>
+                  <b>Giới tính:</b> {user.gender}
+                </Typography>
+              </Box>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Box display="flex" alignItems="center" gap={1}>
+                <CakeIcon color="warning" />
+                <Typography>
+                  <b>Ngày sinh:</b>{" "}
+                  {user.dateOfBirth
+                    ? new Date(user.dateOfBirth).toLocaleDateString("vi-VN")
+                    : "Chưa có"}
                 </Typography>
               </Box>
             </Grid>
