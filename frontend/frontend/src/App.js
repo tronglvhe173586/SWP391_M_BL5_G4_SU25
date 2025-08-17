@@ -15,6 +15,7 @@ import ClassManagement from './pages/ClassManagement';
 import AddClass from './pages/AddClass';
 import ViewClass from './pages/ViewClass';
 import EditClass from './pages/EditClass';
+import ClassLearners from './pages/ClassLearners';
 import Authenticate from "./pages/Authenticate.js";
 
 
@@ -34,6 +35,7 @@ function App() {
         <Route path="/add-class" element={<AddClass />} />
         <Route path="/view-class/:id" element={<ViewClass />} />
         <Route path="/edit-class/:id" element={<EditClass />} />
+        <Route path="/class/:id/learners" element={<ClassLearners />} />
 
         <Route path="/users/edit/:id" element={<EditUser />} />
         <Route path="/exams" element={<ExamList />} />
