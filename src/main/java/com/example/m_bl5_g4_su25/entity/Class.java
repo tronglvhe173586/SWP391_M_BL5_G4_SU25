@@ -17,12 +17,11 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "Classes")
-
 public class Class {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "class_id", nullable = false)
-    private Long id;
+    private Long classId;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -55,13 +54,12 @@ public class Class {
     @Column(name = "current_students_count")
     private Integer currentStudentsCount;
 
-    @OneToMany(mappedBy = "classField")
+    @OneToMany(mappedBy = "clazz")
     private Set<Enrollment> enrollments = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "classField")
+    @OneToMany(mappedBy = "clazz")
     private Set<ExamSchedule> examSchedules = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "classField")
+    @OneToMany(mappedBy = "clazz")
     private Set<Schedule> schedules = new LinkedHashSet<>();
-
 }

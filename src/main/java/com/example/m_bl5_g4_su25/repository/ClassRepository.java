@@ -4,10 +4,13 @@
  */
 package com.example.m_bl5_g4_su25.repository;
 
-/**
- *
- * @author Maxim
- */
-public class ClassRepository {
-    
+import com.example.m_bl5_g4_su25.entity.Class;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface ClassRepository extends JpaRepository<Class, Long> {
+    List<Class> findByInstructorUserId(Long instructorId);
 }
