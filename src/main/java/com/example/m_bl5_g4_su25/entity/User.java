@@ -1,12 +1,15 @@
 package com.example.m_bl5_g4_su25.entity;
 
+import com.example.m_bl5_g4_su25.enums.Gender;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -17,7 +20,6 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +28,7 @@ public class User {
 
     @Size(max = 255)
     @NotNull
-    @Column(name = "username", nullable = false)
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
 
     @Size(max = 255)
@@ -35,20 +37,31 @@ public class User {
     private String passwordHash;
 
     @Size(max = 255)
-    @NotNull
-    @Column(name = "email", nullable = false)
+    @NotBlank
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Size(max = 255)
-    @NotNull
+    @NotBlank
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
     @Size(max = 255)
-    @NotNull
+    @NotBlank
     @Column(name = "last_name", nullable = false)
     private String lastName;
-    
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender", nullable = false)
+    private Gender gender;
+
+    @Column(name = "date_of_birth")
+    private LocalDate dateOfBirth;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "province_id")
+    private Provinces province;
+
     @NotNull
     @Lob
     @Column(name = "role", nullable = false)
@@ -56,16 +69,17 @@ public class User {
 
     @ColumnDefault("1")
     @Column(name = "is_active")
-    private Boolean isActive;
+    private Boolean isActive = true;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false, insertable = false)
     private Instant createdAt;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", insertable = false)
     private Instant updatedAt;
 
+    // Quan hệ với các bảng khác
     @OneToMany(mappedBy = "instructor")
     private Set<Class> classes = new LinkedHashSet<>();
 
@@ -86,5 +100,4 @@ public class User {
 
     @OneToOne(mappedBy = "user")
     private LearnerProfile learnerProfile;
-
 }

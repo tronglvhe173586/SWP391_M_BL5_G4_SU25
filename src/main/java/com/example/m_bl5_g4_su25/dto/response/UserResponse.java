@@ -3,6 +3,8 @@ package com.example.m_bl5_g4_su25.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -15,4 +17,8 @@ public class UserResponse {
     String lastName;
     String email;
     String role;
+    String gender;
+    LocalDate dateOfBirth;
+    Long provinceId;
+    String provinceName;
 }

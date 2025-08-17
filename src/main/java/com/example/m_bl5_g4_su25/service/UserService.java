@@ -6,8 +6,11 @@ import com.example.m_bl5_g4_su25.dto.request.UserCreationRequest;
 import com.example.m_bl5_g4_su25.dto.response.ListUserResponse;
 import com.example.m_bl5_g4_su25.dto.response.UserResponse;
 import com.example.m_bl5_g4_su25.entity.InstructorProfile;
+import com.example.m_bl5_g4_su25.entity.Provinces;
 import com.example.m_bl5_g4_su25.entity.User;
+import com.example.m_bl5_g4_su25.enums.Gender;
 import com.example.m_bl5_g4_su25.repository.InstructorProfileRepository;
+import com.example.m_bl5_g4_su25.repository.ProvinceRepository;
 import com.example.m_bl5_g4_su25.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
@@ -27,11 +30,13 @@ public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final InstructorProfileRepository instructorProfileRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ProvinceRepository provinceRepository;
 
-    public UserService(UserRepository userRepository, InstructorProfileRepository instructorProfileRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, InstructorProfileRepository instructorProfileRepository, PasswordEncoder passwordEncoder, ProvinceRepository provinceRepository) {
         this.userRepository = userRepository;
         this.instructorProfileRepository = instructorProfileRepository;
         this.passwordEncoder = passwordEncoder;
+        this.provinceRepository = provinceRepository;
     }
 
     @Override
@@ -133,24 +138,35 @@ public class UserService implements IUserService {
 
     @Override
     public UserResponse register(UserCreationRequest request) {
+        Provinces province = null;
+        if (request.getProvinceId() != null) {
+            province = provinceRepository.findById(request.getProvinceId())
+                    .orElseThrow(() -> new RuntimeException("Province not found"));
+        }
+
         User user = User.builder()
                 .username(request.getUsername())
                 .passwordHash(passwordEncoder.encode(request.getPassword()))
                 .email(request.getEmail())
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
+                .gender(Gender.valueOf(request.getGender()))
+                .dateOfBirth(request.getDateOfBirth())
+                .province(province)
                 .role("LEARNER")
                 .isActive(true)
                 .build();
+
         user = userRepository.save(user);
 
-        UserResponse response = new UserResponse();
-        response.setId(user.getId());
-        response.setUsername(user.getUsername());
-        response.setEmail(user.getEmail());
-        response.setFirstName(user.getFirstName());
-        response.setLastName(user.getLastName());
-        response.setRole(user.getRole());
-        return response;
+        return UserResponse.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .gender(user.getGender().name()) // nếu enum
+                .dateOfBirth(user.getDateOfBirth())
+                .provinceId(province.getId())
+                .provinceName(province.getName())
+                .build();
     }
 }

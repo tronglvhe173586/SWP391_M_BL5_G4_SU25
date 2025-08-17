@@ -3,6 +3,8 @@ package com.example.m_bl5_g4_su25.dto.request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -14,4 +16,7 @@ public class UserCreationRequest {
     String email;
     String firstName;
     String lastName;
+    String gender;
+    LocalDate dateOfBirth;
+    Long provinceId;
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage.js";
 import ResponsiveAppBar from "./components/ResponsiveAppBar.js";
 import UserManagement from "./pages/userManagement.js";
 import AddInstructor from "./pages/AddInstructor.js";
@@ -40,8 +41,6 @@ function App() {
         <Route path="/exams/edit/:id" element={<EditExam />} />
           <Route path="/register" element={<Register />} />
           <Route path="/users/:id" element={<UserDetails />} />
-          <Route path="/login" element={<Login />} />
-
       </Routes>
     </Router>
   );

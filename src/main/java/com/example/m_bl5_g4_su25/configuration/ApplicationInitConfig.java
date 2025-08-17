@@ -1,6 +1,7 @@
 package com.example.m_bl5_g4_su25.configuration;
 
 import com.example.m_bl5_g4_su25.entity.User;
+import com.example.m_bl5_g4_su25.enums.Gender;
 import com.example.m_bl5_g4_su25.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -33,10 +34,13 @@ public class ApplicationInitConfig {
                 var roles = new HashSet<String>();
                 User user = User.builder()
                         .username("admin")
-//                        .fullName("Administrator")
-                        .email("admin@example.com")
-                        .role("ADMIN")
                         .passwordHash(passwordEncoder.encode("admin"))
+                        .email("admin@example.com")
+                        .firstName("System")
+                        .lastName("Admin")
+                        .gender(Gender.valueOf("Nam"))
+                        .role("ADMIN")
+                        .isActive(true)
                         .build();
                 userRepository.save(user);
                 log.warn("admin user has been created with default password: admin, please change it!");
