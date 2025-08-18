@@ -21,7 +21,7 @@ public class Class {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "class_id", nullable = false)
-    private Long classId;
+    private Long id;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -53,6 +53,10 @@ public class Class {
     @ColumnDefault("0")
     @Column(name = "current_students_count")
     private Integer currentStudentsCount;
+
+    @ColumnDefault("0")
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
 
     @OneToMany(mappedBy = "clazz")
     private Set<Enrollment> enrollments = new LinkedHashSet<>();

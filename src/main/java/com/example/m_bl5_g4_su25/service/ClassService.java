@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.example.m_bl5_g4_su25.service;
 
 import com.example.m_bl5_g4_su25.dto.request.AddClassRequest;
@@ -34,77 +30,59 @@ public class ClassService implements IClassService {
 
     @Override
     public List<ClassResponse> listClasses(Long instructorId) {
-        List<Class> classes = instructorId != null 
-            ? classRepository.findByInstructorUserId(instructorId) 
-            : classRepository.findAll();
+        List<Class> classes = (instructorId != null) ? classRepository.findByInstructorId(instructorId) : classRepository.findByIsDeletedFalse();
         return classes.stream().map(this::mapToResponse).collect(Collectors.toList());
     }
 
     @Override
     public ClassResponse addClass(AddClassRequest request) {
-        validateDates(request.getStartDate(), request.getEndDate());
-        validateMaxStudents(request.getMaxStudents());
-
-        Class newClass = new Class();
-        Course course = courseRepository.findById(request.getCourseId())
-            .orElseThrow(() -> new RuntimeException("Course not found"));
-        User instructor = userRepository.findById(request.getInstructorId())
-            .orElseThrow(() -> new RuntimeException("Instructor not found"));
-
-        newClass.setCourse(course);
-        newClass.setClassName(request.getClassName());
-        newClass.setStartDate(request.getStartDate());
-        newClass.setEndDate(request.getEndDate());
-        newClass.setMaxStudents(request.getMaxStudents());
-        newClass.setInstructor(instructor);
-
-        Class saved = classRepository.save(newClass);
+        validateRequest(request);
+        Class clazz = new Class();
+        clazz.setCourse(courseRepository.findById(request.getCourseId()).orElseThrow(() -> new RuntimeException("Course not found")));
+        clazz.setClassName(request.getClassName());
+        clazz.setStartDate(request.getStartDate());
+        clazz.setEndDate(request.getEndDate());
+        clazz.setMaxStudents(request.getMaxStudents());
+        clazz.setInstructor(userRepository.findById(request.getInstructorId()).orElseThrow(() -> new RuntimeException("Instructor not found")));
+        clazz.setIsDeleted(false);
+        Class saved = classRepository.save(clazz);
         return mapToResponse(saved);
     }
 
     @Override
     public ClassResponse getClassById(Long id) {
-        Class clazz = classRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Class not found"));
+        Class clazz = classRepository.findById(id).orElseThrow(() -> new RuntimeException("Class not found"));
         return mapToResponse(clazz);
     }
 
     @Override
     public ClassResponse editClass(Long id, EditClassRequest request) {
-        Class clazz = classRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Class not found"));
-
+        Class clazz = classRepository.findById(id).orElseThrow(() -> new RuntimeException("Class not found"));
         if (request.getCourseId() != null) {
-            Course course = courseRepository.findById(request.getCourseId())
-                .orElseThrow(() -> new RuntimeException("Course not found"));
-            clazz.setCourse(course);
+            clazz.setCourse(courseRepository.findById(request.getCourseId()).orElseThrow(() -> new RuntimeException("Course not found")));
         }
         if (request.getClassName() != null) {
             clazz.setClassName(request.getClassName());
         }
-        if (request.getStartDate() != null && request.getEndDate() != null) {
-            validateDates(request.getStartDate(), request.getEndDate());
-            clazz.setStartDate(request.getStartDate());
-            clazz.setEndDate(request.getEndDate());
-        } else if (request.getStartDate() != null) {
-            validateDates(request.getStartDate(), clazz.getEndDate());
-            clazz.setStartDate(request.getStartDate());
-        } else if (request.getEndDate() != null) {
-            validateDates(clazz.getStartDate(), request.getEndDate());
-            clazz.setEndDate(request.getEndDate());
-        }
+        LocalDate startDate = request.getStartDate() != null ? request.getStartDate() : clazz.getStartDate();
+        LocalDate endDate = request.getEndDate() != null ? request.getEndDate() : clazz.getEndDate();
+        validateDates(startDate, endDate);
+        clazz.setStartDate(startDate);
+        clazz.setEndDate(endDate);
         if (request.getMaxStudents() != null) {
             validateMaxStudents(request.getMaxStudents());
             clazz.setMaxStudents(request.getMaxStudents());
         }
         if (request.getInstructorId() != null) {
-            User instructor = userRepository.findById(request.getInstructorId())
-                .orElseThrow(() -> new RuntimeException("Instructor not found"));
-            clazz.setInstructor(instructor);
+            clazz.setInstructor(userRepository.findById(request.getInstructorId()).orElseThrow(() -> new RuntimeException("Instructor not found")));
         }
-
         Class updated = classRepository.save(clazz);
         return mapToResponse(updated);
+    }
+
+    private void validateRequest(AddClassRequest request) {
+        validateDates(request.getStartDate(), request.getEndDate());
+        validateMaxStudents(request.getMaxStudents());
     }
 
     private void validateDates(LocalDate startDate, LocalDate endDate) {
@@ -121,14 +99,14 @@ public class ClassService implements IClassService {
 
     private ClassResponse mapToResponse(Class clazz) {
         ClassResponse response = new ClassResponse();
-        response.setClassId(clazz.getClassId());
-        response.setCourseId(clazz.getCourse().getCourseId());
+        response.setClassId(clazz.getId());
+        response.setCourseId(clazz.getCourse().getId());
         response.setClassName(clazz.getClassName());
         response.setStartDate(clazz.getStartDate());
         response.setEndDate(clazz.getEndDate());
         response.setMaxStudents(clazz.getMaxStudents());
-        response.setInstructorId(clazz.getInstructor() != null ? clazz.getInstructor().getUserId() : null);
-        response.setInstructorName(clazz.getInstructor() != null ? clazz.getInstructor().getFullName() : null);
+        response.setInstructorId(clazz.getInstructor() != null ? clazz.getInstructor().getId() : null);
+        response.setInstructorName(clazz.getInstructor() != null ? clazz.getInstructor().getFirstName() + " " + clazz.getInstructor().getLastName() : null);
         response.setCurrentStudentsCount(clazz.getCurrentStudentsCount());
         return response;
     }
