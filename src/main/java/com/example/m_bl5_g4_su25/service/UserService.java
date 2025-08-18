@@ -181,7 +181,7 @@ public class UserService implements IUserService {
                 .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
-                .gender(user.getGender().name()) // nếu enum
+                .gender(user.getGender().name())
                 .dateOfBirth(user.getDateOfBirth())
                 .provinceId(province.getId())
                 .provinceName(province.getName())

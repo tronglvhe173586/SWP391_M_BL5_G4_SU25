@@ -24,7 +24,7 @@ function App() {
     <Router>
       <ResponsiveAppBar />
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/users" element={<UserManagement />} />
         <Route path="/add-instructor" element={<AddInstructor />} />
