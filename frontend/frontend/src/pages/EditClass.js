@@ -9,20 +9,52 @@ const EditClass = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/api/classes/${id}`)
-      .then(response => setFormData(response.data))
-      .catch(error => console.error('Error fetching class:', error));
+    const fetchClass = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('No authentication token found. Please login.');
+        return;
+      }
+
+      try {
+        const response = await axios.get(`http://localhost:8080/driving-school-management/api/classes/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        setFormData(response.data);
+      } catch (error) {
+        alert('Error fetching class: ' + (error.response ? error.response.data.message : error.message));
+        console.error('Fetch class error:', error);
+      }
+    };
+
+    fetchClass();
   }, [id]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    axios.put(`http://localhost:8080/api/classes/${id}`, formData)
-      .then(() => navigate('/class-management'))
-      .catch(error => console.error('Error editing class:', error));
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('No authentication token found. Please login.');
+      return;
+    }
+
+    try {
+      await axios.put(`http://localhost:8080/driving-school-management/api/classes/${id}`, formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      navigate('/class-management');
+    } catch (error) {
+      alert('Error editing class: ' + (error.response ? error.response.data.message : error.message));
+      console.error('Edit class error:', error);
+    }
   };
 
   return (

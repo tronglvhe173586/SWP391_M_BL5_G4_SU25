@@ -8,10 +8,26 @@ const ClassManagement = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch classes from backend (mock if backend not ready)
-    axios.get('http://localhost:8080/api/classes')
-      .then(response => setClasses(response.data))
-      .catch(error => console.error('Error fetching classes:', error));
+    const fetchClasses = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No authentication token found. Please login.');
+        return;
+      }
+
+      try {
+        const response = await axios.get('http://localhost:8080/driving-school-management/api/classes', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        setClasses(response.data);
+      } catch (error) {
+        console.error('Error fetching classes:', error.response ? error.response.data : error.message);
+      }
+    };
+
+    fetchClasses();
   }, []);
 
   return (

@@ -18,14 +18,25 @@ const AddClass = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    axios.post('http://localhost:8080/api/classes', formData)
-      .then(response => {
-        console.log('Class added:', response.data);
-        navigate('/class-management');
-      })
-      .catch(error => console.error('Error adding class:', error));
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('No authentication token found. Please login.');
+      return;
+    }
+
+    try {
+      await axios.post('http://localhost:8080/driving-school-management/api/classes', formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      navigate('/class-management');
+    } catch (error) {
+      alert('Error adding class: ' + (error.response ? error.response.data.message : error.message));
+      console.error('Add class error:', error);
+    }
   };
 
   return (
