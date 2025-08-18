@@ -7,12 +7,12 @@ export default function ExamList() {
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom>
-        Exam Management
+        Quản lý bài thi
       </Typography>
       <ExamTable />
       <Link to="/exams/add">
         <Button variant="contained" color="success" sx={{ mt: 10 }}>
-          Add Exam
+          Tạo bài thi
         </Button>
       </Link>
     </Container>

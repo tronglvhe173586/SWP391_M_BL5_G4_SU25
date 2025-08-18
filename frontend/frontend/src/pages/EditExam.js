@@ -25,14 +25,22 @@ const EditExam = () => {
 
   const [loading, setLoading] = useState(true);
 
-  // Fetch exam data
+  // Lấy thông tin kỳ thi
   useEffect(() => {
     const fetchExam = async () => {
       try {
+        const token = localStorage.getItem("jwtToken");
         console.log("Fetching exam with ID:", id);
+
         const res = await axios.get(
-          `http://localhost:8080/driving-school-management/exams/${id}`
+          `http://localhost:8080/driving-school-management/exams/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
         );
+
         console.log("Exam data received:", res.data);
         setForm({
           examName: res.data.examName,
@@ -43,7 +51,7 @@ const EditExam = () => {
       } catch (err) {
         console.error("Error fetching exam:", err);
         console.error("Error response:", err.response?.data);
-        alert(`Failed to fetch exam data: ${err.response?.data?.message || err.message}`);
+        alert(`Không thể tải dữ liệu kỳ thi: ${err.response?.data?.message || err.message}`);
         setLoading(false);
       }
     };
@@ -69,27 +77,35 @@ const EditExam = () => {
         passScore: parseInt(form.passScore)
       };
       console.log("Sending update data:", updateData);
-      
+
+      const token = localStorage.getItem("jwtToken");
+
       const res = await axios.put(
         `http://localhost:8080/driving-school-management/exams/${id}`,
-        updateData
+        updateData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
       );
+
       console.log("Update response:", res.data);
-      alert("Exam updated successfully!");
+      alert("Cập nhật kỳ thi thành công!");
       navigate("/exams");
     } catch (err) {
       console.error("Error updating exam:", err);
       console.error("Error response:", err.response?.data);
-      alert(`Failed to update exam: ${err.response?.data?.message || err.message}`);
+      alert(`Cập nhật kỳ thi thất bại: ${err.response?.data?.message || err.message}`);
     }
   };
 
-  if (loading) return <Typography>Loading exam data...</Typography>;
+  if (loading) return <Typography>Đang tải dữ liệu kỳ thi...</Typography>;
 
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
       <Typography variant="h4" mb={3}>
-        Edit Exam
+        Chỉnh sửa kỳ thi
       </Typography>
       <Box
         component="form"
@@ -97,31 +113,31 @@ const EditExam = () => {
         sx={{ display: "flex", flexDirection: "column", gap: 2 }}
       >
         <TextField
-          label="Exam Name"
+          label="Tên kỳ thi"
           name="examName"
           value={form.examName}
           onChange={handleChange}
           fullWidth
           required
         />
-        
+
         <FormControl fullWidth>
-          <InputLabel>Exam Type</InputLabel>
+          <InputLabel>Loại kỳ thi</InputLabel>
           <Select
             name="examType"
             value={form.examType}
             onChange={handleChange}
-            label="Exam Type"
+            label="Loại kỳ thi"
           >
-            <MenuItem value="THEORY">Theory</MenuItem>
-            <MenuItem value="SIMULATION">Simulation</MenuItem>
-            <MenuItem value="PRACTICAL">Practical</MenuItem>
-            <MenuItem value="ON_THE_ROAD">On The Road</MenuItem>
+            <MenuItem value="THEORY">Lý thuyết</MenuItem>
+            <MenuItem value="SIMULATION">Mô phỏng</MenuItem>
+            <MenuItem value="PRACTICAL">Thực hành</MenuItem>
+            <MenuItem value="ON_THE_ROAD">Đường trường</MenuItem>
           </Select>
         </FormControl>
 
         <TextField
-          label="Pass Score"
+          label="Điểm đạt"
           name="passScore"
           type="number"
           value={form.passScore}
@@ -130,16 +146,16 @@ const EditExam = () => {
           required
           inputProps={{ min: 0, max: 100 }}
         />
-        
+
         <Button variant="contained" color="primary" type="submit">
-          Update Exam
+          Cập nhật
         </Button>
         <Button
           variant="outlined"
           color="secondary"
           onClick={() => navigate("/exams")}
         >
-          Cancel
+          Hủy
         </Button>
       </Box>
     </Container>

@@ -3,6 +3,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { Paper, TextField, Box } from "@mui/material";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { viVN } from "@mui/x-data-grid/locales";
 import axios from "axios";
 
 export default function ExamTable() {
@@ -13,25 +14,25 @@ export default function ExamTable() {
 
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
-    { field: "examName", headerName: "Exam Name", width: 200 },
+    { field: "examName", headerName: "Tên kỳ thi", width: 200 },
     { 
       field: "examType", 
-      headerName: "Exam Type", 
+      headerName: "Loại kỳ thi", 
       width: 150,
       renderCell: (params) => {
         const typeMap = {
-          'THEORY': 'Theory',
-          'SIMULATION': 'Simulation',
-          'PRACTICAL': 'Practical',
-          'ON_THE_ROAD': 'On The Road'
+          'THEORY': 'Lý thuyết',
+          'SIMULATION': 'Mô phỏng',
+          'PRACTICAL': 'Thực hành',
+          'ON_THE_ROAD': 'Đường trường'
         };
         return typeMap[params.value] || params.value;
       }
     },
-    { field: "passScore", headerName: "Pass Score", width: 120 },
+    { field: "passScore", headerName: "Điểm đạt", width: 120 },
     {
       field: "actions",
-      headerName: "Actions",
+      headerName: "Hành động",
       width: 150,
       renderCell: (params) => (
         <Button
@@ -40,7 +41,7 @@ export default function ExamTable() {
           size="small"
           onClick={() => navigate(`/exams/edit/${params.row.id}`)}
         >
-          Edit
+          Sửa
         </Button>
       )
     }
@@ -49,10 +50,16 @@ export default function ExamTable() {
   const fetchExams = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("http://localhost:8080/driving-school-management/exams");
+      const token = localStorage.getItem("jwtToken");
+      const res = await axios.get("http://localhost:8080/driving-school-management/exams", 
+        {
+           headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      
       setExams(res.data);
     } catch (err) {
-      console.error("Error fetching exams:", err);
+      console.error("Lỗi khi lấy danh sách kỳ thi:", err);
     }
     setLoading(false);
   };
@@ -61,7 +68,7 @@ export default function ExamTable() {
     fetchExams();
   }, []);
 
-  // Filter exams based on keyword
+  // Lọc kỳ thi theo từ khóa
   const filteredExams = exams.filter(exam =>
     exam.examName.toLowerCase().includes(keyword.toLowerCase()) ||
     exam.examType.toLowerCase().includes(keyword.toLowerCase())
@@ -71,7 +78,7 @@ export default function ExamTable() {
     <Paper sx={{ height: 500, width: "100%" }}>
       <Box sx={{ p: 2 }}>
         <TextField
-          label="Search"
+          label="Tìm kiếm"
           variant="outlined"
           size="small"
           value={keyword}
@@ -90,6 +97,7 @@ export default function ExamTable() {
         }}
         loading={loading}
         disableRowSelectionOnClick
+        localeText={viVN.components.MuiDataGrid.defaultProps.localeText}
       />
     </Paper>
   );

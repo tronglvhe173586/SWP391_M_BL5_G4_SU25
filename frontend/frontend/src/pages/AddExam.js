@@ -22,15 +22,19 @@ export default function AddExam() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const token = localStorage.getItem("jwtToken");
       await axios.post(
         "http://localhost:8080/driving-school-management/exams",
         {
           examName: form.examName,
           examType: form.examType,
           passScore: parseInt(form.passScore)
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-      alert("Exam added successfully!");
+      alert("Thêm kỳ thi thành công!");
       setForm({
         examName: "",
         examType: "THEORY",
@@ -39,14 +43,14 @@ export default function AddExam() {
       navigate("/exams");
     } catch (error) {
       console.error(error);
-      alert("Failed to add exam");
+      alert("Thêm kỳ thi thất bại!");
     }
   };
 
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom>
-        Add Exam
+        Thêm kỳ thi
       </Typography>
       <Box
         component="form"
@@ -54,7 +58,7 @@ export default function AddExam() {
         sx={{ display: "flex", flexDirection: "column", gap: 2 }}
       >
         <TextField
-          label="Exam Name"
+          label="Tên kỳ thi"
           name="examName"
           value={form.examName}
           onChange={handleChange}
@@ -63,22 +67,22 @@ export default function AddExam() {
         />
         
         <FormControl fullWidth>
-          <InputLabel>Exam Type</InputLabel>
+          <InputLabel>Loại kỳ thi</InputLabel>
           <Select
             name="examType"
             value={form.examType}
             onChange={handleChange}
-            label="Exam Type"
+            label="Loại kỳ thi"
           >
-            <MenuItem value="THEORY">Theory</MenuItem>
-            <MenuItem value="SIMULATION">Simulation</MenuItem>
-            <MenuItem value="PRACTICAL">Practical</MenuItem>
-            <MenuItem value="ON_THE_ROAD">On The Road</MenuItem>
+            <MenuItem value="THEORY">Lý thuyết</MenuItem>
+            <MenuItem value="SIMULATION">Mô phỏng</MenuItem>
+            <MenuItem value="PRACTICAL">Thực hành</MenuItem>
+            <MenuItem value="ON_THE_ROAD">Đường trường</MenuItem>
           </Select>
         </FormControl>
 
         <TextField
-          label="Pass Score"
+          label="Điểm đạt"
           name="passScore"
           value={form.passScore}
           onChange={handleChange}
@@ -89,7 +93,7 @@ export default function AddExam() {
         />
 
         <Button type="submit" variant="contained" color="primary">
-          Add Exam
+          Thêm
         </Button>
         
         <Button
@@ -97,7 +101,7 @@ export default function AddExam() {
           color="secondary"
           onClick={() => navigate("/exams")}
         >
-          Cancel
+          Hủy
         </Button>
       </Box>
     </Container>
