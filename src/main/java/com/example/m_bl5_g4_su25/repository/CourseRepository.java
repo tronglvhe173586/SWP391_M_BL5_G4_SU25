@@ -4,10 +4,10 @@
  */
 package com.example.m_bl5_g4_su25.repository;
 
-/**
- *
- * @author Maxim
- */
-public class CourseRepository {
-    
+import com.example.m_bl5_g4_su25.entity.Course;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface CourseRepository extends JpaRepository<Course, Long> {
 }

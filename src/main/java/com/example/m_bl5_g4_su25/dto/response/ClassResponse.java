@@ -4,10 +4,19 @@
  */
 package com.example.m_bl5_g4_su25.dto.response;
 
-/**
- *
- * @author Maxim
- */
+import lombok.Data;
+
+import java.time.LocalDate;
+
+@Data
 public class ClassResponse {
-    
+    private Long classId;
+    private Long courseId;
+    private String className;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private Integer maxStudents;
+    private Long instructorId;
+    private String instructorName;
+    private Integer currentStudentsCount;
 }
