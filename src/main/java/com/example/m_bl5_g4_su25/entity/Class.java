@@ -56,14 +56,14 @@ public class Class {
 
     @ColumnDefault("0")
     @Column(name = "is_deleted")
-    private Boolean isDeleted;
+    private Boolean isDeleted = false;
 
-    @OneToMany(mappedBy = "clazz")
+    @OneToMany(mappedBy = "classField")  // Fixed: Matches field in Enrollment.java
     private Set<Enrollment> enrollments = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "clazz")
+    @OneToMany(mappedBy = "classField")
     private Set<ExamSchedule> examSchedules = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "clazz")
+    @OneToMany(mappedBy = "classField")
     private Set<Schedule> schedules = new LinkedHashSet<>();
 }
