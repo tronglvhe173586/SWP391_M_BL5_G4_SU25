@@ -23,7 +23,7 @@ const AddClass = () => {
     try {
       const token = localStorage.getItem('jwtToken');
       const response = await axios.post(
-          'http://localhost:8080/api/classes',
+          'http://localhost:8080/driving-school-management/api/classes',
           formData,
           {
             headers: {
