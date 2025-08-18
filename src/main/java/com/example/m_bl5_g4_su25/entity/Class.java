@@ -17,7 +17,6 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "Classes")
-
 public class Class {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,13 +54,16 @@ public class Class {
     @Column(name = "current_students_count")
     private Integer currentStudentsCount;
 
-    @OneToMany(mappedBy = "classField")
+    @ColumnDefault("0")
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
+
+    @OneToMany(mappedBy = "clazz")
     private Set<Enrollment> enrollments = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "classField")
+    @OneToMany(mappedBy = "clazz")
     private Set<ExamSchedule> examSchedules = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "classField")
+    @OneToMany(mappedBy = "clazz")
     private Set<Schedule> schedules = new LinkedHashSet<>();
-
 }

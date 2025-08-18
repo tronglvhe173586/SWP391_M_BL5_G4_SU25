@@ -21,7 +21,10 @@ const AddClass = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios.post('http://localhost:8080/api/classes', formData)
-      .then(() => navigate('/class-management'))
+      .then(response => {
+        console.log('Class added:', response.data);
+        navigate('/class-management');
+      })
       .catch(error => console.error('Error adding class:', error));
   };
 
