@@ -30,36 +30,51 @@ public class ClassService implements IClassService {
 
     @Override
     public List<ClassResponse> listClasses(Long instructorId) {
-        List<Class> classes = (instructorId != null) ? classRepository.findByInstructorId(instructorId) : classRepository.findByIsDeletedFalse();
+        List<Class> classes = instructorId != null 
+            ? classRepository.findByInstructorId(instructorId) 
+            : classRepository.findByIsDeletedFalse();
         return classes.stream().map(this::mapToResponse).collect(Collectors.toList());
     }
 
     @Override
     public ClassResponse addClass(AddClassRequest request) {
-        validateRequest(request);
-        Class clazz = new Class();
-        clazz.setCourse(courseRepository.findById(request.getCourseId()).orElseThrow(() -> new RuntimeException("Course not found")));
-        clazz.setClassName(request.getClassName());
-        clazz.setStartDate(request.getStartDate());
-        clazz.setEndDate(request.getEndDate());
-        clazz.setMaxStudents(request.getMaxStudents());
-        clazz.setInstructor(userRepository.findById(request.getInstructorId()).orElseThrow(() -> new RuntimeException("Instructor not found")));
-        clazz.setIsDeleted(false);
-        Class saved = classRepository.save(clazz);
+        validateDates(request.getStartDate(), request.getEndDate());
+        validateMaxStudents(request.getMaxStudents());
+
+        Class newClass = new Class();
+        Course course = courseRepository.findById(request.getCourseId())
+            .orElseThrow(() -> new RuntimeException("Course not found"));
+        User instructor = userRepository.findById(request.getInstructorId())
+            .orElseThrow(() -> new RuntimeException("Instructor not found"));
+
+        newClass.setCourse(course);
+        newClass.setClassName(request.getClassName());
+        newClass.setStartDate(request.getStartDate());
+        newClass.setEndDate(request.getEndDate());
+        newClass.setMaxStudents(request.getMaxStudents());
+        newClass.setInstructor(instructor);
+        newClass.setIsDeleted(false);
+
+        Class saved = classRepository.save(newClass);
         return mapToResponse(saved);
     }
 
     @Override
     public ClassResponse getClassById(Long id) {
-        Class clazz = classRepository.findById(id).orElseThrow(() -> new RuntimeException("Class not found"));
+        Class clazz = classRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Class not found"));
         return mapToResponse(clazz);
     }
 
     @Override
     public ClassResponse editClass(Long id, EditClassRequest request) {
-        Class clazz = classRepository.findById(id).orElseThrow(() -> new RuntimeException("Class not found"));
+        Class clazz = classRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Class not found"));
+
         if (request.getCourseId() != null) {
-            clazz.setCourse(courseRepository.findById(request.getCourseId()).orElseThrow(() -> new RuntimeException("Course not found")));
+            Course course = courseRepository.findById(request.getCourseId())
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+            clazz.setCourse(course);
         }
         if (request.getClassName() != null) {
             clazz.setClassName(request.getClassName());
@@ -74,15 +89,13 @@ public class ClassService implements IClassService {
             clazz.setMaxStudents(request.getMaxStudents());
         }
         if (request.getInstructorId() != null) {
-            clazz.setInstructor(userRepository.findById(request.getInstructorId()).orElseThrow(() -> new RuntimeException("Instructor not found")));
+            User instructor = userRepository.findById(request.getInstructorId())
+                .orElseThrow(() -> new RuntimeException("Instructor not found"));
+            clazz.setInstructor(instructor);
         }
+
         Class updated = classRepository.save(clazz);
         return mapToResponse(updated);
-    }
-
-    private void validateRequest(AddClassRequest request) {
-        validateDates(request.getStartDate(), request.getEndDate());
-        validateMaxStudents(request.getMaxStudents());
     }
 
     private void validateDates(LocalDate startDate, LocalDate endDate) {
