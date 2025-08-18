@@ -9,21 +9,17 @@ const ClassManagement = () => {
 
   useEffect(() => {
     const fetchClasses = async () => {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        console.error('No authentication token found. Please login.');
-        return;
-      }
-
       try {
-        const response = await axios.get('http://localhost:8080/driving-school-management/api/classes', {
+        const token = localStorage.getItem('jwtToken');
+        const response = await axios.get('http://localhost:8080/api/classes', {
           headers: {
-            'Authorization': `Bearer ${token}`
+            Authorization: `Bearer ${token}`
           }
         });
         setClasses(response.data);
       } catch (error) {
-        console.error('Error fetching classes:', error.response ? error.response.data : error.message);
+        console.error('Error fetching classes:', error);
+        alert('Không thể tải danh sách lớp');
       }
     };
 
@@ -31,41 +27,41 @@ const ClassManagement = () => {
   }, []);
 
   return (
-    <div>
-      <h2>Class Management</h2>
-      <Button variant="contained" color="primary" onClick={() => navigate('/add-class')}>Add Class</Button>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Class Name</TableCell>
-              <TableCell>Start Date</TableCell>
-              <TableCell>End Date</TableCell>
-              <TableCell>Max Students</TableCell>
-              <TableCell>Instructor</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {classes.map(cls => (
-              <TableRow key={cls.classId}>
-                <TableCell>{cls.classId}</TableCell>
-                <TableCell>{cls.className}</TableCell>
-                <TableCell>{cls.startDate}</TableCell>
-                <TableCell>{cls.endDate}</TableCell>
-                <TableCell>{cls.maxStudents}</TableCell>
-                <TableCell>{cls.instructorName}</TableCell>
-                <TableCell>
-                  <Button onClick={() => navigate(`/view-class/${cls.classId}`)}>View</Button>
-                  <Button onClick={() => navigate(`/edit-class/${cls.classId}`)}>Edit</Button>
-                </TableCell>
+      <div>
+        <h2>Class Management</h2>
+        <Button variant="contained" color="primary" onClick={() => navigate('/add-class')}>Add Class</Button>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>ID</TableCell>
+                <TableCell>Class Name</TableCell>
+                <TableCell>Start Date</TableCell>
+                <TableCell>End Date</TableCell>
+                <TableCell>Max Students</TableCell>
+                <TableCell>Instructor</TableCell>
+                <TableCell>Actions</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </div>
+            </TableHead>
+            <TableBody>
+              {classes.map(cls => (
+                  <TableRow key={cls.classId}>
+                    <TableCell>{cls.classId}</TableCell>
+                    <TableCell>{cls.className}</TableCell>
+                    <TableCell>{cls.startDate}</TableCell>
+                    <TableCell>{cls.endDate}</TableCell>
+                    <TableCell>{cls.maxStudents}</TableCell>
+                    <TableCell>{cls.instructorName}</TableCell>
+                    <TableCell>
+                      <Button onClick={() => navigate(`/view-class/${cls.classId}`)}>View</Button>
+                      <Button onClick={() => navigate(`/edit-class/${cls.classId}`)}>Edit</Button>
+                    </TableCell>
+                  </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
   );
 };
 
