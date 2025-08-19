@@ -1,58 +1,138 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { TextField, Button, Container } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { Container, TextField, Button, Typography, Box, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const AddClass = () => {
-  const [formData, setFormData] = useState({
-    courseId: '',
-    className: '',
-    startDate: '',
-    endDate: '',
-    maxStudents: '',
-    instructorId: ''
-  });
+export default function AddClass() {
   const navigate = useNavigate();
 
+  const [form, setForm] = useState({
+    className: "",
+    startDate: "",
+    endDate: "",
+    maxStudents: "",
+    courseId: "",
+    instructorId: ""
+  });
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('jwtToken');
-      const response = await axios.post(
-          'http://localhost:8080/driving-school-management/api/classes',
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
+      const token = localStorage.getItem("jwtToken");
+      await axios.post(
+        "http://localhost:8080/driving-school-management/classes",
+        {
+          className: form.className,
+          startDate: form.startDate,
+          endDate: form.endDate,
+          maxStudents: parseInt(form.maxStudents),
+          courseId: parseInt(form.courseId),
+          instructorId: parseInt(form.instructorId)
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
-      console.log('Class added:', response.data);
-      navigate('/class-management');
+      alert("Thêm lớp học thành công!");
+      setForm({
+        className: "",
+        startDate: "",
+        endDate: "",
+        maxStudents: "",
+        courseId: "",
+        instructorId: ""
+      });
+      navigate("/classes");
     } catch (error) {
-      console.error('Error adding class:', error);
-      alert('Thêm lớp thất bại');
+      console.error(error);
+      alert("Thêm lớp học thất bại!");
     }
   };
 
   return (
-      <Container>
-        <h2>Add Class</h2>
-        <form onSubmit={handleSubmit}>
-          <TextField name="courseId" label="Course ID" value={formData.courseId} onChange={handleChange} fullWidth required />
-          <TextField name="className" label="Class Name" value={formData.className} onChange={handleChange} fullWidth required />
-          <TextField name="startDate" label="Start Date" type="date" value={formData.startDate} onChange={handleChange} fullWidth required InputLabelProps={{ shrink: true }} />
-          <TextField name="endDate" label="End Date" type="date" value={formData.endDate} onChange={handleChange} fullWidth required InputLabelProps={{ shrink: true }} />
-          <TextField name="maxStudents" label="Max Students" type="number" value={formData.maxStudents} onChange={handleChange} fullWidth required />
-          <TextField name="instructorId" label="Instructor ID" value={formData.instructorId} onChange={handleChange} fullWidth required />
-          <Button type="submit" variant="contained" color="primary">Add</Button>
-        </form>
-      </Container>
+    <Container maxWidth="sm" sx={{ mt: 4 }}>
+      <Typography variant="h4" gutterBottom>
+        Thêm Lớp Học
+      </Typography>
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+      >
+        <TextField
+          label="Tên Lớp"
+          name="className"
+          value={form.className}
+          onChange={handleChange}
+          required
+          fullWidth
+        />
+        <TextField
+          label="Ngày Bắt Đầu"
+          name="startDate"
+          type="date"
+          value={form.startDate}
+          onChange={handleChange}
+          required
+          fullWidth
+          InputLabelProps={{ shrink: true }}
+        />
+        <TextField
+          label="Ngày Kết Thúc"
+          name="endDate"
+          type="date"
+          value={form.endDate}
+          onChange={handleChange}
+          required
+          fullWidth
+          InputLabelProps={{ shrink: true }}
+        />
+        <TextField
+          label="Sĩ Số Tối Đa"
+          name="maxStudents"
+          value={form.maxStudents}
+          onChange={handleChange}
+          type="number"
+          required
+          fullWidth
+          inputProps={{ min: 1 }}
+        />
+        <TextField
+          label="ID Khóa Học"
+          name="courseId"
+          value={form.courseId}
+          onChange={handleChange}
+          type="number"
+          required
+          fullWidth
+        />
+        <TextField
+          label="ID Giảng Viên"
+          name="instructorId"
+          value={form.instructorId}
+          onChange={handleChange}
+          type="number"
+          required
+          fullWidth
+        />
+        <Button type="submit" variant="contained" color="primary">
+          Thêm
+        </Button>
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={() => navigate("/classes")}
+        >
+          Hủy
+        </Button>
+      </Box>
+    </Container>
   );
-};
-
-export default AddClass;
+}
