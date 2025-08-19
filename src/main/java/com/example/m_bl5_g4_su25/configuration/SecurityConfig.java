@@ -26,7 +26,8 @@ import java.util.List;
 public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS = {
         "/users", "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh",
-            "users/register", "/provinces", "/provinces/**", "/auth/outbound/authentication"
+            "users/register", "/provinces", "/provinces/**", "/auth/outbound/authentication",
+            "/forgot-password/**"
     };
 
     @Autowired

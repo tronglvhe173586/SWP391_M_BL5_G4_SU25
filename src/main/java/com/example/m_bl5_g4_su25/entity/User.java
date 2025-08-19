@@ -100,4 +100,7 @@ public class User {
 
     @OneToOne(mappedBy = "user")
     private LearnerProfile learnerProfile;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private ForgotPassword forgotPassword;
 }

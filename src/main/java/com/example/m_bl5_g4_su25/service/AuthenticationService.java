@@ -59,6 +59,7 @@ public class AuthenticationService implements IAuthenticationService {
     @NonFinal
     protected final String GRANT_TYPE = "authorization_code";
 
+    @Override
     public AuthenticationResponse outboundAuthenticate(String code){
         var response = outboundIdentityClient.exchangeToken(ExchangeTokenRequest.builder()
                 .code(code)

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/driving-school-management/api/classes")
+@RequestMapping("/api/classes")
 public class ClassController {
 
     @Autowired
