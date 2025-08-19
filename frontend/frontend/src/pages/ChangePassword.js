@@ -38,7 +38,6 @@ export default function ChangePassword() {
                 password,
                 repeatPassword
             });
-            alert("Mật khẩu đã được thay đổi thành công!");
             navigate("/login");
         } catch (error) {
             console.error(error);

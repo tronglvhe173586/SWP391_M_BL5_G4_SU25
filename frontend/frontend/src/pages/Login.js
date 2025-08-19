@@ -1,15 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-    Container, TextField, Button, Typography, Box,
-    CircularProgress, Alert, Link
+    Container,
+    TextField,
+    Button,
+    Typography,
+    Box,
+    CircularProgress,
+    Alert,
+    Link
 } from "@mui/material";
-import { useNavigate, Link as RouterLink } from "react-router-dom";
+import { useNavigate, Link as RouterLink, useLocation } from "react-router-dom";
 import { Google } from "@mui/icons-material";
 import axios from "axios";
 import { OAuthConfig } from "../configurations/configuration";
 
 export default function Login() {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [form, setForm] = useState({
         username: "",
@@ -17,6 +24,14 @@ export default function Login() {
     });
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
+
+    useEffect(() => {
+        if (location.state?.successMessage) {
+            setSuccessMessage(location.state.successMessage);
+            window.history.replaceState({}, document.title);
+        }
+    }, [location.state]);
 
     const handleChange = (e) => {
         setForm({
@@ -29,6 +44,14 @@ export default function Login() {
         e.preventDefault();
         setLoading(true);
         setErrorMessage("");
+        setSuccessMessage(""); // Clear any previous messages
+
+        // Client-side validation
+        if (!form.username || !form.password) {
+            setErrorMessage("Vui lòng điền đầy đủ tên đăng nhập và mật khẩu.");
+            setLoading(false);
+            return;
+        }
 
         try {
             const response = await axios.post(
@@ -42,17 +65,19 @@ export default function Login() {
             console.log("Login response:", response.data);
 
             const token = response.data.result?.token;
-            if (!token) throw new Error("Token not found in response");
+            if (!token) throw new Error("Không tìm thấy token trong phản hồi.");
 
             localStorage.setItem("jwtToken", token);
             navigate("/users");
         } catch (error) {
-            console.error(error);
-            if (error.response && error.response.data) {
-                setErrorMessage(error.response.data.message || JSON.stringify(error.response.data));
-            } else {
-                setErrorMessage(error.message);
-            }
+            console.error("Login failed:", error);
+
+            // Refined error message handling
+            const message = error.response?.data?.message ||
+                error.response?.data ||
+                error.message ||
+                "Đã xảy ra lỗi không xác định.";
+            setErrorMessage(message);
         } finally {
             setLoading(false);
         }
@@ -76,6 +101,7 @@ export default function Login() {
                 Đăng nhập
             </Typography>
 
+            {successMessage && <Alert severity="success" sx={{ mb: 2 }}>{successMessage}</Alert>}
             {errorMessage && <Alert severity="error" sx={{ mb: 2 }}>{errorMessage}</Alert>}
 
             <Box
