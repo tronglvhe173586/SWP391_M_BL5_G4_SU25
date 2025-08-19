@@ -1,5 +1,6 @@
 package com.example.m_bl5_g4_su25.service;
 
+import com.example.m_bl5_g4_su25.dto.request.AddCourseRequest;
 import com.example.m_bl5_g4_su25.dto.request.EditCourseRequest;
 import com.example.m_bl5_g4_su25.dto.response.ListCourseResponse;
 import com.example.m_bl5_g4_su25.dto.response.ListUserResponse;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class CourseService implements ICourseService{
+public class CourseService implements ICourseService {
 
     private final CourseRepository courseRepository;
 
@@ -48,7 +49,7 @@ public class CourseService implements ICourseService{
 
     @Override
     public ListCourseResponse editCourse(Long id, EditCourseRequest request) {
-        Course course =  courseRepository.findById(id).
+        Course course = courseRepository.findById(id).
                 orElseThrow(() -> new EntityNotFoundException("Course not found with id: " + id));
         course.setCourseName(request.getCourseName());
         course.setCourseType(request.getCourseType());
@@ -65,6 +66,27 @@ public class CourseService implements ICourseService{
                 updatedCourse.getPrice(),
                 updatedCourse.getDuration(),
                 updatedCourse.getIsDeleted()
+        );
+    }
+
+    @Override
+    public ListCourseResponse addCourse(AddCourseRequest request) {
+        Course course = new Course();
+        course.setCourseName(request.getCourseName());
+        course.setCourseType(request.getCourseType());
+        course.setDescription(request.getDescription());
+        course.setPrice(request.getPrice());
+        course.setDuration(request.getDuration());
+        course.setIsDeleted(false);
+        Course newCourse = courseRepository.save(course);
+        return new ListCourseResponse(
+                newCourse.getId(),
+                newCourse.getCourseName(),
+                newCourse.getCourseType(),
+                newCourse.getDescription(),
+                newCourse.getPrice(),
+                newCourse.getDuration(),
+                newCourse.getIsDeleted()
         );
     }
 

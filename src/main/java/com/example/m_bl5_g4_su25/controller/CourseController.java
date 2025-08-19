@@ -1,10 +1,9 @@
 package com.example.m_bl5_g4_su25.controller;
 
 
+import com.example.m_bl5_g4_su25.dto.request.AddCourseRequest;
 import com.example.m_bl5_g4_su25.dto.request.EditCourseRequest;
-import com.example.m_bl5_g4_su25.dto.request.EditUserRequest;
 import com.example.m_bl5_g4_su25.dto.response.ListCourseResponse;
-import com.example.m_bl5_g4_su25.dto.response.ListUserResponse;
 import com.example.m_bl5_g4_su25.service.ICourseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +35,10 @@ public class CourseController {
             @Valid @RequestBody EditCourseRequest request
     ) {
         return ResponseEntity.ok(courseService.editCourse(id, request));
+    }
+    @PostMapping("/add_courses")
+    public ResponseEntity<ListCourseResponse> addCourse(@RequestBody AddCourseRequest request) {
+        return ResponseEntity.ok(courseService.addCourse(request));
     }
 
 }
