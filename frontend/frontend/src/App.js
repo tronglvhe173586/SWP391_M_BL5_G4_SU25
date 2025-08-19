@@ -17,6 +17,9 @@ import ViewClass from './pages/ViewClass';
 import EditClass from './pages/EditClass';
 import ClassLearners from './pages/ClassLearners';
 import Authenticate from "./pages/Authenticate.js";
+import ForgotPassword from "./pages/ForgotPassword.js";
+import VerifyOtp from "./pages/VerifyOTP.js";
+import ChangePassword from "./pages/ChangePassword.js";
 
 
 function App() {
@@ -44,6 +47,9 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/users/:id" element={<UserDetails />} />
         <Route path="/authenticate" element={<Authenticate />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path= "/verify-otp" element={<VerifyOtp />} />
+        <Route path="/change-password" element={<ChangePassword />} />
 
       </Routes>
     </Router>

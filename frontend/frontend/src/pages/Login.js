@@ -115,6 +115,12 @@ export default function Login() {
                 </Button>
 
                 <div style={{ marginTop: "10px" }}>
+                    <Link component={RouterLink} to="/forgot-password" underline="none" color="primary">
+                        Quên mật khẩu?
+                    </Link>
+                </div>
+
+                <div style={{ marginTop: "10px" }}>
                     Chưa có tài khoản?{" "}
                     <Link component={RouterLink} to="/register" underline="none" color="primary">
                         Đăng ký tại đây!
