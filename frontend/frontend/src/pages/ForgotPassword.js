@@ -6,28 +6,32 @@ import {
     Typography,
     Box,
     CircularProgress,
-    Alert
+    Alert,
+    Link
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
 
 export default function ForgotPassword() {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-    const [successMessage, setSuccessMessage] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setErrorMessage("");
-        setSuccessMessage("");
 
         try {
             await axios.post(`/driving-school-management/forgot-password/verify-email/${email}`);
-            setSuccessMessage("Một mã OTP đã được gửi đến email của bạn. Vui lòng kiểm tra hòm thư.");
-            navigate("/verify-otp", { state: { email } });
+            navigate("/verify-otp", {
+                state: {
+                    email,
+                    successMessage: "Một mã OTP đã được gửi đến email của bạn. Vui lòng kiểm tra hòm thư."
+                }
+            });
         } catch (error) {
             console.error(error);
             const message = error.response?.data?.message || "Đã xảy ra lỗi. Vui lòng thử lại.";
@@ -44,7 +48,6 @@ export default function ForgotPassword() {
             </Typography>
 
             {errorMessage && <Alert severity="error" sx={{ mb: 2 }}>{errorMessage}</Alert>}
-            {successMessage && <Alert severity="success" sx={{ mb: 2 }}>{successMessage}</Alert>}
 
             <Box
                 component="form"

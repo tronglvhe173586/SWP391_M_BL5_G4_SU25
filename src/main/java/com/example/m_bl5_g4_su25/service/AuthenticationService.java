@@ -86,7 +86,7 @@ public class AuthenticationService implements IAuthenticationService {
 
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPasswordHash());
 
-        if (!authenticated) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        if (!authenticated) throw new AppException(ErrorCode.USER_NOT_EXISTED);
 
         var token = generateToken(user);
 

@@ -17,6 +17,9 @@ import { Link } from 'react-router-dom';
 const pages = [
   { name: 'Tài Khoản', path: '/users' },
   { name: 'Bài Thi', path: '/exams' },
+  {
+    name: 'Lịch Thi', path: '/exam-schedules'
+  },
 ];
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
