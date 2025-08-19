@@ -13,7 +13,7 @@ const ViewClass = () => {
     const fetchClass = async () => {
       try {
         const token = localStorage.getItem('jwtToken');
-        const response = await axios.get(`http://localhost:8080/api/classes/${id}`, {
+        const response = await axios.get(`http://localhost:8080/driving-school-management/classes/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }

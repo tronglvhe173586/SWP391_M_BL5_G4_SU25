@@ -1,70 +1,193 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';
-import { TextField, Button, Container } from '@mui/material';
+import React, { useState, useEffect } from "react";
+import {
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Box,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel
+} from "@mui/material";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 
 const EditClass = () => {
   const { id } = useParams();
-  const [formData, setFormData] = useState({});
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+  const [form, setForm] = useState({
+    className: "",
+    startDate: "",
+    endDate: "",
+    maxStudents: "",
+    courseId: "",
+    instructorId: ""
+  });
+
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchClass = async () => {
       try {
-        const token = localStorage.getItem('jwtToken');
-        const response = await axios.get(`http://localhost:8080/api/classes/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`
+        const token = localStorage.getItem("jwtToken");
+        console.log("Fetching class with ID:", id);
+
+        const res = await axios.get(
+          `http://localhost:8080/driving-school-management/classes/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
           }
+        );
+
+        console.log("Class data received:", res.data);
+        setForm({
+          className: res.data.className,
+          startDate: res.data.startDate,
+          endDate: res.data.endDate,
+          maxStudents: res.data.maxStudents,
+          courseId: res.data.courseId,
+          instructorId: res.data.instructorId
         });
-        setFormData(response.data);
         setLoading(false);
-      } catch (error) {
-        console.error('Error fetching class:', error);
-        alert('Không thể tải dữ liệu lớp học');
+      } catch (err) {
+        console.error("Error fetching class:", err);
+        console.error("Error response:", err.response?.data);
+        alert(`Không thể tải dữ liệu lớp học: ${err.response?.data?.message || err.message}`);
+        setLoading(false);
       }
     };
-
     fetchClass();
   }, [id]);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('jwtToken'); // Lấy token
-      await axios.put(`http://localhost:8080/api/classes/${id}`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      console.log("Updating class with ID:", id);
+      console.log("Form data:", form);
+      const updateData = {
+        className: form.className,
+        startDate: form.startDate,
+        endDate: form.endDate,
+        maxStudents: parseInt(form.maxStudents),
+        courseId: parseInt(form.courseId),
+        instructorId: parseInt(form.instructorId)
+      };
+      console.log("Sending update data:", updateData);
+
+      const token = localStorage.getItem("jwtToken");
+
+      const res = await axios.put(
+        `http://localhost:8080/driving-school-management/classes/${id}`,
+        updateData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
-      });
-      alert('Cập nhật lớp học thành công!');
-      navigate('/class-management');
-    } catch (error) {
-      console.error('Error editing class:', error);
-      alert('Cập nhật lớp học thất bại');
+      );
+
+      console.log("Update response:", res.data);
+      alert("Cập nhật lớp học thành công!");
+      navigate("/classes");
+    } catch (err) {
+      console.error("Error updating class:", err);
+      console.error("Error response:", err.response?.data);
+      alert(`Cập nhật lớp học thất bại: ${err.response?.data?.message || err.message}`);
     }
   };
 
-  if (loading) return <p>Đang tải dữ liệu lớp học...</p>;
+  if (loading) return <Typography>Đang tải dữ liệu lớp học...</Typography>;
 
   return (
-      <Container>
-        <h2>Edit Class</h2>
-        <form onSubmit={handleSubmit}>
-          <TextField name="courseId" label="Course ID" value={formData.courseId || ''} onChange={handleChange} fullWidth />
-          <TextField name="className" label="Class Name" value={formData.className || ''} onChange={handleChange} fullWidth />
-          <TextField name="startDate" label="Start Date" type="date" value={formData.startDate || ''} onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} />
-          <TextField name="endDate" label="End Date" type="date" value={formData.endDate || ''} onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} />
-          <TextField name="maxStudents" label="Max Students" type="number" value={formData.maxStudents || ''} onChange={handleChange} fullWidth />
-          <TextField name="instructorId" label="Instructor ID" value={formData.instructorId || ''} onChange={handleChange} fullWidth />
-          <Button type="submit" variant="contained" color="primary">Update</Button>
-        </form>
-      </Container>
+    <Container maxWidth="sm" sx={{ mt: 4 }}>
+      <Typography variant="h4" mb={3}>
+        Chỉnh Sửa Lớp Học
+      </Typography>
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+      >
+        <TextField
+          label="Tên Lớp"
+          name="className"
+          value={form.className}
+          onChange={handleChange}
+          fullWidth
+          required
+        />
+        <TextField
+          label="Ngày Bắt Đầu"
+          name="startDate"
+          type="date"
+          value={form.startDate}
+          onChange={handleChange}
+          fullWidth
+          required
+          InputLabelProps={{ shrink: true }}
+        />
+        <TextField
+          label="Ngày Kết Thúc"
+          name="endDate"
+          type="date"
+          value={form.endDate}
+          onChange={handleChange}
+          fullWidth
+          required
+          InputLabelProps={{ shrink: true }}
+        />
+        <TextField
+          label="Sĩ Số Tối Đa"
+          name="maxStudents"
+          type="number"
+          value={form.maxStudents}
+          onChange={handleChange}
+          fullWidth
+          required
+          inputProps={{ min: 1 }}
+        />
+        <TextField
+          label="ID Khóa Học"
+          name="courseId"
+          value={form.courseId}
+          onChange={handleChange}
+          type="number"
+          fullWidth
+          required
+        />
+        <TextField
+          label="ID Giảng Viên"
+          name="instructorId"
+          value={form.instructorId}
+          onChange={handleChange}
+          type="number"
+          fullWidth
+          required
+        />
+        <Button variant="contained" color="primary" type="submit">
+          Cập nhật
+        </Button>
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={() => navigate("/classes")}
+        >
+          Hủy
+        </Button>
+      </Box>
+    </Container>
   );
 };
 
