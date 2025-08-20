@@ -13,6 +13,7 @@ import { useNavigate, Link as RouterLink, useLocation } from "react-router-dom";
 import { Google } from "@mui/icons-material";
 import axios from "axios";
 import { OAuthConfig } from "../configurations/configuration";
+import { jwtDecode } from "jwt-decode";
 
 export default function Login() {
     const navigate = useNavigate();
@@ -44,9 +45,8 @@ export default function Login() {
         e.preventDefault();
         setLoading(true);
         setErrorMessage("");
-        setSuccessMessage(""); // Clear any previous messages
+        setSuccessMessage("");
 
-        // Client-side validation
         if (!form.username || !form.password) {
             setErrorMessage("Vui lòng điền đầy đủ tên đăng nhập và mật khẩu.");
             setLoading(false);
@@ -68,11 +68,18 @@ export default function Login() {
             if (!token) throw new Error("Không tìm thấy token trong phản hồi.");
 
             localStorage.setItem("jwtToken", token);
-            navigate("/users");
+            const decodedToken = jwtDecode(token);
+            const userRole = decodedToken.role;
+            if (userRole === "ROLE_ADMIN") {
+                navigate("/users");
+            } else if (userRole === "ROLE_LEARNER"){
+                navigate("/learners");
+            } else {
+                navigate("/instructors");
+            }
         } catch (error) {
             console.error("Login failed:", error);
 
-            // Refined error message handling
             const message = error.response?.data?.message ||
                 error.response?.data ||
                 error.message ||

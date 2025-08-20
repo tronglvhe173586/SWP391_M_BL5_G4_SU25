@@ -2,6 +2,7 @@ package com.example.m_bl5_g4_su25.configuration;
 
 import com.example.m_bl5_g4_su25.entity.User;
 import com.example.m_bl5_g4_su25.enums.Gender;
+import com.example.m_bl5_g4_su25.enums.Role;
 import com.example.m_bl5_g4_su25.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,7 @@ public class ApplicationInitConfig {
                         .firstName("System")
                         .lastName("Admin")
                         .gender(Gender.valueOf("Nam"))
-                        .role("ADMIN")
+                        .role(Role.ADMIN)
                         .isActive(true)
                         .build();
                 userRepository.save(user);
