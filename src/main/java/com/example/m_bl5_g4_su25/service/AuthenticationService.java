@@ -59,6 +59,7 @@ public class AuthenticationService implements IAuthenticationService {
     @NonFinal
     protected final String GRANT_TYPE = "authorization_code";
 
+    @Override
     public AuthenticationResponse outboundAuthenticate(String code){
         var response = outboundIdentityClient.exchangeToken(ExchangeTokenRequest.builder()
                 .code(code)
@@ -85,7 +86,7 @@ public class AuthenticationService implements IAuthenticationService {
 
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPasswordHash());
 
-        if (!authenticated) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        if (!authenticated) throw new AppException(ErrorCode.USER_NOT_EXISTED);
 
         var token = generateToken(user);
 

@@ -8,6 +8,7 @@ import EditUser from "./pages/editUser.js";
 import ExamList from "./pages/ExamList.js";
 import AddExam from "./pages/AddExam.js";
 import EditExam from "./pages/EditExam.js";
+import ExamScheduleList from "./pages/ExamScheduleList.js";
 import Login from './pages/Login.js';
 import UserDetails from "./pages/UserDetails.js";
 import Register from "./pages/Register.js";
@@ -17,6 +18,9 @@ import ViewClass from './pages/ViewClass';
 import EditClass from './pages/EditClass';
 import ClassLearners from './pages/ClassLearners';
 import Authenticate from "./pages/Authenticate.js";
+import ForgotPassword from "./pages/ForgotPassword.js";
+import VerifyOtp from "./pages/VerifyOTP.js";
+import ChangePassword from "./pages/ChangePassword.js";
 
 
 function App() {
@@ -41,9 +45,13 @@ function App() {
         <Route path="/exams" element={<ExamList />} />
         <Route path="/exams/add" element={<AddExam />} />
         <Route path="/exams/edit/:id" element={<EditExam />} />
+        <Route path="/exam-schedules" element={<ExamScheduleList />} />
           <Route path="/register" element={<Register />} />
           <Route path="/users/:id" element={<UserDetails />} />
         <Route path="/authenticate" element={<Authenticate />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path= "/verify-otp" element={<VerifyOtp />} />
+        <Route path="/change-password" element={<ChangePassword />} />
 
       </Routes>
     </Router>

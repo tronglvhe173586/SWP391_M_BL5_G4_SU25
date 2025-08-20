@@ -180,9 +180,12 @@ public class UserService implements IUserService {
         return UserResponse.builder()
                 .id(user.getId())
                 .username(user.getUsername())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
                 .email(user.getEmail())
                 .gender(user.getGender().name())
                 .dateOfBirth(user.getDateOfBirth())
+                .role(user.getRole())
                 .provinceId(province.getId())
                 .provinceName(province.getName())
                 .build();

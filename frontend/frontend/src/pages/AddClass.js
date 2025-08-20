@@ -25,6 +25,7 @@ export default function AddClass() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+
       const token = localStorage.getItem("jwtToken");
       await axios.post(
         "http://localhost:8080/driving-school-management/classes",
@@ -39,6 +40,7 @@ export default function AddClass() {
         {
           headers: { Authorization: `Bearer ${token}` },
         }
+
       );
       alert("Thêm lớp học thành công!");
       setForm({

@@ -36,6 +36,7 @@ public class ClassService implements IClassService {
     private UserRepository userRepository;
 
     @Override
+
     public List<ClassResponse> getAllClasses() {
         logger.debug("Fetching all active classes");
         List<Class> classes = classRepository.findAll().stream()
@@ -125,6 +126,7 @@ public class ClassService implements IClassService {
     private void validateClassRequest(AddClassRequest request) {
         if (request.getClassName() == null || request.getClassName().trim().isEmpty()) {
             throw new ClassValidationException("Tên lớp không được để trống");
+
         }
         validateDates(request.getStartDate(), request.getEndDate());
         if (request.getMaxStudents() == null || request.getMaxStudents() <= 0) {

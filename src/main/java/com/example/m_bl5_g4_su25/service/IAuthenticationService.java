@@ -10,4 +10,5 @@ import java.text.ParseException;
 
 public interface IAuthenticationService {
     AuthenticationResponse authenticate(AuthenticationRequest request) throws ParseException, JOSEException;
+    AuthenticationResponse outboundAuthenticate(String code);
 }
