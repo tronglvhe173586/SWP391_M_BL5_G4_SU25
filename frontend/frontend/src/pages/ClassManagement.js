@@ -1,65 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 
-const ClassManagement = () => {
-    const [classes, setClasses] = useState([]);
-    const navigate = useNavigate();
+import React from "react";
+import ClassTable from "../components/ClassTable";
+import { Container, Typography, Button } from "@mui/material";
+import { Link } from "react-router-dom";
 
-    useEffect(() => {
-        const fetchClasses = async () => {
-            try {
-                const token = localStorage.getItem('jwtToken');
-                const response = await axios.get('http://localhost:8080/driving-school-management/api/classes', {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                setClasses(response.data);
-            } catch (error) {
-                console.error('Error fetching classes:', error);
-                alert('Không thể tải danh sách lớp');
-            }
-        };
-        fetchClasses();
-    }, []);
+export default function ClassManagement() {
+  return (
+    <Container maxWidth="lg" sx={{ mt: 4 }}>
+      <Typography variant="h4" gutterBottom>
+        Quản Lý Lớp Học
+      </Typography>
+      <ClassTable />
+      <Link to="/classes/add">
+        <Button variant="contained" color="success" sx={{ mt: 10 }}>
+          Tạo Lớp Học
+        </Button>
+      </Link>
+    </Container>
+  );
+}
 
-    return (
-        <div>
-            <h2>Class Management</h2>
-            <Button variant="contained" color="primary" onClick={() => navigate('/add-class')}>Add Class</Button>
-            <TableContainer component={Paper}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>ID</TableCell>
-                            <TableCell>Class Name</TableCell>
-                            <TableCell>Start Date</TableCell>
-                            <TableCell>End Date</TableCell>
-                            <TableCell>Max Students</TableCell>
-                            <TableCell>Instructor</TableCell>
-                            <TableCell>Actions</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {classes.map(cls => (
-                            <TableRow key={cls.classId}>
-                                <TableCell>{cls.classId}</TableCell>
-                                <TableCell>{cls.className}</TableCell>
-                                <TableCell>{cls.startDate}</TableCell>
-                                <TableCell>{cls.endDate}</TableCell>
-                                <TableCell>{cls.maxStudents}</TableCell>
-                                <TableCell>{cls.instructorName}</TableCell>
-                                <TableCell>
-                                    <Button onClick={() => navigate(`/view-class/${cls.classId}`)}>View</Button>
-                                    <Button onClick={() => navigate(`/edit-class/${cls.classId}`)}>Edit</Button>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </div>
-    );
-};
-
-export default ClassManagement;
