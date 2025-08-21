@@ -1,8 +1,9 @@
 package com.example.m_bl5_g4_su25.controller;
 
 
+import com.example.m_bl5_g4_su25.dto.request.AddCourseRequest;
 import com.example.m_bl5_g4_su25.dto.request.EditCourseRequest;
-import com.example.m_bl5_g4_su25.dto.request.EditUserRequest;
+import com.example.m_bl5_g4_su25.dto.response.ClassResponse;
 import com.example.m_bl5_g4_su25.dto.response.ListCourseResponse;
 import com.example.m_bl5_g4_su25.dto.response.ListUserResponse;
 import com.example.m_bl5_g4_su25.service.ICourseService;
@@ -26,7 +27,7 @@ public class CourseController {
     public Page<ListCourseResponse> getAllCourses(
             @RequestParam(required = false) String keyword,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size
+            @RequestParam(defaultValue = "10") int size
     ) {
         return courseService.getAllCoursesPagination(keyword, page, size);
     }
@@ -36,6 +37,19 @@ public class CourseController {
             @Valid @RequestBody EditCourseRequest request
     ) {
         return ResponseEntity.ok(courseService.editCourse(id, request));
+    }
+    @PostMapping("/add_courses")
+    public ResponseEntity<ListCourseResponse> addCourse(@RequestBody AddCourseRequest request) {
+        return ResponseEntity.ok(courseService.addCourse(request));
+    }
+    @GetMapping("/{id}")
+    public ListCourseResponse getCourseById(@PathVariable Long id) {
+        return courseService.getCourseById(id);
+    }
+    @GetMapping("/by-course/{courseId}")
+    public ResponseEntity<List<ClassResponse>> getClassesByCourse(@PathVariable Long courseId) {
+        List<ClassResponse> classes = courseService.getClassesByCourse(courseId);
+        return ResponseEntity.ok(classes);
     }
 
 }

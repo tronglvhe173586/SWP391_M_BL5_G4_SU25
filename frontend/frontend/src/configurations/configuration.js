@@ -3,3 +3,7 @@ export const OAuthConfig = {
     redirectUri: "http://localhost:3000/authenticate",
     authUri: "https://accounts.google.com/o/oauth2/auth",
 };
+
+export const configuration = {
+    API_BASE_URL: "http://localhost:8080/driving-school-management", // URL backend
+};

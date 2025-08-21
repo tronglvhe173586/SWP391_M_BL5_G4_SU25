@@ -1,15 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-    Container, TextField, Button, Typography, Box,
-    CircularProgress, Alert, Link
+    Container,
+    TextField,
+    Button,
+    Typography,
+    Box,
+    CircularProgress,
+    Alert,
+    Link
 } from "@mui/material";
-import { useNavigate, Link as RouterLink } from "react-router-dom";
+import { useNavigate, Link as RouterLink, useLocation } from "react-router-dom";
 import { Google } from "@mui/icons-material";
 import axios from "axios";
 import { OAuthConfig } from "../configurations/configuration";
+import { jwtDecode } from "jwt-decode";
+import { setToken } from "../services/localStorageService";
 
 export default function Login() {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [form, setForm] = useState({
         username: "",
@@ -17,6 +26,14 @@ export default function Login() {
     });
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
+
+    useEffect(() => {
+        if (location.state?.successMessage) {
+            setSuccessMessage(location.state.successMessage);
+            window.history.replaceState({}, document.title);
+        }
+    }, [location.state]);
 
     const handleChange = (e) => {
         setForm({
@@ -29,6 +46,13 @@ export default function Login() {
         e.preventDefault();
         setLoading(true);
         setErrorMessage("");
+        setSuccessMessage("");
+
+        if (!form.username || !form.password) {
+            setErrorMessage("Vui lòng điền đầy đủ tên đăng nhập và mật khẩu.");
+            setLoading(false);
+            return;
+        }
 
         try {
             const response = await axios.post(
@@ -42,17 +66,26 @@ export default function Login() {
             console.log("Login response:", response.data);
 
             const token = response.data.result?.token;
-            if (!token) throw new Error("Token not found in response");
+            if (!token) throw new Error("Không tìm thấy token trong phản hồi.");
 
-            localStorage.setItem("jwtToken", token);
-            navigate("/users");
-        } catch (error) {
-            console.error(error);
-            if (error.response && error.response.data) {
-                setErrorMessage(error.response.data.message || JSON.stringify(error.response.data));
+            setToken(token);
+            const decodedToken = jwtDecode(token);
+            const userRole = decodedToken.role;
+            if (userRole === "ROLE_ADMIN") {
+                navigate("/users");
+            } else if (userRole === "ROLE_LEARNER"){
+                navigate("/users");
             } else {
-                setErrorMessage(error.message);
+                navigate("/instructors");
             }
+        } catch (error) {
+            console.error("Login failed:", error);
+
+            const message = error.response?.data?.message ||
+                error.response?.data ||
+                error.message ||
+                "Đã xảy ra lỗi không xác định.";
+            setErrorMessage(message);
         } finally {
             setLoading(false);
         }
@@ -76,6 +109,7 @@ export default function Login() {
                 Đăng nhập
             </Typography>
 
+            {successMessage && <Alert severity="success" sx={{ mb: 2 }}>{successMessage}</Alert>}
             {errorMessage && <Alert severity="error" sx={{ mb: 2 }}>{errorMessage}</Alert>}
 
             <Box
@@ -113,6 +147,12 @@ export default function Login() {
                 >
                     Đăng nhập bằng Google
                 </Button>
+
+                <div style={{ marginTop: "10px" }}>
+                    <Link component={RouterLink} to="/forgot-password" underline="none" color="primary">
+                        Quên mật khẩu?
+                    </Link>
+                </div>
 
                 <div style={{ marginTop: "10px" }}>
                     Chưa có tài khoản?{" "}

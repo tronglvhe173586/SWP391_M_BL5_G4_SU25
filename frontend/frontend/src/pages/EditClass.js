@@ -189,6 +189,7 @@ const EditClass = () => {
       </Box>
     </Container>
   );
+
 };
 
 export default EditClass;

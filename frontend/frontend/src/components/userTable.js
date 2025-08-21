@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { viVN } from "@mui/x-data-grid/locales";
-import { Paper, TextField, Box, Button } from "@mui/material";
+import { Paper, TextField, Box, IconButton, Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
+// Icons
+import EditIcon from "@mui/icons-material/Edit";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 export default function UserTable() {
   const navigate = useNavigate();
@@ -29,32 +33,34 @@ export default function UserTable() {
     },
     {
       field: "actions",
-      headerName: "Hành động",
-      width: 150,
+      headerName: "Sửa",
+      width: 80,
       renderCell: (params) => (
-        <Button
-          variant="contained"
-          color="warning"
-          size="small"
-          onClick={() => navigate(`/users/edit/${params.row.id}`)}
-        >
-          Sửa
-        </Button>
+        <Tooltip title="Sửa">
+          <IconButton
+            color="warning"
+            size="small"
+            onClick={() => navigate(`/users/edit/${params.row.id}`)}
+          >
+            <EditIcon />
+          </IconButton>
+        </Tooltip>
       ),
     },
     {
       field: "view",
-      headerName: "Xem chi tiết",
-      width: 150,
+      headerName: "Chi tiết",
+      width: 80,
       renderCell: (params) => (
-        <Button
-          variant="contained"
-          color="primary"
-          size="small"
-          onClick={() => navigate(`/users/${params.row.id}`)}
-        >
-          Xem
-        </Button>
+        <Tooltip title="Xem chi tiết">
+          <IconButton
+            color="primary"
+            size="small"
+            onClick={() => navigate(`/users/${params.row.id}`)}
+          >
+            <VisibilityIcon />
+          </IconButton>
+        </Tooltip>
       ),
     },
   ];

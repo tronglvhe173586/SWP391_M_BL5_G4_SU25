@@ -13,17 +13,28 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { getToken, removeToken } from '../services/localStorageService';
+import { useNavigate } from 'react-router-dom';
 
 const pages = [
   { name: 'Tài Khoản', path: '/users' },
+  { name: 'Khóa Học', path: '/courses' },
   { name: 'Bài Thi', path: '/exams' },
+
+  {
+    name: 'Lịch Thi', path: '/exam-schedules'
+  },
+
 { name: 'Lớp học', path: '/classes' },
+
 
 ];
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function ResponsiveAppBar() {
+  const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -38,6 +49,20 @@ function ResponsiveAppBar() {
   };
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleLogout = async () => {
+    try {
+      const token = getToken();
+      if (token) {
+        await axios.post('/driving-school-management/auth/logout', { token });
+      }
+    } catch (e) {
+      // ignore
+    } finally {
+      removeToken();
+      navigate('/login');
+    }
   };
 
   return (
@@ -117,7 +142,15 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem
+                  key={setting}
+                  onClick={() => {
+                    handleCloseUserMenu();
+                    if (setting === 'Logout') {
+                      handleLogout();
+                    }
+                  }}
+                >
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}

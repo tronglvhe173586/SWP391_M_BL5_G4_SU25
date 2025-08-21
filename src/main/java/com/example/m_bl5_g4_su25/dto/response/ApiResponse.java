@@ -16,4 +16,32 @@ public class ApiResponse<T> {
 
     String message;
     T result;
+    
+    // Thêm các method tiện ích
+    public boolean isSuccess() {
+        return code == 1000;
+    }
+    
+    public static <T> ApiResponse<T> success(T data) {
+        return ApiResponse.<T>builder()
+                .code(1000)
+                .message("Success")
+                .result(data)
+                .build();
+    }
+    
+    public static <T> ApiResponse<T> success(String message, T data) {
+        return ApiResponse.<T>builder()
+                .code(1000)
+                .message(message)
+                .result(data)
+                .build();
+    }
+    
+    public static <T> ApiResponse<T> error(int code, String message) {
+        return ApiResponse.<T>builder()
+                .code(code)
+                .message(message)
+                .build();
+    }
 }
