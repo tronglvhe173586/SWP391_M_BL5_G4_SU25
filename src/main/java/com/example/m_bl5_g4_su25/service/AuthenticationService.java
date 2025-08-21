@@ -104,7 +104,7 @@ public class AuthenticationService implements IAuthenticationService {
                 .expirationTime(new Date(
                         Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()))
                 .jwtID(UUID.randomUUID().toString())
-                .claim("CustomerClaim", "Customer")
+                .claim("role", "ROLE_" + user.getRole())
                 .build();
 
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());

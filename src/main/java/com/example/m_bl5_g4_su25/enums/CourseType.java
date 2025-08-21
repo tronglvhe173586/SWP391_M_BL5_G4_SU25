@@ -5,5 +5,8 @@ public enum CourseType {
     A2,
     B1,
     B2,
-    C
+    C,
+    D,
+    E,
+    F
 }

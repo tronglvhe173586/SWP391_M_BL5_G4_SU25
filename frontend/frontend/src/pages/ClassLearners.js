@@ -25,11 +25,11 @@ const ClassLearners = () => {
     const fetchClassData = async () => {
       try {
         // Fetch class details
-        const classResponse = await axios.get(`http://localhost:8080/api/classes/${id}`);
+        const classResponse = await axios.get(`http://localhost:8080/driving-school-management/classes/${id}`);
         setClassData(classResponse.data);
 
         // Fetch learners for this class
-        const learnersResponse = await axios.get(`http://localhost:8080/api/classes/${id}/learners`);
+        const learnersResponse = await axios.get(`http://localhost:8080/driving-school-management/classes/${id}/learners`);
         setLearners(learnersResponse.data);
 
         setLoading(false);
@@ -93,10 +93,10 @@ const ClassLearners = () => {
           <MuiLink component={Link} to="/" color="inherit">
             Home
           </MuiLink>
-          <MuiLink component={Link} to="/class-management" color="inherit">
+          <MuiLink component={Link} to="/classes" color="inherit">
             Classes
           </MuiLink>
-          <MuiLink component={Link} to={`/view-class/${id}`} color="inherit">
+          <MuiLink component={Link} to={`/${id}`} color="inherit">
             Class Details
           </MuiLink>
           <Typography color="text.primary">Learners</Typography>

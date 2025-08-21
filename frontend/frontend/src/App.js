@@ -36,10 +36,10 @@ function App() {
 
         <Route path="/edit-user/:id" element={<EditUser />} />
         {/* New routes for Class Management */}
-        <Route path="/class-management" element={<ClassManagement />} />
-        <Route path="/add-class" element={<AddClass />} />
-        <Route path="/view-class/:id" element={<ViewClass />} />
-        <Route path="/edit-class/:id" element={<EditClass />} />
+        <Route path="/classes" element={<ClassManagement />} />
+        <Route path="/classes/add" element={<AddClass />} />
+        <Route path="/classes/:id" element={<ViewClass />} />
+        <Route path="/classes/edit/:id" element={<EditClass />} />
         <Route path="/class/:id/learners" element={<ClassLearners />} />
 
         <Route path="/users/edit/:id" element={<EditUser />} />
