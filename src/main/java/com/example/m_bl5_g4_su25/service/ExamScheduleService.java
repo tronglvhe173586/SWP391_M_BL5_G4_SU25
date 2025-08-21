@@ -4,7 +4,7 @@ import com.example.m_bl5_g4_su25.dto.request.ExamScheduleCreateRequest;
 import com.example.m_bl5_g4_su25.dto.response.ExamScheduleResponse;
 import com.example.m_bl5_g4_su25.entity.ExamSchedule;
 import com.example.m_bl5_g4_su25.entity.Exam;
-import com.example.m_bl5_g4_su25.entity.Class;
+import com.example.m_bl5_g4_su25.entity.DrivingClass;
 import com.example.m_bl5_g4_su25.entity.User;
 import com.example.m_bl5_g4_su25.repository.ExamScheduleRepository;
 import com.example.m_bl5_g4_su25.repository.ExamRepository;
@@ -56,7 +56,7 @@ public class ExamScheduleService implements IExamScheduleService {
 
                 // Set class if provided
                 if (request.getClassId() != null) {
-                        Class classField = classRepository.findById(request.getClassId())
+                        DrivingClass classField = classRepository.findById(request.getClassId())
                                         .orElseThrow(() -> new RuntimeException(
                                                         "Class not found with id: " + request.getClassId()));
                         examSchedule.setClassField(classField);
