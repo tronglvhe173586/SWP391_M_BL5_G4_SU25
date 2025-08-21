@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { DataGrid } from '@mui/x-data-grid';
-import {Paper, TextField, Box, Container, Typography, Button, Tooltip, IconButton} from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import {Paper, TextField, Box, Container, Typography, Button, ButtonGroup, Tooltip, IconButton} from '@mui/material';
 import { viVN } from '@mui/x-data-grid/locales';
 import { configuration } from '../configurations/configuration';
+import { useNavigate } from 'react-router-dom';
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
-
 
 const ExamScheduleTable = () => {
     const [examSchedules, setExamSchedules] = useState([]);
@@ -20,7 +20,23 @@ const ExamScheduleTable = () => {
         { field: 'className', headerName: 'Lớp', width: 160 },
         { field: 'examDate', headerName: 'Ngày thi', width: 140 },
         { field: 'startTime', headerName: 'Giờ bắt đầu', width: 140 },
-        { field: 'location', headerName: 'Địa điểm', width: 240 },
+        { field: 'location', headerName: 'Địa điểm', width: 180 },
+        {
+            field: 'view',
+            headerName: 'Chi tiết',
+            width: 80,
+            renderCell: (params) => (
+                <Tooltip title={"Xem chi tiết"}>
+                    <IconButton
+                        color={"primary"}
+                        size={"small"}
+                        onClick={() => navigate(`/exam-schedules/${params.row.id}`)}
+                    >
+                        <VisibilityIcon></VisibilityIcon>
+                    </IconButton>
+                </Tooltip>
+            )
+        },
         {
             field: 'actions',
             headerName: 'Sửa',
@@ -35,7 +51,6 @@ const ExamScheduleTable = () => {
                         <EditIcon></EditIcon>
                     </IconButton>
                 </Tooltip>
-
             )
         }
     ];
@@ -72,10 +87,6 @@ const ExamScheduleTable = () => {
         );
     });
 
-    const handleAddExamSchedule = () => {
-        navigate('/exam-schedules/add');
-    };
-
     return (
         <Container maxWidth="lg" sx={{ mt: 4 }}>
             <Typography variant="h4" gutterBottom>
@@ -104,12 +115,7 @@ const ExamScheduleTable = () => {
                     localeText={viVN.components.MuiDataGrid.defaultProps.localeText}
                 />
             </Paper>
-            <Button
-                variant="contained"
-                color="success"
-                sx={{ mt: 10 }}
-                onClick={handleAddExamSchedule}
-            >
+            <Button variant="contained" color="success" sx={{ mt: 10 }}>
                 Tạo lịch thi
             </Button>
         </Container>
