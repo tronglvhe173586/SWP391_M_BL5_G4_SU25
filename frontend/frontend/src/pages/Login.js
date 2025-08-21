@@ -14,6 +14,7 @@ import { Google } from "@mui/icons-material";
 import axios from "axios";
 import { OAuthConfig } from "../configurations/configuration";
 import { jwtDecode } from "jwt-decode";
+import { setToken } from "../services/localStorageService";
 
 export default function Login() {
     const navigate = useNavigate();
@@ -67,7 +68,7 @@ export default function Login() {
             const token = response.data.result?.token;
             if (!token) throw new Error("Không tìm thấy token trong phản hồi.");
 
-            localStorage.setItem("jwtToken", token);
+            setToken(token);
             const decodedToken = jwtDecode(token);
             const userRole = decodedToken.role;
             if (userRole === "ROLE_ADMIN") {

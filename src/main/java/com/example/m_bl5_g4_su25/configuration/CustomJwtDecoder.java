@@ -2,7 +2,6 @@ package com.example.m_bl5_g4_su25.configuration;
 
 import com.example.m_bl5_g4_su25.dto.request.IntrospectRequest;
 import com.example.m_bl5_g4_su25.service.AuthenticationService;
-import com.example.m_bl5_g4_su25.service.IAuthenticationService;
 import com.nimbusds.jose.JOSEException;
 import lombok.experimental.NonFinal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +24,22 @@ public class CustomJwtDecoder implements JwtDecoder {
     @Value("${jwt.signerKey}")
     private String signerKey;
 
+    @Autowired
+    private AuthenticationService authenticationService;
+
     private NimbusJwtDecoder nimbusJwtDecoder = null;
 
     @Override
     public Jwt decode(String token) throws JwtException {
+
+        try {
+            var response = authenticationService.introspect(
+                    IntrospectRequest.builder().token(token).build());
+
+            if (!response.isValid()) throw new JwtException("Token invalid");
+        } catch (JOSEException | ParseException e) {
+            throw new JwtException(e.getMessage());
+        }
 
         if (Objects.isNull(nimbusJwtDecoder)) {
             byte[] keyBytes = Base64.getDecoder().decode(signerKey);
