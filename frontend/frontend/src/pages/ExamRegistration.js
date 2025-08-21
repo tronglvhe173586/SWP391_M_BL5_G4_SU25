@@ -3,11 +3,19 @@ import axios from 'axios';
 import { Container, Typography, Paper, Box, Button } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { viVN } from '@mui/x-data-grid/locales';
-import { configuration } from '../configurations/configuration';
 
 const ExamRegistration = () => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [statusByScheduleId, setStatusByScheduleId] = useState({});
+
+  const getStatusLabel = (status) => {
+    if (!status) return 'Đăng ký';
+    if (status === 'PENDING') return 'Chờ xét duyệt';
+    if (status === 'ACCEPT') return 'Đã chấp thuận';
+    if (status === 'REJECT') return 'Bị từ chối';
+    return 'Đăng ký';
+  };
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 80 },
@@ -19,22 +27,47 @@ const ExamRegistration = () => {
     { field: 'maxParticipants', headerName: 'Số lượng tối đa', width: 150 },
     {
       field: 'actions',
-      headerName: 'Thao tác',
-      width: 160,
+      headerName: 'Trạng thái',
+      width: 180,
       sortable: false,
-      renderCell: (params) => (
-        <Button variant="contained" onClick={() => handleRegister(params.row.id)}>
-          Đăng ký
-        </Button>
-      ),
+      renderCell: (params) => {
+        const status = statusByScheduleId[params.row.id];
+        const label = getStatusLabel(status);
+        return (
+          <Button
+            variant="contained"
+            disabled={Boolean(status)}
+            onClick={() => handleRegister(params.row.id)}
+          >
+            {label}
+          </Button>
+        );
+      },
     },
   ];
+
+  const fetchStatuses = async (ids) => {
+    if (!ids || ids.length === 0) {
+      setStatusByScheduleId({});
+      return;
+    }
+    try {
+      const qs = encodeURIComponent(ids.join(','));
+      const resp = await axios.get(`/driving-school-management/exam-registrations/statuses?examScheduleIds=${qs}`);
+      setStatusByScheduleId(resp?.data?.result || {});
+    } catch (e) {
+      // ignore status load errors
+    }
+  };
 
   const fetchSchedules = async () => {
     setLoading(true);
     try {
-      const resp = await axios.get(`${configuration.API_BASE_URL}/exam-schedules`);
-      setRows(resp.data.result || []);
+      const resp = await axios.get(`/driving-school-management/exam-schedules`);
+      const list = resp.data.result || [];
+      setRows(list);
+      const ids = list.map((x) => x.id);
+      fetchStatuses(ids);
     } catch (e) {
       console.error(e);
     } finally {
@@ -44,10 +77,11 @@ const ExamRegistration = () => {
 
   const handleRegister = async (scheduleId) => {
     try {
-      await axios.post(`${configuration.API_BASE_URL}/exam-registrations`, {
+      await axios.post(`/driving-school-management/exam-registrations`, {
         examScheduleId: scheduleId,
       });
-      alert('Đăng ký thành công');
+      // Reload only the status for this schedule
+      fetchStatuses([scheduleId]);
     } catch (e) {
       const msg = e?.response?.data?.message || 'Đăng ký thất bại';
       alert(msg);
