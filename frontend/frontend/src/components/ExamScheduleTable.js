@@ -107,7 +107,7 @@ const ExamScheduleTable = () => {
             <Button
                 variant="contained"
                 color="success"
-                sx={{ mt: 2 }}
+                sx={{ mt: 10 }}
                 onClick={handleAddExamSchedule}
             >
                 Tạo lịch thi
