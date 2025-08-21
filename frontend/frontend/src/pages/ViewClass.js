@@ -21,7 +21,7 @@ const ViewClass = () => {
         setClassData(response.data);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching class:', error);
+        console.error('Lỗi khi tải dữ liệu lớp học:', error);
         alert('Không thể tải dữ liệu lớp học');
       }
     };
@@ -29,19 +29,19 @@ const ViewClass = () => {
     fetchClass();
   }, [id]);
 
-  if (loading) return <Typography>Loading...</Typography>;
+  if (loading) return <Typography>Đang tải...</Typography>;
 
   return (
       <Container>
         <Paper elevation={3} sx={{ p: 3, mt: 3 }}>
-          <h2>View Class</h2>
+          <h2>Xem Lớp Học</h2>
           <Typography>ID: {classData.classId}</Typography>
-          <Typography>Class Name: {classData.className}</Typography>
-          <Typography>Start Date: {classData.startDate}</Typography>
-          <Typography>End Date: {classData.endDate}</Typography>
-          <Typography>Max Students: {classData.maxStudents}</Typography>
-          <Typography>Instructor: {classData.instructorName}</Typography>
-          <Typography>Current Students: {classData.currentStudentsCount}</Typography>
+          <Typography>Tên Lớp: {classData.className}</Typography>
+          <Typography>Ngày Bắt Đầu: {classData.startDate}</Typography>
+          <Typography>Ngày Kết Thúc: {classData.endDate}</Typography>
+          <Typography>Sĩ Số Tối Đa: {classData.maxStudents}</Typography>
+          <Typography>Giảng Viên: {classData.instructorName}</Typography>
+          <Typography>Số Học Viên Hiện Tại: {classData.currentStudentsCount}</Typography>
 
           <Box sx={{ mt: 3 }}>
             <Button
@@ -51,7 +51,7 @@ const ViewClass = () => {
                 color="primary"
                 startIcon={<PeopleIcon />}
             >
-              View Learners
+              Xem Học Viên
             </Button>
           </Box>
         </Paper>

@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Paper, TextField, Box } from "@mui/material";
-import { Button } from "@mui/material";
+import { Paper, TextField, Box, IconButton, Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { viVN } from "@mui/x-data-grid/locales";
 import axios from "axios";
+// Icons
+import EditIcon from "@mui/icons-material/Edit";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import PeopleIcon from "@mui/icons-material/People";
 
 export default function ClassTable() {
   const navigate = useNavigate();
@@ -15,42 +18,56 @@ export default function ClassTable() {
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
     { field: "className", headerName: "Tên Lớp", width: 200 },
-    {
-      field: "startDate",
-      headerName: "Ngày Bắt Đầu",
-      width: 150,
-    },
-    {
-      field: "endDate",
-      headerName: "Ngày Kết Thúc",
-      width: 150,
-    },
+    { field: "startDate", headerName: "Ngày Bắt Đầu", width: 150 },
+    { field: "endDate", headerName: "Ngày Kết Thúc", width: 150 },
     { field: "maxStudents", headerName: "Sĩ Số Tối Đa", width: 120 },
     { field: "instructorName", headerName: "Giảng Viên", width: 150 },
     {
       field: "actions",
-      headerName: "Hành Động",
-      width: 150,
+      headerName: "Sửa",
+      width: 80,
       renderCell: (params) => (
-        <>
-          <Button
-            variant="contained"
-            color="primary"
-            size="small"
-            onClick={() => navigate(`/classes/${params.row.id}`)}
-            style={{ marginRight: "10px" }}
-          >
-            Xem
-          </Button>
-          <Button
-            variant="contained"
+        <Tooltip title="Sửa">
+          <IconButton
             color="warning"
             size="small"
             onClick={() => navigate(`/classes/edit/${params.row.id}`)}
           >
-            Sửa
-          </Button>
-        </>
+            <EditIcon />
+          </IconButton>
+        </Tooltip>
+      ),
+    },
+    {
+      field: "view",
+      headerName: "Chi Tiết",
+      width: 80,
+      renderCell: (params) => (
+        <Tooltip title="Xem Chi Tiết">
+          <IconButton
+            color="primary"
+            size="small"
+            onClick={() => navigate(`/classes/${params.row.id}`)}
+          >
+            <VisibilityIcon />
+          </IconButton>
+        </Tooltip>
+      ),
+    },
+    {
+      field: "viewLearners",
+      headerName: "Học Viên",
+      width: 100,
+      renderCell: (params) => (
+        <Tooltip title="Xem Học Viên">
+          <IconButton
+            color="secondary"
+            size="small"
+            onClick={() => navigate(`/class/${params.row.id}/learners`)}
+          >
+            <PeopleIcon />
+          </IconButton>
+        </Tooltip>
       ),
     },
   ];
