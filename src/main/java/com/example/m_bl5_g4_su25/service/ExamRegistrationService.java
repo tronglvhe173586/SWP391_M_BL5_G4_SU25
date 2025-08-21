@@ -75,8 +75,12 @@ public class ExamRegistrationService {
         ExamRegistration registration = examRegistrationRepository.findById(registrationId)
                 .orElseThrow(() -> new AppException(ErrorCode.EXAM_REGISTRATION_NOT_FOUND));
 
-        String newStatus = request.getStatus() == null ? "" : request.getStatus().trim().toUpperCase();
-        if (!"ACCEPT".equals(newStatus) && !"REJECT".equals(newStatus)) {
+        if (request == null || request.getStatus() == null) {
+            throw new AppException(ErrorCode.INVALID_STATUS);
+        }
+
+        String newStatus = request.getStatus().trim().toUpperCase();
+        if (!"CONFIRMED".equals(newStatus) && !"CANCELLED".equals(newStatus)) {
             throw new AppException(ErrorCode.INVALID_STATUS);
         }
 

@@ -27,7 +27,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import axios from 'axios';
 import { getToken } from '../services/localStorageService';
 import { configuration } from '../configurations/configuration';
- 
+
 
 const ExamRegistrationManagement = () => {
   const [registrations, setRegistrations] = useState([]);
@@ -74,10 +74,11 @@ const ExamRegistrationManagement = () => {
         status: newStatus
       }, {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
       });
-      
+
       if (response.data && response.data.code === 1000) {
         setSuccess(`Registration ${newStatus.toLowerCase()}ed successfully`);
         fetchRegistrations();
@@ -97,7 +98,7 @@ const ExamRegistrationManagement = () => {
           Authorization: `Bearer ${token}`
         }
       });
-      
+
       if (response.data && response.data.code === 1000) {
         setSuccess('Registration deleted successfully');
         fetchRegistrations();
@@ -130,23 +131,28 @@ const ExamRegistrationManagement = () => {
   };
 
   const handleConfirmAction = () => {
-    if (confirmDialog.action === 'accept') {
-      handleStatusUpdate(confirmDialog.registrationId, 'ACCEPT');
-    } else if (confirmDialog.action === 'reject') {
-      handleStatusUpdate(confirmDialog.registrationId, 'REJECT');
-    } else if (confirmDialog.action === 'delete') {
-      handleDelete(confirmDialog.registrationId);
-    }
+    const { action, registrationId } = confirmDialog;
+    // Close dialog first to avoid aria-hidden/focus issues
     closeConfirmDialog();
+    // Defer action until dialog unmounts
+    setTimeout(() => {
+      if (action === 'accept') {
+        handleStatusUpdate(registrationId, 'CONFIRMED');
+      } else if (action === 'reject') {
+        handleStatusUpdate(registrationId, 'CANCELLED');
+      } else if (action === 'delete') {
+        handleDelete(registrationId);
+      }
+    }, 0);
   };
 
   const getStatusColor = (status) => {
     switch (status) {
       case 'PENDING':
         return 'warning';
-      case 'ACCEPT':
+      case 'CONFIRMED':
         return 'success';
-      case 'REJECT':
+      case 'CANCELLED':
         return 'error';
       default:
         return 'default';
