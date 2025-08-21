@@ -62,7 +62,7 @@ const ExamRegistrationTable = () => {
 
   const fetchExamRegistrations = async () => {
     try {
-      const response = await fetch(`${configuration.baseUrl}/api/exam-registrations`);
+      const response = await fetch(`/driving-school-management/exam-registrations`);
       const data = await response.json();
       if (data.code === 1000) {
         setExamRegistrations(data.result);
@@ -75,7 +75,7 @@ const ExamRegistrationTable = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch(`${configuration.baseUrl}/api/users`);
+      const response = await fetch(`/driving-school-management/users`);
       const data = await response.json();
       if (data.code === 1000) {
         setUsers(data.result);
@@ -87,7 +87,7 @@ const ExamRegistrationTable = () => {
 
   const fetchExamSchedules = async () => {
     try {
-      const response = await fetch(`${configuration.baseUrl}/api/exam-schedules`);
+      const response = await fetch(`/driving-school-management/exam-schedules`);
       const data = await response.json();
       if (data.code === 1000) {
         setExamSchedules(data.result);
@@ -147,8 +147,8 @@ const ExamRegistrationTable = () => {
   const handleSubmit = async () => {
     try {
       const url = editingRegistration
-        ? `${configuration.baseUrl}/api/exam-registrations/${editingRegistration.id}`
-        : `${configuration.baseUrl}/api/exam-registrations`;
+        ? `/driving-school-management/exam-registrations/${editingRegistration.id}`
+        : `/driving-school-management/exam-registrations`;
       
       const method = editingRegistration ? 'PUT' : 'POST';
       
@@ -183,7 +183,7 @@ const ExamRegistrationTable = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this exam registration?')) {
       try {
-        const response = await fetch(`${configuration.baseUrl}/api/exam-registrations/${id}`, {
+        const response = await fetch(`/driving-school-management/exam-registrations/${id}`, {
           method: 'DELETE',
         });
 
@@ -204,7 +204,7 @@ const ExamRegistrationTable = () => {
 
   const handleStatusUpdate = async () => {
     try {
-      const response = await fetch(`${configuration.baseUrl}/api/exam-registrations/status`, {
+      const response = await fetch(`/driving-school-management/exam-registrations/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

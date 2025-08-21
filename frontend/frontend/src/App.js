@@ -9,7 +9,8 @@ import ExamList from "./pages/ExamList.js";
 import AddExam from "./pages/AddExam.js";
 import EditExam from "./pages/EditExam.js";
 import ExamScheduleList from "./pages/ExamScheduleList.js";
-import AddExamSchedulePage from "./pages/AddExamSchedulePage.js";
+import EditExamSchedule from "./pages/EditExamSchedule.js";
+import ViewExamSchedule from "./pages/ViewExamSchedule.js";
 import Login from './pages/Login.js';
 import UserDetails from "./pages/UserDetails.js";
 import Register from "./pages/Register.js";
@@ -27,6 +28,8 @@ import AddCourse from './pages/AddCourse.js';
 import EditCourse from './pages/EditCourse.js';
 import CourseDetail from './pages/CourseDetails.js';
 import ClassListByCourse from './pages/ClassListByCourse.js';
+import ExamRegistration from './pages/ExamRegistration.js';
+import ExamRegistrationManagement from './pages/ExamRegistrationManagement.js';
 
 
 function AppContent() {
@@ -61,8 +64,10 @@ function AppContent() {
         <Route path="/exams/add" element={<AddExam />} />
         <Route path="/exams/edit/:id" element={<EditExam />} />
         <Route path="/exam-schedules" element={<ExamScheduleList />} />
-
-        <Route path="/exam-schedules/add" element={<AddExamSchedulePage />} />
+        <Route path="/exam-schedules/edit/:id" element={<EditExamSchedule />} />
+        <Route path="/exam-schedules/:id" element={<ViewExamSchedule />} />
+        <Route path="/exam-registration" element={<ExamRegistration />} />
+        <Route path="/exam-registration-management" element={<ExamRegistrationManagement />} />
         <Route path="/register" element={<Register />} />
         <Route path="/users/:id" element={<UserDetails />} />
         <Route path="/authenticate" element={<Authenticate />} />
