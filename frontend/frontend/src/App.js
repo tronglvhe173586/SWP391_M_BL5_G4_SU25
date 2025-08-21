@@ -25,6 +25,7 @@ import CourseManagement from './pages/CourseManagement.js';
 import AddCourse from './pages/AddCourse.js';
 import EditCourse from './pages/EditCourse.js';
 import CourseDetail from './pages/CourseDetails.js';
+import ClassListByCourse from './pages/ClassListByCourse.js';
 
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
         <Route path="/add_courses" element={<AddCourse />} />
         <Route path="/courses/edit/:id" element={<EditCourse />} />
         <Route path="/courses/:id" element={<CourseDetail />} />
+        <Route path="/courses/:courseId/classes" element={<ClassListByCourse />} />
         <Route path="/add-instructor" element={<AddInstructor />} />
 
         <Route path="/edit-user/:id" element={<EditUser />} />

@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { viVN } from "@mui/x-data-grid/locales";
-import { Paper, TextField, Box, Button } from "@mui/material";
+import { Paper, TextField, Box, IconButton, Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
+// Icons
+import EditIcon from "@mui/icons-material/Edit";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import SchoolIcon from "@mui/icons-material/School";
 
 export default function CourseTable() {
   const navigate = useNavigate();
@@ -17,44 +22,62 @@ export default function CourseTable() {
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
     { field: "courseName", headerName: "Tên khóa học", width: 200 },
-    { field: "courseType", headerName: "Loại khóa học", width: 150 },
+    { field: "courseType", headerName: "Loại khóa học", width: 120 },
     { field: "description", headerName: "Mô tả", width: 250 },
     { field: "price", headerName: "Giá", width: 120 },
-    { field: "duration", headerName: "Thời lượng", width: 120 },
+    { field: "duration", headerName: "Thời lượng", width: 90 },
     {
       field: "isDeleted",
       headerName: "Đã xóa",
-      width: 120,
+      width: 90,
       renderCell: (params) => (params.value ? "Có" : "Không"),
     },
     {
       field: "actions",
-      headerName: "Hành động",
-      width: 150,
+      headerName: "Sửa",
+      width: 80,
       renderCell: (params) => (
-        <Button
-          variant="contained"
-          color="warning"
-          size="small"
-          onClick={() => navigate(`/courses/edit/${params.row.id}`)}
-        >
-          Sửa
-        </Button>
+        <Tooltip title="Sửa">
+          <IconButton
+            color="warning"
+            size="small"
+            onClick={() => navigate(`/courses/edit/${params.row.id}`)}
+          >
+            <EditIcon />
+          </IconButton>
+        </Tooltip>
       ),
     },
     {
       field: "view",
-      headerName: "Xem chi tiết",
-      width: 150,
+      headerName: "Chi tiết",
+      width: 80,
       renderCell: (params) => (
-        <Button
-          variant="contained"
-          color="primary"
-          size="small"
-          onClick={() => navigate(`/courses/${params.row.id}`)}
-        >
-          Xem
-        </Button>
+        <Tooltip title="Xem chi tiết">
+          <IconButton
+            color="primary"
+            size="small"
+            onClick={() => navigate(`/courses/${params.row.id}`)}
+          >
+            <VisibilityIcon />
+          </IconButton>
+        </Tooltip>
+      ),
+    },
+    {
+      field: "viewClasses",
+      headerName: "Lớp học",
+      width: 100,
+      renderCell: (params) => (
+        <Tooltip title="Xem lớp học">
+          <IconButton
+            color="secondary"
+            size="small"
+            onClick={() => navigate(`/courses/${params.row.id}/classes`)}
+          >
+            <SchoolIcon />
+          </IconButton>
+        </Tooltip>
       ),
     },
   ];

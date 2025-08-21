@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 
 const pages = [
   { name: 'Tài Khoản', path: '/users' },
+  { name: 'Khóa Học', path: '/courses' },
   { name: 'Bài Thi', path: '/exams' },
 
   {
