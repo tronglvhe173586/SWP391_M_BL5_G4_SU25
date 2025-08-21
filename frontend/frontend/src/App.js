@@ -21,6 +21,10 @@ import Authenticate from "./pages/Authenticate.js";
 import ForgotPassword from "./pages/ForgotPassword.js";
 import VerifyOtp from "./pages/VerifyOTP.js";
 import ChangePassword from "./pages/ChangePassword.js";
+import CourseManagement from './pages/CourseManagement.js';
+import AddCourse from './pages/AddCourse.js';
+import EditCourse from './pages/EditCourse.js';
+import CourseDetail from './pages/CourseDetails.js';
 
 
 function App() {
@@ -31,6 +35,10 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/users" element={<UserManagement />} />
+        <Route path="/courses" element={<CourseManagement />} />
+        <Route path="/add_courses" element={<AddCourse />} />
+        <Route path="/courses/edit/:id" element={<EditCourse />} />
+        <Route path="/courses/:id" element={<CourseDetail />} />
         <Route path="/add-instructor" element={<AddInstructor />} />
 
         <Route path="/edit-user/:id" element={<EditUser />} />

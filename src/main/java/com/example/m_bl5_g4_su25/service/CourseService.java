@@ -36,38 +36,38 @@ public class CourseService implements ICourseService {
             coursePage = courseRepository.findAll(pageable);
         }
 
-        return coursePage.map(user -> new ListCourseResponse(
-                user.getId(),
-                user.getCourseName(),
-                user.getCourseType(),
-                user.getDescription(),
-                user.getPrice(),
-                user.getDuration(),
-                user.getIsDeleted()
+        return coursePage.map(course -> new ListCourseResponse(
+                course.getId(),
+                course.getCourseName(),
+                course.getCourseType(),
+                course.getDescription(),
+                course.getPrice(),
+                course.getDuration(),
+                course.getIsDeleted()
         ));
     }
 
     @Override
-    public ListCourseResponse editCourse(Long id, EditCourseRequest request) {
-        Course course = courseRepository.findById(id).
-                orElseThrow(() -> new EntityNotFoundException("Course not found with id: " + id));
-        course.setCourseName(request.getCourseName());
-        course.setCourseType(request.getCourseType());
-        course.setDescription(request.getDescription());
-        course.setPrice(request.getPrice());
-        course.setDuration(request.getDuration());
-        course.setIsDeleted(request.getIsDeleted());
-        Course updatedCourse = courseRepository.save(course);
-        return new ListCourseResponse(
-                updatedCourse.getId(),
-                updatedCourse.getCourseName(),
-                updatedCourse.getCourseType(),
-                updatedCourse.getDescription(),
-                updatedCourse.getPrice(),
-                updatedCourse.getDuration(),
-                updatedCourse.getIsDeleted()
-        );
-    }
+        public ListCourseResponse editCourse(Long id, EditCourseRequest request) {
+            Course course = courseRepository.findById(id).
+                    orElseThrow(() -> new EntityNotFoundException("Course not found with id: " + id));
+            course.setCourseName(request.getCourseName());
+            course.setCourseType(request.getCourseType());
+            course.setDescription(request.getDescription());
+            course.setPrice(request.getPrice());
+            course.setDuration(request.getDuration());
+            course.setIsDeleted(request.getIsDeleted());
+            Course updatedCourse = courseRepository.save(course);
+            return new ListCourseResponse(
+                    updatedCourse.getId(),
+                    updatedCourse.getCourseName(),
+                    updatedCourse.getCourseType(),
+                    updatedCourse.getDescription(),
+                    updatedCourse.getPrice(),
+                    updatedCourse.getDuration(),
+                    updatedCourse.getIsDeleted()
+            );
+        }
 
     @Override
     public ListCourseResponse addCourse(AddCourseRequest request) {
@@ -88,6 +88,22 @@ public class CourseService implements ICourseService {
                 newCourse.getDuration(),
                 newCourse.getIsDeleted()
         );
+    }
+
+    @Override
+    public ListCourseResponse getCourseById(Long id) {
+        Course course = courseRepository.findById(id).
+                orElseThrow(() -> new EntityNotFoundException("Course not found with id: " + id));
+        return new ListCourseResponse(
+                course.getId(),
+                course.getCourseName(),
+                course.getCourseType(),
+                course.getDescription(),
+                course.getPrice(),
+                course.getDuration(),
+                course.getIsDeleted()
+        );
+
     }
 
 }
