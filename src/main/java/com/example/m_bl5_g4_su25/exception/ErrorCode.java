@@ -15,6 +15,13 @@ public enum ErrorCode {
     UNAUTHENTICATED(1006, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1007, "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_DOB(1008, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
+    USER_NOT_FOUND(1009, "User not found", HttpStatus.NOT_FOUND),
+    EXAM_SCHEDULE_NOT_FOUND(1010, "Exam schedule not found", HttpStatus.NOT_FOUND),
+    EXAM_REGISTRATION_NOT_FOUND(1011, "Exam registration not found", HttpStatus.NOT_FOUND),
+    EXAM_REGISTRATION_ALREADY_EXISTS(1012, "Exam registration already exists", HttpStatus.BAD_REQUEST),
+    EXAM_SCHEDULE_FULL(1013, "Exam schedule is full", HttpStatus.BAD_REQUEST),
+    INVALID_STATUS(1014, "Invalid status", HttpStatus.BAD_REQUEST),
+    INTERNAL_SERVER_ERROR(1015, "Internal server error", HttpStatus.INTERNAL_SERVER_ERROR),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

@@ -11,5 +11,4 @@ import java.util.List;
 public interface ClassRepository extends JpaRepository<Class, Long> {
     boolean existsByClassName(String className);
     List<Class> findByCourseId(Long courseId);
-
 }
