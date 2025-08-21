@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class EditClassRequest {
 
-    @Size(max = 100, message = "Tên lớp không được vượt quá 100 ký tự")
+    @Size(max = 100, message = "Tên lớp phải không vượt quá 100 ký tự")
     @NotNull(message = "Tên lớp là bắt buộc")
     private String className;
 

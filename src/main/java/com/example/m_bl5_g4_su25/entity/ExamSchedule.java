@@ -34,7 +34,7 @@ public class ExamSchedule {
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.SET_NULL)
     @JoinColumn(name = "class_id")
-    private Class classField;
+    private DrivingClass classField;
 
     @NotNull
     @Column(name = "exam_date", nullable = false)
