@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import HomePage from "./pages/HomePage.js";
 import ResponsiveAppBar from "./components/ResponsiveAppBar.js";
 import UserManagement from "./pages/userManagement.js";
@@ -22,16 +22,30 @@ import Authenticate from "./pages/Authenticate.js";
 import ForgotPassword from "./pages/ForgotPassword.js";
 import VerifyOtp from "./pages/VerifyOTP.js";
 import ChangePassword from "./pages/ChangePassword.js";
+import CourseManagement from './pages/CourseManagement.js';
+import AddCourse from './pages/AddCourse.js';
+import EditCourse from './pages/EditCourse.js';
+import CourseDetail from './pages/CourseDetails.js';
+import ClassListByCourse from './pages/ClassListByCourse.js';
 
 
-function App() {
+function AppContent() {
+  const location = useLocation();
+  const hideAppBarPaths = ['/', '/login'];
+  const shouldHideAppBar = hideAppBarPaths.includes(location.pathname);
+
   return (
-    <Router>
-      <ResponsiveAppBar />
+    <>
+      {!shouldHideAppBar && <ResponsiveAppBar />}
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/users" element={<UserManagement />} />
+        <Route path="/courses" element={<CourseManagement />} />
+        <Route path="/add_courses" element={<AddCourse />} />
+        <Route path="/courses/edit/:id" element={<EditCourse />} />
+        <Route path="/courses/:id" element={<CourseDetail />} />
+        <Route path="/courses/:courseId/classes" element={<ClassListByCourse />} />
         <Route path="/add-instructor" element={<AddInstructor />} />
 
         <Route path="/edit-user/:id" element={<EditUser />} />
@@ -47,15 +61,23 @@ function App() {
         <Route path="/exams/add" element={<AddExam />} />
         <Route path="/exams/edit/:id" element={<EditExam />} />
         <Route path="/exam-schedules" element={<ExamScheduleList />} />
+
         <Route path="/exam-schedules/add" element={<AddExamSchedulePage />} />
         <Route path="/register" element={<Register />} />
-          <Route path="/users/:id" element={<UserDetails />} />
+        <Route path="/users/:id" element={<UserDetails />} />
         <Route path="/authenticate" element={<Authenticate />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path= "/verify-otp" element={<VerifyOtp />} />
         <Route path="/change-password" element={<ChangePassword />} />
-
       </Routes>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AppContent />
     </Router>
   );
 }

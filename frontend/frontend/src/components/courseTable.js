@@ -5,33 +5,31 @@ import { Paper, TextField, Box, IconButton, Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-
 // Icons
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import SchoolIcon from "@mui/icons-material/School";
 
-
-export default function UserTable() {
+export default function CourseTable() {
   const navigate = useNavigate();
-  const [users, setUsers] = useState([]);
+  const [courses, setCourses] = useState([]);
   const [totalElements, setTotalElements] = useState(0);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [loading, setLoading] = useState(false);
   const [keyword, setKeyword] = useState("");
-  const [isAdmin, setIsAdmin] = useState(false);
 
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
-    { field: "username", headerName: "Tên đăng nhập", width: 150 },
-    { field: "firstName", headerName: "Họ", width: 150 },
-    { field: "lastName", headerName: "Tên", width: 150 },
-    { field: "email", headerName: "Email", width: 200 },
-    { field: "role", headerName: "Vai trò", width: 130 },
+    { field: "courseName", headerName: "Tên khóa học", width: 200 },
+    { field: "courseType", headerName: "Loại khóa học", width: 120 },
+    { field: "description", headerName: "Mô tả", width: 250 },
+    { field: "price", headerName: "Giá", width: 120 },
+    { field: "duration", headerName: "Thời lượng", width: 90 },
     {
-      field: "isActive",
-      headerName: "Hoạt động",
-      width: 120,
+      field: "isDeleted",
+      headerName: "Đã xóa",
+      width: 90,
       renderCell: (params) => (params.value ? "Có" : "Không"),
     },
     {
@@ -43,7 +41,7 @@ export default function UserTable() {
           <IconButton
             color="warning"
             size="small"
-            onClick={() => navigate(`/users/edit/${params.row.id}`)}
+            onClick={() => navigate(`/courses/edit/${params.row.id}`)}
           >
             <EditIcon />
           </IconButton>
@@ -59,21 +57,37 @@ export default function UserTable() {
           <IconButton
             color="primary"
             size="small"
-            onClick={() => navigate(`/users/${params.row.id}`)}
+            onClick={() => navigate(`/courses/${params.row.id}`)}
           >
             <VisibilityIcon />
           </IconButton>
         </Tooltip>
       ),
     },
+    {
+      field: "viewClasses",
+      headerName: "Lớp học",
+      width: 100,
+      renderCell: (params) => (
+        <Tooltip title="Xem lớp học">
+          <IconButton
+            color="secondary"
+            size="small"
+            onClick={() => navigate(`/courses/${params.row.id}/classes`)}
+          >
+            <SchoolIcon />
+          </IconButton>
+        </Tooltip>
+      ),
+    },
   ];
 
-  const fetchUsers = async () => {
+  const fetchCourses = async () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("jwtToken");
       const res = await axios.get(
-        "http://localhost:8080/driving-school-management/users/users_pagination",
+        "http://localhost:8080/driving-school-management/courses/courses_pagination",
         {
           params: {
             page: page,
@@ -83,23 +97,23 @@ export default function UserTable() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      setUsers(res.data.content || []);
+      setCourses(res.data.content || []);
       setTotalElements(res.data.totalElements || 0);
     } catch (err) {
-      console.error("Lỗi khi tải danh sách người dùng:", err);
+      console.error("Lỗi khi tải danh sách khóa học:", err);
     }
     setLoading(false);
   };
 
   useEffect(() => {
-    fetchUsers();
+    fetchCourses();
   }, [page, pageSize, keyword]);
 
   return (
-    <Paper sx={{ height: 500, width: "100%" }}>
+    <Paper sx={{ height: 600, width: "100%" }}>
       <Box sx={{ p: 2 }}>
         <TextField
-          label="Tìm kiếm"
+          label="Tìm kiếm theo tên khóa học"
           variant="outlined"
           size="small"
           value={keyword}
@@ -108,7 +122,7 @@ export default function UserTable() {
         />
       </Box>
       <DataGrid
-        rows={users}
+        rows={courses}
         columns={columns}
         paginationMode="server"
         rowCount={totalElements}
