@@ -58,9 +58,9 @@ This feature allows administrators to add new exam schedules to the driving scho
   - "Create Exam Schedule" button that navigates to add page
   - Clean, focused interface for viewing schedules
 
-### AddExamSchedulePage Component
+### AddExamSchedule Component
 
-- **Location**: `frontend/frontend/src/pages/AddExamSchedulePage.js`
+- **Location**: `frontend/frontend/src/pages/AddExamSchedule.js`
 - **Purpose**: Standalone page for adding exam schedules
 - **Features**: Wrapper component that can be used independently
 
