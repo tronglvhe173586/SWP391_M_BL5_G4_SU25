@@ -9,6 +9,7 @@ import com.example.m_bl5_g4_su25.entity.InstructorProfile;
 import com.example.m_bl5_g4_su25.entity.Provinces;
 import com.example.m_bl5_g4_su25.entity.User;
 import com.example.m_bl5_g4_su25.enums.Gender;
+import com.example.m_bl5_g4_su25.enums.Role;
 import com.example.m_bl5_g4_su25.repository.InstructorProfileRepository;
 import com.example.m_bl5_g4_su25.repository.ProvinceRepository;
 import com.example.m_bl5_g4_su25.repository.UserRepository;
@@ -16,6 +17,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +50,7 @@ public class UserService implements IUserService {
                         user.getFirstName(),
                         user.getLastName(),
                         user.getEmail(),
-                        user.getRole(),
+                        user.getRole().name(),
                         user.getIsActive(),
                         user.getGender(),
                         user.getDateOfBirth()
@@ -75,7 +77,7 @@ public class UserService implements IUserService {
                 updated.getFirstName(),
                 updated.getLastName(),
                 updated.getEmail(),
-                updated.getRole(),
+                updated.getRole().name(),
                 updated.getIsActive(),
                 updated.getGender(),
                 updated.getDateOfBirth()
@@ -98,7 +100,7 @@ public class UserService implements IUserService {
         user.setProvince(province);
         user.setGender(Gender.valueOf(request.getGender()));
         user.setDateOfBirth(request.getDateOfBirth());
-        user.setRole("INSTRUCTOR");
+        user.setRole(Role.INSTRUCTOR);
         user.setIsActive(true);
         userRepository.save(user);
 
@@ -129,7 +131,7 @@ public class UserService implements IUserService {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getEmail(),
-                user.getRole(),
+                user.getRole().name(),
                 user.getIsActive(),
                 user.getGender(),
                 user.getDateOfBirth()
@@ -147,7 +149,7 @@ public class UserService implements IUserService {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getEmail(),
-                user.getRole(),
+                user.getRole().name(),
                 user.getIsActive(),
                 user.getGender(),
                 user.getDateOfBirth()
@@ -171,7 +173,7 @@ public class UserService implements IUserService {
                 .gender(Gender.valueOf(request.getGender()))
                 .dateOfBirth(request.getDateOfBirth())
                 .province(province)
-                .role("LEARNER")
+                .role(Role.LEARNER)
                 .isActive(true)
                 .build();
 
@@ -185,7 +187,7 @@ public class UserService implements IUserService {
                 .email(user.getEmail())
                 .gender(user.getGender().name())
                 .dateOfBirth(user.getDateOfBirth())
-                .role(user.getRole())
+                .role(user.getRole().name())
                 .provinceId(province.getId())
                 .provinceName(province.getName())
                 .build();

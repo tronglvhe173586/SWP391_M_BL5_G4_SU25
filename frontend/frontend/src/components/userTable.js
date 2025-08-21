@@ -5,6 +5,7 @@ import { Paper, TextField, Box, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+
 export default function UserTable() {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
@@ -13,6 +14,7 @@ export default function UserTable() {
   const [pageSize, setPageSize] = useState(10);
   const [loading, setLoading] = useState(false);
   const [keyword, setKeyword] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const columns = [
     { field: "id", headerName: "ID", width: 70 },

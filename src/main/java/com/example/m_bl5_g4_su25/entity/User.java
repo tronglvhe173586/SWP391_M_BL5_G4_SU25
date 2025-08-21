@@ -1,6 +1,7 @@
 package com.example.m_bl5_g4_su25.entity;
 
 import com.example.m_bl5_g4_su25.enums.Gender;
+import com.example.m_bl5_g4_su25.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -63,9 +64,9 @@ public class User {
     private Provinces province;
 
     @NotNull
-    @Lob
+    @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private String role;
+    private Role role;
 
     @ColumnDefault("1")
     @Column(name = "is_active")
