@@ -12,8 +12,8 @@ const ExamRegistration = () => {
   const getStatusLabel = (status) => {
     if (!status) return 'Đăng ký';
     if (status === 'PENDING') return 'Chờ xét duyệt';
-    if (status === 'ACCEPT') return 'Đã chấp thuận';
-    if (status === 'REJECT') return 'Bị từ chối';
+    if (status === 'CONFIRMED') return 'Đã chấp thuận';
+    if (status === 'CANCELLED') return 'Bị từ chối';
     return 'Đăng ký';
   };
 
