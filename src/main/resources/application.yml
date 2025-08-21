@@ -9,7 +9,7 @@ spring:
     url: jdbc:mysql://localhost:3306/driving_school_management
     driverClassName: "com.mysql.cj.jdbc.Driver"
     username: root
-    password: 1234
+    password: root
   jpa:
     properties:
       hibernate:
@@ -17,8 +17,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: tronglvhe173586@fpt.edu.vn
-    password: rwgzjvedrqripghh
+    username: ${GMAIL_USERNAME}
+    password: ${GMAIL_PASSWORD}
     properties:
       mail:
         smtp:
@@ -28,13 +28,12 @@ spring:
 
 outbound:
   identity:
-    client-id: 189975487459-fsccp80lfnucmpue0auunupkf2c4h5pn.apps.googleusercontent.com
-    client-secret: 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
+    client-id: ${GOOGLE_CLIENT_ID}
+    client-secret: ${GOOGLE_CLIENT_SECRET}
     redirect-uri: "http://localhost:3000/authenticate"
 
 jwt:
   signerKey: "n6o81j7T49u61O2h2c7P1y3p0r1I9w8L2k5R8s3T4o2X3j5V9m7Q0e4A8b6C9d5H4v0F1z7E"
   valid-duration: 36000 #in seconds
   refreshable-duration: 36000 #in seconds
-
 
