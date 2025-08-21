@@ -5,9 +5,11 @@ import { Paper, TextField, Box, IconButton, Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+
 // Icons
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+
 
 export default function UserTable() {
   const navigate = useNavigate();
@@ -17,6 +19,7 @@ export default function UserTable() {
   const [pageSize, setPageSize] = useState(10);
   const [loading, setLoading] = useState(false);
   const [keyword, setKeyword] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const columns = [
     { field: "id", headerName: "ID", width: 70 },

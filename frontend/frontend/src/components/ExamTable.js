@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Paper, TextField, Box } from "@mui/material";
+import {Paper, TextField, Box, Tooltip, IconButton} from "@mui/material";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { viVN } from "@mui/x-data-grid/locales";
 import axios from "axios";
+import EditIcon from "@mui/icons-material/Edit";
 
 export default function ExamTable() {
   const navigate = useNavigate();
@@ -32,18 +33,19 @@ export default function ExamTable() {
     { field: "passScore", headerName: "Điểm đạt", width: 120 },
     {
       field: "actions",
-      headerName: "Hành động",
-      width: 150,
+      headerName: "Sửa",
+      width: 80,
       renderCell: (params) => (
-        <Button
-          variant="contained"
-          color="warning"
-          size="small"
-          onClick={() => navigate(`/exams/edit/${params.row.id}`)}
-        >
-          Sửa
-        </Button>
-      )
+          <Tooltip title="Sửa">
+            <IconButton
+                color="warning"
+                size="small"
+                onClick={() => navigate(`/exams/edit/${params.row.id}`)}
+            >
+              <EditIcon />
+            </IconButton>
+          </Tooltip>
+      ),
     }
   ];
 

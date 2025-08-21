@@ -1,8 +1,14 @@
 package com.example.m_bl5_g4_su25.service;
 
+import com.example.m_bl5_g4_su25.dto.request.ExamScheduleUpdateRequest;
+import com.example.m_bl5_g4_su25.dto.response.ExamScheduleDetailResponse;
 import com.example.m_bl5_g4_su25.dto.response.ExamScheduleResponse;
 import com.example.m_bl5_g4_su25.entity.ExamSchedule;
+import com.example.m_bl5_g4_su25.entity.Enrollment;
+import com.example.m_bl5_g4_su25.exception.AppException;
+import com.example.m_bl5_g4_su25.exception.ErrorCode;
 import com.example.m_bl5_g4_su25.repository.ExamScheduleRepository;
+import com.example.m_bl5_g4_su25.repository.EnrollmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,29 +18,99 @@ import java.util.stream.Collectors;
 @Service
 public class ExamScheduleService implements IExamScheduleService {
 
-    @Autowired
-    private ExamScheduleRepository examScheduleRepository;
+        @Autowired
+        private ExamScheduleRepository examScheduleRepository;
 
-    @Override
-    public List<ExamScheduleResponse> getAllExamSchedules() {
-        List<ExamSchedule> examSchedules = examScheduleRepository.findAll();
-        return examSchedules.stream()
-                .map(this::convertToResponse)
-                .collect(Collectors.toList());
-    }
+        @Autowired
+        private EnrollmentRepository enrollmentRepository;
 
-    private ExamScheduleResponse convertToResponse(ExamSchedule examSchedule) {
-        return new ExamScheduleResponse(
-                examSchedule.getId(),
-                examSchedule.getExam().getExamName(),
-                examSchedule.getClassField() != null ? examSchedule.getClassField().getClassName() : null,
-                examSchedule.getExamDate(),
-                examSchedule.getStartTime(),
-                examSchedule.getLocation(),
-                examSchedule.getMaxParticipants(),
-                examSchedule.getInstructor() != null
-                        ? (examSchedule.getInstructor().getFirstName() + " "
-                                + examSchedule.getInstructor().getLastName())
-                        : null);
-    }
+        @Override
+        public List<ExamScheduleResponse> getAllExamSchedules() {
+                List<ExamSchedule> examSchedules = examScheduleRepository.findAll();
+                return examSchedules.stream()
+                                .map(this::convertToResponse)
+                                .collect(Collectors.toList());
+        }
+
+        @Override
+        public ExamScheduleResponse getExamScheduleById(Long id) {
+                ExamSchedule examSchedule = examScheduleRepository.findById(id)
+                                .orElseThrow(() -> new AppException(ErrorCode.EXAM_SCHEDULE_NOT_FOUND));
+                return convertToResponse(examSchedule);
+        }
+
+        @Override
+        public ExamScheduleResponse updateExamSchedule(Long id, ExamScheduleUpdateRequest request) {
+                ExamSchedule examSchedule = examScheduleRepository.findById(id)
+                                .orElseThrow(() -> new AppException(ErrorCode.EXAM_SCHEDULE_NOT_FOUND));
+
+                examSchedule.setExamDate(request.getExamDate());
+                examSchedule.setStartTime(request.getStartTime());
+                examSchedule.setLocation(request.getLocation());
+                examSchedule.setMaxParticipants(request.getMaxParticipants());
+
+                ExamSchedule saved = examScheduleRepository.save(examSchedule);
+                return convertToResponse(saved);
+        }
+
+        @Override
+        public ExamScheduleDetailResponse getExamScheduleDetail(Long id) {
+                ExamSchedule examSchedule = examScheduleRepository.findById(id)
+                                .orElseThrow(() -> new AppException(ErrorCode.EXAM_SCHEDULE_NOT_FOUND));
+
+                List<ExamScheduleDetailResponse.LearnerInfo> learners = null;
+                if (examSchedule.getClassField() != null) {
+                        List<Enrollment> enrollments = enrollmentRepository
+                                        .findByClassFieldId(examSchedule.getClassField().getId());
+                        learners = enrollments.stream()
+                                        .map(this::convertToLearnerInfo)
+                                        .collect(Collectors.toList());
+                }
+
+                return ExamScheduleDetailResponse.builder()
+                                .id(examSchedule.getId())
+                                .examName(examSchedule.getExam().getExamName())
+                                .className(examSchedule.getClassField() != null
+                                                ? examSchedule.getClassField().getClassName()
+                                                : null)
+                                .instructorName(examSchedule.getInstructor() != null
+                                                ? (examSchedule.getInstructor().getFirstName() + " "
+                                                                + examSchedule.getInstructor().getLastName())
+                                                : null)
+                                .examDate(examSchedule.getExamDate())
+                                .startTime(examSchedule.getStartTime())
+                                .location(examSchedule.getLocation())
+                                .maxParticipants(examSchedule.getMaxParticipants())
+                                .learners(learners)
+                                .build();
+        }
+
+        private ExamScheduleResponse convertToResponse(ExamSchedule examSchedule) {
+                return new ExamScheduleResponse(
+                                examSchedule.getId(),
+                                examSchedule.getExam().getExamName(),
+                                examSchedule.getClassField() != null ? examSchedule.getClassField().getClassName()
+                                                : null,
+                                examSchedule.getExamDate(),
+                                examSchedule.getStartTime(),
+                                examSchedule.getLocation(),
+                                examSchedule.getMaxParticipants(),
+                                examSchedule.getInstructor() != null
+                                                ? (examSchedule.getInstructor().getFirstName() + " "
+                                                                + examSchedule.getInstructor().getLastName())
+                                                : null);
+        }
+
+        private ExamScheduleDetailResponse.LearnerInfo convertToLearnerInfo(Enrollment enrollment) {
+                return ExamScheduleDetailResponse.LearnerInfo.builder()
+                                .id(enrollment.getLearner().getId())
+                                .firstName(enrollment.getLearner().getFirstName())
+                                .lastName(enrollment.getLearner().getLastName())
+                                .email(enrollment.getLearner().getEmail())
+                                .phone(enrollment.getLearner().getLearnerProfile() != null
+                                                ? enrollment.getLearner().getLearnerProfile().getPhoneNumber()
+                                                : null)
+                                .status(enrollment.getStatus())
+                                .build();
+        }
 }
