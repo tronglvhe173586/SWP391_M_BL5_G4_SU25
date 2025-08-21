@@ -26,6 +26,7 @@ import AddCourse from './pages/AddCourse.js';
 import EditCourse from './pages/EditCourse.js';
 import CourseDetail from './pages/CourseDetails.js';
 import ClassListByCourse from './pages/ClassListByCourse.js';
+import ExamRegistration from './pages/ExamRegistration.js';
 
 
 function AppContent() {
@@ -60,6 +61,7 @@ function AppContent() {
         <Route path="/exams/add" element={<AddExam />} />
         <Route path="/exams/edit/:id" element={<EditExam />} />
         <Route path="/exam-schedules" element={<ExamScheduleList />} />
+        <Route path="/exam-registration" element={<ExamRegistration />} />
         <Route path="/register" element={<Register />} />
         <Route path="/users/:id" element={<UserDetails />} />
         <Route path="/authenticate" element={<Authenticate />} />

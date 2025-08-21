@@ -28,6 +28,8 @@ const pages = [
 
 { name: 'Lớp học', path: '/classes' },
 
+  { name: 'Đăng ký thi', path: '/exam-registration' },
+
 
 ];
 
