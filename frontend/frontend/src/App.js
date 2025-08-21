@@ -9,6 +9,7 @@ import ExamList from "./pages/ExamList.js";
 import AddExam from "./pages/AddExam.js";
 import EditExam from "./pages/EditExam.js";
 import ExamScheduleList from "./pages/ExamScheduleList.js";
+import AddExamSchedulePage from "./pages/AddExamSchedulePage.js";
 import Login from './pages/Login.js';
 import UserDetails from "./pages/UserDetails.js";
 import Register from "./pages/Register.js";
@@ -46,7 +47,8 @@ function App() {
         <Route path="/exams/add" element={<AddExam />} />
         <Route path="/exams/edit/:id" element={<EditExam />} />
         <Route path="/exam-schedules" element={<ExamScheduleList />} />
-          <Route path="/register" element={<Register />} />
+        <Route path="/exam-schedules/add" element={<AddExamSchedulePage />} />
+        <Route path="/register" element={<Register />} />
           <Route path="/users/:id" element={<UserDetails />} />
         <Route path="/authenticate" element={<Authenticate />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />

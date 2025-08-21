@@ -4,11 +4,13 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Paper, TextField, Box, Container, Typography, Button } from '@mui/material';
 import { viVN } from '@mui/x-data-grid/locales';
 import { configuration } from '../configurations/configuration';
+import { useNavigate } from 'react-router-dom';
 
 const ExamScheduleTable = () => {
     const [examSchedules, setExamSchedules] = useState([]);
     const [loading, setLoading] = useState(false);
     const [keyword, setKeyword] = useState('');
+    const navigate = useNavigate();
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
@@ -53,6 +55,10 @@ const ExamScheduleTable = () => {
         );
     });
 
+    const handleAddExamSchedule = () => {
+        navigate('/exam-schedules/add');
+    };
+
     return (
         <Container maxWidth="lg" sx={{ mt: 4 }}>
             <Typography variant="h4" gutterBottom>
@@ -81,7 +87,12 @@ const ExamScheduleTable = () => {
                     localeText={viVN.components.MuiDataGrid.defaultProps.localeText}
                 />
             </Paper>
-            <Button variant="contained" color="success" sx={{ mt: 10 }}>
+            <Button 
+                variant="contained" 
+                color="success" 
+                sx={{ mt: 2 }}
+                onClick={handleAddExamSchedule}
+            >
                 Tạo lịch thi
             </Button>
         </Container>
