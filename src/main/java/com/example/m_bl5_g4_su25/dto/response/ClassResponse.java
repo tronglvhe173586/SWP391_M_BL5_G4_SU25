@@ -15,8 +15,8 @@ public class ClassResponse {
     private LocalDate startDate;
     private LocalDate endDate;
     private Integer maxStudents;
-    private Long courseId;
-    private Long instructorId;
+    private Long course;
+    private Long instructor;
     private String instructorName;
     private Integer currentStudentsCount;
 }
