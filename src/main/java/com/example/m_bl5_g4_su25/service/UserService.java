@@ -41,6 +41,7 @@ public class UserService implements IUserService {
         this.provinceRepository = provinceRepository;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public List<ListUserResponse> getAllUsers() {
         return userRepository.findAll().stream()
