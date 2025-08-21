@@ -7,6 +7,7 @@ import { viVN } from '@mui/x-data-grid/locales';
 import { configuration } from '../configurations/configuration';
 import EditIcon from "@mui/icons-material/Edit";
 
+
 const ExamScheduleTable = () => {
     const [examSchedules, setExamSchedules] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -71,6 +72,10 @@ const ExamScheduleTable = () => {
         );
     });
 
+    const handleAddExamSchedule = () => {
+        navigate('/exam-schedules/add');
+    };
+
     return (
         <Container maxWidth="lg" sx={{ mt: 4 }}>
             <Typography variant="h4" gutterBottom>
@@ -99,7 +104,12 @@ const ExamScheduleTable = () => {
                     localeText={viVN.components.MuiDataGrid.defaultProps.localeText}
                 />
             </Paper>
-            <Button variant="contained" color="success" sx={{ mt: 10 }}>
+            <Button
+                variant="contained"
+                color="success"
+                sx={{ mt: 2 }}
+                onClick={handleAddExamSchedule}
+            >
                 Tạo lịch thi
             </Button>
         </Container>

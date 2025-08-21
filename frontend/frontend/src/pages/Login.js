@@ -14,7 +14,9 @@ import { Google } from "@mui/icons-material";
 import axios from "axios";
 import { OAuthConfig } from "../configurations/configuration";
 import { jwtDecode } from "jwt-decode";
+
 import { setToken } from "../services/localStorageService";
+
 
 export default function Login() {
     const navigate = useNavigate();
@@ -69,12 +71,15 @@ export default function Login() {
             if (!token) throw new Error("Không tìm thấy token trong phản hồi.");
 
             setToken(token);
+
             const decodedToken = jwtDecode(token);
             const userRole = decodedToken.role;
             if (userRole === "ROLE_ADMIN") {
                 navigate("/users");
             } else if (userRole === "ROLE_LEARNER"){
+
                 navigate("/users");
+
             } else {
                 navigate("/instructors");
             }
