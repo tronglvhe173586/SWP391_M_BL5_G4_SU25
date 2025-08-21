@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import HomePage from "./pages/HomePage.js";
 import ResponsiveAppBar from "./components/ResponsiveAppBar.js";
 import UserManagement from "./pages/userManagement.js";
@@ -28,10 +28,14 @@ import CourseDetail from './pages/CourseDetails.js';
 import ClassListByCourse from './pages/ClassListByCourse.js';
 
 
-function App() {
+function AppContent() {
+  const location = useLocation();
+  const hideAppBarPaths = ['/', '/login'];
+  const shouldHideAppBar = hideAppBarPaths.includes(location.pathname);
+
   return (
-    <Router>
-      <ResponsiveAppBar />
+    <>
+      {!shouldHideAppBar && <ResponsiveAppBar />}
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
@@ -56,14 +60,21 @@ function App() {
         <Route path="/exams/add" element={<AddExam />} />
         <Route path="/exams/edit/:id" element={<EditExam />} />
         <Route path="/exam-schedules" element={<ExamScheduleList />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/users/:id" element={<UserDetails />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/users/:id" element={<UserDetails />} />
         <Route path="/authenticate" element={<Authenticate />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path= "/verify-otp" element={<VerifyOtp />} />
         <Route path="/change-password" element={<ChangePassword />} />
-
       </Routes>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AppContent />
     </Router>
   );
 }
