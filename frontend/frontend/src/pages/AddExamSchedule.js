@@ -1,8 +1,8 @@
 import React from 'react';
 import AddExamSchedule from '../components/AddExamSchedule';
 
-const AddExamSchedule = () => {
+const AddExamSchedulePage = () => {
     return <AddExamSchedule />;
 };
 
-export default AddExamSchedule;
+export default AddExamSchedulePage;
