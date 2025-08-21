@@ -73,7 +73,7 @@ export default function Login() {
             if (userRole === "ROLE_ADMIN") {
                 navigate("/users");
             } else if (userRole === "ROLE_LEARNER"){
-                navigate("/learners");
+                navigate("/users");
             } else {
                 navigate("/instructors");
             }

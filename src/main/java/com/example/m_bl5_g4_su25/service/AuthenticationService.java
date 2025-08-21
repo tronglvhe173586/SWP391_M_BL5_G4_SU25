@@ -4,8 +4,11 @@ import com.example.m_bl5_g4_su25.dto.request.AuthenticationRequest;
 import com.example.m_bl5_g4_su25.dto.request.ExchangeTokenRequest;
 import com.example.m_bl5_g4_su25.dto.response.AuthenticationResponse;
 import com.example.m_bl5_g4_su25.entity.User;
+import com.example.m_bl5_g4_su25.enums.Gender;
+import com.example.m_bl5_g4_su25.enums.Role;
 import com.example.m_bl5_g4_su25.exception.AppException;
 import com.example.m_bl5_g4_su25.exception.ErrorCode;
+import com.example.m_bl5_g4_su25.repository.OutboundUserClient;
 import com.example.m_bl5_g4_su25.repository.OutboundIdentityClient;
 import com.example.m_bl5_g4_su25.repository.UserRepository;
 import com.nimbusds.jose.*;
@@ -35,6 +38,7 @@ import java.util.UUID;
 public class AuthenticationService implements IAuthenticationService {
     UserRepository userRepository;
     OutboundIdentityClient outboundIdentityClient;
+    OutboundUserClient outboundUserClient;
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -71,8 +75,23 @@ public class AuthenticationService implements IAuthenticationService {
 
         log.info("TOKEN RESPONSE {}", response);
 
+        var userInfo = outboundUserClient.getUserInfo("json", response.getAccessToken());
+        var user = userRepository.findByUsername(userInfo.getEmail()).orElseGet(
+                () -> userRepository.save(User.builder()
+                        .username(userInfo.getEmail())
+                        .firstName(userInfo.getGivenName())
+                        .lastName(userInfo.getFamilyName())
+                        .email(userInfo.getEmail())
+                        .role(Role.LEARNER)
+                        .passwordHash(new BCryptPasswordEncoder(10).encode("12345678"))
+                        .gender(Gender.Nam)
+                        .isActive(true)
+                        .build()));
+
+        var token = generateToken(user);
+
         return AuthenticationResponse.builder()
-                .token(response.getAccessToken())
+                .token(token)
                 .build();
     }
 
