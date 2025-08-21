@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { DataGrid } from '@mui/x-data-grid';
-import { Paper, TextField, Box, Container, Typography, Button } from '@mui/material';
+import {Paper, TextField, Box, Container, Typography, Button, Tooltip, IconButton} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import { viVN } from '@mui/x-data-grid/locales';
 import { configuration } from '../configurations/configuration';
+import EditIcon from "@mui/icons-material/Edit";
 
 const ExamScheduleTable = () => {
     const [examSchedules, setExamSchedules] = useState([]);
     const [loading, setLoading] = useState(false);
     const [keyword, setKeyword] = useState('');
+    const navigate = useNavigate();
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
@@ -16,9 +19,24 @@ const ExamScheduleTable = () => {
         { field: 'className', headerName: 'Lớp', width: 160 },
         { field: 'examDate', headerName: 'Ngày thi', width: 140 },
         { field: 'startTime', headerName: 'Giờ bắt đầu', width: 140 },
-        { field: 'location', headerName: 'Địa điểm', width: 180 },
-        { field: 'maxParticipants', headerName: 'Số lượng tối đa', width: 160 },
-        { field: 'instructorName', headerName: 'Giảng viên', width: 180 },
+        { field: 'location', headerName: 'Địa điểm', width: 240 },
+        {
+            field: 'actions',
+            headerName: 'Sửa',
+            width: 80,
+            renderCell: (params) => (
+                <Tooltip title={"Sửa"}>
+                    <IconButton
+                        color={"warning"}
+                        size={"small"}
+                        onClick={() => navigate(`/exam-schedules/edit/${params.row.id}`)}
+                    >
+                        <EditIcon></EditIcon>
+                    </IconButton>
+                </Tooltip>
+
+            )
+        }
     ];
 
     const fetchExamSchedules = async () => {
