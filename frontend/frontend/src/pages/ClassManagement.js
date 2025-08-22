@@ -1,4 +1,3 @@
-
 import React from "react";
 import ClassTable from "../components/ClassTable";
 import { Container, Typography, Button } from "@mui/material";
@@ -19,4 +18,3 @@ export default function ClassManagement() {
     </Container>
   );
 }
-

@@ -37,4 +37,3 @@ jwt:
   valid-duration: 36000 #in seconds
   refreshable-duration: 36000 #in seconds
 
-
