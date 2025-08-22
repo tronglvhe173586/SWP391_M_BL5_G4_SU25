@@ -19,6 +19,9 @@ import AddClass from './pages/AddClass';
 import ViewClass from './pages/ViewClass';
 import EditClass from './pages/EditClass';
 import ClassLearners from './pages/ClassLearners';
+import AddLearner from './pages/AddLearner';
+import ViewLearner from './pages/ViewLearner';
+import EditLearner from './pages/EditLearner';
 import Authenticate from "./pages/Authenticate.js";
 import ForgotPassword from "./pages/ForgotPassword.js";
 import VerifyOtp from "./pages/VerifyOTP.js";
@@ -52,12 +55,15 @@ function AppContent() {
         <Route path="/add-instructor" element={<AddInstructor />} />
 
         <Route path="/edit-user/:id" element={<EditUser />} />
-        {/* New routes for Class Management */}
+
         <Route path="/classes" element={<ClassManagement />} />
         <Route path="/classes/add" element={<AddClass />} />
         <Route path="/classes/:id" element={<ViewClass />} />
         <Route path="/classes/edit/:id" element={<EditClass />} />
         <Route path="/class/:id/learners" element={<ClassLearners />} />
+        <Route path="/enrollments/add" element={<AddLearner />} />
+        <Route path="/enrollments/:id" element={<ViewLearner />} />
+        <Route path="/enrollments/edit/:id" element={<EditLearner />} />
 
         <Route path="/users/edit/:id" element={<EditUser />} />
         <Route path="/exams" element={<ExamList />} />
@@ -68,6 +74,7 @@ function AppContent() {
         <Route path="/exam-schedules/:id" element={<ViewExamSchedule />} />
         <Route path="/exam-registration" element={<ExamRegistration />} />
         <Route path="/exam-registration-management" element={<ExamRegistrationManagement />} />
+
         <Route path="/register" element={<Register />} />
         <Route path="/users/:id" element={<UserDetails />} />
         <Route path="/authenticate" element={<Authenticate />} />

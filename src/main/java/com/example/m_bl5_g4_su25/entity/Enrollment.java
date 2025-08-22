@@ -9,6 +9,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -38,12 +39,15 @@ public class Enrollment {
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "enrollment_date")
-    private Instant enrollmentDate;
+    private LocalDateTime enrollmentDate = LocalDateTime.now();
 
-    @ColumnDefault("'ENROLLED'")
-    @Lob
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private String status;
+    private Status status = Status.ENROLLED;
+
+    public enum Status {
+        ENROLLED, DROPPED, COMPLETED
+    }
 
     @OneToMany(mappedBy = "enrollment")
     private Set<Attendance> attendances = new LinkedHashSet<>();
