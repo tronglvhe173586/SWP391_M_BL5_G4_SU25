@@ -82,7 +82,7 @@ public class User {
 
     // Quan hệ với các bảng khác
     @OneToMany(mappedBy = "instructor")
-    private Set<Class> classes = new LinkedHashSet<>();
+    private Set<DrivingClass> classes = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "learner")
     private Set<Enrollment> enrollments = new LinkedHashSet<>();

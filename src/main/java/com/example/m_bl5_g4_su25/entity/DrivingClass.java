@@ -14,7 +14,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "Classes")
-public class Class {
+public class DrivingClass {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "class_id", nullable = false)
