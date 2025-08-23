@@ -1,5 +1,6 @@
 package com.example.m_bl5_g4_su25.service;
 
+import com.example.m_bl5_g4_su25.dto.request.ExamScheduleCreateRequest;
 import com.example.m_bl5_g4_su25.dto.request.ExamScheduleUpdateRequest;
 import com.example.m_bl5_g4_su25.dto.response.ExamScheduleDetailResponse;
 import com.example.m_bl5_g4_su25.dto.response.ExamScheduleResponse;
@@ -13,4 +14,6 @@ public interface IExamScheduleService {
     ExamScheduleResponse updateExamSchedule(Long id, ExamScheduleUpdateRequest request);
 
     ExamScheduleDetailResponse getExamScheduleDetail(Long id);
+
+    ExamScheduleResponse createExamSchedule(ExamScheduleCreateRequest request);
 }

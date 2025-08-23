@@ -11,6 +11,7 @@ import EditExam from "./pages/EditExam.js";
 import ExamScheduleList from "./pages/ExamScheduleList.js";
 import EditExamSchedule from "./pages/EditExamSchedule.js";
 import ViewExamSchedule from "./pages/ViewExamSchedule.js";
+import AddExamSchedule from "./pages/AddExamSchedule";
 import Login from './pages/Login.js';
 import UserDetails from "./pages/UserDetails.js";
 import Register from "./pages/Register.js";
@@ -66,6 +67,7 @@ function AppContent() {
         <Route path="/exam-schedules" element={<ExamScheduleList />} />
         <Route path="/exam-schedules/edit/:id" element={<EditExamSchedule />} />
         <Route path="/exam-schedules/:id" element={<ViewExamSchedule />} />
+        <Route path={"/exam-schedules/add"} element={<AddExamSchedule />} />
         <Route path="/exam-registration" element={<ExamRegistration />} />
         <Route path="/exam-registration-management" element={<ExamRegistrationManagement />} />
         <Route path="/register" element={<Register />} />

@@ -7,6 +7,7 @@ import { configuration } from '../configurations/configuration';
 import { useNavigate } from 'react-router-dom';
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
+import { Link } from "react-router-dom";
 
 const ExamScheduleTable = () => {
     const [examSchedules, setExamSchedules] = useState([]);
@@ -74,6 +75,8 @@ const ExamScheduleTable = () => {
         fetchExamSchedules();
     }, []);
 
+
+
     const filteredRows = examSchedules.filter((s) => {
         const q = keyword.toLowerCase();
         return (
@@ -115,9 +118,12 @@ const ExamScheduleTable = () => {
                     localeText={viVN.components.MuiDataGrid.defaultProps.localeText}
                 />
             </Paper>
-            <Button variant="contained" color="success" sx={{ mt: 10 }}>
-                Tạo lịch thi
-            </Button>
+            <Link to={"/exam-schedules/add"}>
+                <Button variant="contained" color="success" sx={{ mt: 10 }}>
+                    Tạo lịch thi
+                </Button>
+            </Link>
+
         </Container>
     );
 };
