@@ -8,7 +8,6 @@ import {
     Select,
     FormControl,
     InputLabel,
-    Grid,
     Alert,
     Container,
     Paper
@@ -51,7 +50,7 @@ export default function AddExamSchedule() {
 
                 // Fetch classes
                 const classesResponse = await axios.get(
-                    `${configuration.API_BASE_URL}/driving-school-management/classes`,
+                    `${configuration.API_BASE_URL}/classes`,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
                 setClasses(classesResponse.data || []);
@@ -174,7 +173,7 @@ export default function AddExamSchedule() {
                                     <em>Không chọn lớp</em>
                                 </MenuItem>
                                 {classes.map((cls) => (
-                                    <MenuItem key={cls.classId} value={cls.classId}>
+                                    <MenuItem key={cls.id} value={cls.id}>
                                         {cls.className}
                                     </MenuItem>
                                 ))}
