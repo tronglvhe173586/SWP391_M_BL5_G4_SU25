@@ -93,7 +93,7 @@ const ClassListByCourse = () => {
                       : "Chưa có"}
                   </TableCell>
                   <TableCell align="center">{cls.maxStudents}</TableCell>
-                  <TableCell>{cls.instructorId || "Chưa phân công"}</TableCell>
+                  <TableCell>{cls.instructor|| "Chưa phân công"}</TableCell>
                 </TableRow>
               ))
             ) : (

@@ -34,7 +34,7 @@ import CourseDetail from './pages/CourseDetails.js';
 import ClassListByCourse from './pages/ClassListByCourse.js';
 import ExamRegistration from './pages/ExamRegistration.js';
 import ExamRegistrationManagement from './pages/ExamRegistrationManagement.js';
-
+import LearnerProfilePage from './pages/LearnerProfile.js';
 
 function AppContent() {
   const location = useLocation();
@@ -53,6 +53,7 @@ function AppContent() {
         <Route path="/courses/edit/:id" element={<EditCourse />} />
         <Route path="/courses/:id" element={<CourseDetail />} />
         <Route path="/courses/:courseId/classes" element={<ClassListByCourse />} />
+        <Route path="/users/:id/profile" element={<LearnerProfilePage />} />
         <Route path="/add-instructor" element={<AddInstructor />} />
 
         <Route path="/edit-user/:id" element={<EditUser />} />
