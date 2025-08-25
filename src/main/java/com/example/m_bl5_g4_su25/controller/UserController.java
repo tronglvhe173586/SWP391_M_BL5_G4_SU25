@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,11 +28,16 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
+    @GetMapping("/learners")
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<List<ListUserResponse>> getLearners() {
+        return ResponseEntity.ok(userService.getLearners());
+    }
+
     @PutMapping("/edit_User/{id}")
     public ResponseEntity<ListUserResponse> editUser(
             @PathVariable Long id,
-            @Valid @RequestBody EditUserRequest request
-    ) {
+            @Valid @RequestBody EditUserRequest request) {
         return ResponseEntity.ok(userService.editUser(id, request));
     }
 
@@ -45,8 +51,7 @@ public class UserController {
     public Page<ListUserResponse> getAllUsers(
             @RequestParam(required = false) String keyword,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
+            @RequestParam(defaultValue = "10") int size) {
         return userService.getAllUsersPagination(keyword, page, size);
     }
 
@@ -67,4 +72,3 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 }
-

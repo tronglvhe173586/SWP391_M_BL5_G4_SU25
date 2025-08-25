@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -14,7 +17,9 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
-
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "ExamResults")
 
 public class ExamResult {

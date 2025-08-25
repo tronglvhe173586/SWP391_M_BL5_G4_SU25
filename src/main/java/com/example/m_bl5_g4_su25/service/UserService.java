@@ -36,7 +36,8 @@ public class UserService implements IUserService {
     private final PasswordEncoder passwordEncoder;
     private final ProvinceRepository provinceRepository;
 
-    public UserService(UserRepository userRepository, InstructorProfileRepository instructorProfileRepository, PasswordEncoder passwordEncoder, ProvinceRepository provinceRepository) {
+    public UserService(UserRepository userRepository, InstructorProfileRepository instructorProfileRepository,
+            PasswordEncoder passwordEncoder, ProvinceRepository provinceRepository) {
         this.userRepository = userRepository;
         this.instructorProfileRepository = instructorProfileRepository;
         this.passwordEncoder = passwordEncoder;
@@ -55,8 +56,24 @@ public class UserService implements IUserService {
                         user.getRole().name(),
                         user.getIsActive(),
                         user.getGender(),
-                        user.getDateOfBirth()
-                ))
+                        user.getDateOfBirth()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ListUserResponse> getLearners() {
+        return userRepository.findAll().stream()
+                .filter(user -> user.getRole().name().equals("LEARNER"))
+                .map(user -> new ListUserResponse(
+                        user.getId(),
+                        user.getUsername(),
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getEmail(),
+                        user.getRole().name(),
+                        user.getIsActive(),
+                        user.getGender(),
+                        user.getDateOfBirth()))
                 .collect(Collectors.toList());
     }
 
@@ -82,8 +99,7 @@ public class UserService implements IUserService {
                 updated.getRole().name(),
                 updated.getIsActive(),
                 updated.getGender(),
-                updated.getDateOfBirth()
-        );
+                updated.getDateOfBirth());
     }
 
     @Override
@@ -122,7 +138,8 @@ public class UserService implements IUserService {
 
         Page<User> userPage;
         if (keyword != null && !keyword.trim().isEmpty()) {
-            userPage = userRepository.findByUsernameContainingIgnoreCaseOrEmailContainingIgnoreCase(keyword, keyword, pageable);
+            userPage = userRepository.findByUsernameContainingIgnoreCaseOrEmailContainingIgnoreCase(keyword, keyword,
+                    pageable);
         } else {
             userPage = userRepository.findAll(pageable);
         }
@@ -136,8 +153,7 @@ public class UserService implements IUserService {
                 user.getRole().name(),
                 user.getIsActive(),
                 user.getGender(),
-                user.getDateOfBirth()
-        ));
+                user.getDateOfBirth()));
     }
 
     @Override
@@ -154,8 +170,7 @@ public class UserService implements IUserService {
                 user.getRole().name(),
                 user.getIsActive(),
                 user.getGender(),
-                user.getDateOfBirth()
-        );
+                user.getDateOfBirth());
     }
 
     @Override
@@ -218,8 +233,7 @@ public class UserService implements IUserService {
                     instructorProfile != null ? instructorProfile.getHireDate() : null,
                     instructorProfile != null ? instructorProfile.getAddress() : null,
                     instructorProfile != null ? instructorProfile.getPhoneNumber() : null,
-                    instructorProfile != null ? instructorProfile.getCertificationInfo() : null
-            );
+                    instructorProfile != null ? instructorProfile.getCertificationInfo() : null);
         } else if ("LEARNER".equalsIgnoreCase(String.valueOf(user.getRole()))) {
             LearnerProfile learnerProfile = user.getLearnerProfile();
 
@@ -232,14 +246,11 @@ public class UserService implements IUserService {
                     user.getDateOfBirth(),
                     province != null ? province.getName() : null,
                     learnerProfile != null ? learnerProfile.getAddress() : null,
-                    learnerProfile != null ? learnerProfile.getPhoneNumber() : null
-            );
+                    learnerProfile != null ? learnerProfile.getPhoneNumber() : null);
         }
 
         throw new IllegalArgumentException("Unsupported role: " + user.getRole());
     }
-
-
 
     private String generateEmployeeId() {
         long count = instructorProfileRepository.count() + 1;

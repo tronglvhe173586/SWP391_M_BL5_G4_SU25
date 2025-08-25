@@ -36,6 +36,8 @@ import ClassListByCourse from './pages/ClassListByCourse.js';
 import ExamRegistration from './pages/ExamRegistration.js';
 import ExamRegistrationManagement from './pages/ExamRegistrationManagement.js';
 import LearnerProfilePage from './pages/LearnerProfile.js';
+import ExamResults from './pages/ExamResults.js';
+import AddExamResult from './pages/AddExamResult.js';
 
 function AppContent() {
   const location = useLocation();
@@ -79,6 +81,8 @@ function AppContent() {
         <Route path="/my-exam-schedules" element={<LearnerExamSchedule />} />
         <Route path="/exam-registration" element={<ExamRegistration />} />
         <Route path="/exam-registration-management" element={<ExamRegistrationManagement />} />
+        <Route path="/exam-results" element={<ExamResults />} />
+        <Route path="/exam-results/add" element={<AddExamResult />} />
 
         <Route path="/register" element={<Register />} />
         <Route path="/users/:id" element={<UserDetails />} />

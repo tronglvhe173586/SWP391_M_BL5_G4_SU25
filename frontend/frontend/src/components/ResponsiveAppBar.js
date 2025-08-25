@@ -28,6 +28,7 @@ const adminPages = [
   { name: 'Lớp học', path: '/classes' },
   { name: 'Đăng ký thi', path: '/exam-registration' },
   { name: 'Quản lý đăng ký thi', path: '/exam-registration-management' },
+  { name: 'Kết quả thi', path: '/exam-results' },
 ];
 
 // Learner pages

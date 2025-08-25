@@ -21,4 +21,5 @@ public class ExamScheduleResponse {
     private String location;
     private Integer maxParticipants;
     private String instructorName;
+    private Integer passScore;
 }

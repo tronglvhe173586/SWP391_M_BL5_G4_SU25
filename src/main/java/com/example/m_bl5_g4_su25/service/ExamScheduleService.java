@@ -176,9 +176,10 @@ public class ExamScheduleService implements IExamScheduleService {
                                 examSchedule.getLocation(),
                                 examSchedule.getMaxParticipants(),
                                 examSchedule.getInstructor() != null
-                                                ? (examSchedule.getInstructor().getFirstName() + " "
-                                                                + examSchedule.getInstructor().getLastName())
-                                                : null);
+                                                ? (examSchedule.getInstructor().getFirstName() + " " +
+                                                                examSchedule.getInstructor().getLastName())
+                                                : null,
+                                examSchedule.getExam().getPassScore());
         }
 
         private ExamScheduleDetailResponse.LearnerInfo convertToLearnerInfo(Enrollment enrollment) {

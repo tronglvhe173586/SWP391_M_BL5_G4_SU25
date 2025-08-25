@@ -25,7 +25,7 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS = {
-            "/users", "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh",
+            "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh",
             "users/register", "/provinces", "/provinces/**", "/auth/outbound/authentication",
             "/forgot-password/**"
     };
@@ -72,9 +72,9 @@ public class SecurityConfig {
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
 
-//        System.out.println("JwtAuthenticationConverter configured with:");
-//        System.out.println("  - Authority prefix: ROLE_");
-//        System.out.println("  - Authorities claim name: role");
+        // System.out.println("JwtAuthenticationConverter configured with:");
+        // System.out.println(" - Authority prefix: ROLE_");
+        // System.out.println(" - Authorities claim name: role");
 
         return jwtAuthenticationConverter;
     }

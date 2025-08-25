@@ -22,7 +22,9 @@ public enum ErrorCode {
     EXAM_SCHEDULE_FULL(1013, "Exam schedule is full", HttpStatus.BAD_REQUEST),
     INVALID_STATUS(1014, "Invalid status", HttpStatus.BAD_REQUEST),
     INTERNAL_SERVER_ERROR(1015, "Internal server error", HttpStatus.INTERNAL_SERVER_ERROR),
-    ;
+    EXAM_RESULT_ALREADY_EXISTS(1016, "Exam result already exists for this learner and exam schedule",
+            HttpStatus.BAD_REQUEST),
+            ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

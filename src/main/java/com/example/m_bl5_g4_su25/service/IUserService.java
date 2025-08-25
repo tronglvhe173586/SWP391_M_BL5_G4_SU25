@@ -11,14 +11,20 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 
-
 public interface IUserService {
     List<ListUserResponse> getAllUsers();
+
+    List<ListUserResponse> getLearners();
+
     ListUserResponse editUser(Long id, EditUserRequest request);
+
     void addInstructor(AddInstructorRequest request);
+
     Page<ListUserResponse> getAllUsersPagination(String keyword, int page, int size);
+
     ListUserResponse getUserById(Long id);
+
     UserResponse register(UserCreationRequest request);
+
     Object getProfileById(Long id);
 }
-
