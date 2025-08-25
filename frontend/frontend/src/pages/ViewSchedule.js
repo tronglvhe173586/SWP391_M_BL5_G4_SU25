@@ -5,7 +5,7 @@ import {
     Paper, Alert, CircularProgress, IconButton, Tooltip, TextField, MenuItem
 } from '@mui/material';
 import {
-    Add as AddIcon, Edit as EditIcon, Visibility as VisibilityIcon, ArrowBack as ArrowBackIcon,
+    Add as AddIcon, Edit as EditIcon, Visibility as VisibilityIcon, ArrowBack as ArrowBackIcon, Delete as DeleteIcon
 } from '@mui/icons-material';
 
 const ViewSchedule = () => {
@@ -240,6 +240,24 @@ const ViewSchedule = () => {
         }
     };
 
+    const handleDeleteSchedule = async (scheduleId) => {
+        setIsLoading(true);
+        setError('');
+        try {
+            await axios.delete(`/driving-school-management/schedules/${scheduleId}`);
+            await handleFetchSchedules();
+        } catch (err) {
+            console.error('API Error:', err.response ? err.response.data : err.message);
+            if (err.response && err.response.status === 404) {
+                setError('Không tìm thấy lịch học để xóa. Vui lòng tải lại trang.');
+            } else {
+                setError('Có lỗi xảy ra khi xóa lịch học.');
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const handleBack = () => {
         setMode('list');
         setSelectedSchedule(null);
@@ -302,6 +320,11 @@ const ViewSchedule = () => {
                                                             <Tooltip title="Chỉnh sửa">
                                                                 <IconButton size="small" onClick={() => handleEditScheduleClick(currentSlot)}>
                                                                     <EditIcon fontSize="small" color="warning" />
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                            <Tooltip title="Xóa lịch học">
+                                                                <IconButton size="small" onClick={() => handleDeleteSchedule(currentSlot.id)}>
+                                                                    <DeleteIcon fontSize="small" color="error" />
                                                                 </IconButton>
                                                             </Tooltip>
                                                         </Box>

@@ -53,4 +53,12 @@ public class ScheduleService {
             throw new RuntimeException("Schedule not found with ID: " + scheduleId);
         }
     }
+
+    public void deleteSchedule(Long scheduleId) {
+        if (scheduleRepository.existsById(scheduleId)) {
+            scheduleRepository.deleteById(scheduleId);
+        } else {
+            throw new RuntimeException("Schedule not found with ID: " + scheduleId);
+        }
+    }
 }
