@@ -2,23 +2,22 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { DataGrid } from '@mui/x-data-grid';
 import {
-    Paper, 
-    TextField, 
-    Box, 
-    Container, 
-    Typography, 
-    FormControl, 
-    InputLabel, 
-    Select, 
+    Paper,
+    TextField,
+    Box,
+    Container,
+    Typography,
+    FormControl,
+    InputLabel,
+    Select,
     MenuItem,
     Chip,
     Alert,
-    Button
+    Button, Tooltip, IconButton
 } from '@mui/material';
 import { viVN } from '@mui/x-data-grid/locales';
 import { configuration } from '../configurations/configuration';
 import { useNavigate } from 'react-router-dom';
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 
@@ -80,23 +79,20 @@ const ExamResults = () => {
             }
         },
         {
-            field: 'actions',
-            headerName: 'Hành động',
-            width: 160,
-            sortable: false,
-            filterable: false,
+            field: "actions",
+            headerName: "Sửa",
+            width: 80,
             renderCell: (params) => (
-                <Box sx={{ display: 'flex', gap: 1 }}>
-                    <Button
+                <Tooltip title="Sửa">
+                    <IconButton
+                        color="warning"
                         size="small"
-                        variant="outlined"
-                        startIcon={<EditIcon />}
                         onClick={() => navigate(`/exam-results/edit/${params.row.id}`)}
                     >
-                        Sửa
-                    </Button>
-                </Box>
-            )
+                        <EditIcon />
+                    </IconButton>
+                </Tooltip>
+            ),
         }
     ];
 

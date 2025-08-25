@@ -230,7 +230,7 @@ const AddExamResult = () => {
                 
                 <Alert severity="info" sx={{ mb: 2 }}>
                     <Typography variant="body2">
-                        <strong>Lưu ý:</strong> Điểm đạt được lấy tự động từ cấu hình bài thi trong bảng Exam. 
+                        <strong>Lưu ý:</strong> Điểm đạt được lấy tự động từ cấu hình bài thi.
                         Hệ thống sẽ so sánh điểm thi của học viên với điểm đạt để xác định kết quả đạt/không đạt.
                     </Typography>
                 </Alert>
@@ -299,7 +299,7 @@ const AddExamResult = () => {
                                 label="Điểm đạt (tự động)"
                                 value={passScore || 'Chọn lịch thi trước'}
                                 InputProps={{ readOnly: true }}
-                                helperText="Điểm tối thiểu để đạt kỳ thi (lấy từ bảng Exam)"
+                                helperText="Điểm tối thiểu để đạt kỳ thi"
                                 sx={{ backgroundColor: '#f5f5f5' }}
                             />
                         </Grid>
@@ -333,7 +333,7 @@ const AddExamResult = () => {
                     </Typography>
                     
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                        Điểm đạt được lấy tự động từ cấu hình bài thi trong bảng Exam
+                        Điểm đạt được lấy tự động từ cấu hình bài thi
                     </Typography>
                     
                     <Grid container spacing={2}>
@@ -354,7 +354,7 @@ const AddExamResult = () => {
                             <Card>
                                 <CardContent>
                                     <Typography variant="subtitle2" color="text.secondary">
-                                        Điểm đạt (từ Exam)
+                                        Điểm đạt
                                     </Typography>
                                     <Typography variant="h4" sx={{ mt: 1 }}>
                                         {passScore}
