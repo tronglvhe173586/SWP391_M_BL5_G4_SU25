@@ -1,5 +1,6 @@
 package com.example.m_bl5_g4_su25.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -58,5 +59,6 @@ public class DrivingClass {
     private Set<ExamSchedule> examSchedules = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "classField")
+    @JsonManagedReference
     private Set<Schedule> schedules = new LinkedHashSet<>();
 }

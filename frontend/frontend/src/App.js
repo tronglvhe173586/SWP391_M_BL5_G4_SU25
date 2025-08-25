@@ -40,6 +40,7 @@ import ExamResults from './pages/ExamResults.js';
 import AddExamResult from './pages/AddExamResult.js';
 import EditExamResult from './pages/EditExamResult.js';
 import MyExamResults from './pages/MyExamResults.js';
+import ViewSchedule from "./pages/ViewSchedule";
 
 function AppContent() {
   const location = useLocation();
@@ -94,6 +95,9 @@ function AppContent() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path= "/verify-otp" element={<VerifyOtp />} />
         <Route path="/change-password" element={<ChangePassword />} />
+
+        <Route path="/view-schedule" element={<ViewSchedule />} />
+
       </Routes>
     </>
   );

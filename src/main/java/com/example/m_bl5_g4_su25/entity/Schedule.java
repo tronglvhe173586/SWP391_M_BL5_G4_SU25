@@ -1,5 +1,6 @@
 package com.example.m_bl5_g4_su25.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -8,6 +9,7 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Getter
@@ -23,15 +25,19 @@ public class Schedule {
     private Long id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "class_id", nullable = false)
+    @JsonBackReference
     private DrivingClass classField;
 
     @NotNull
-    @Lob
+    @Size(max = 20)
     @Column(name = "day_of_week", nullable = false)
     private String dayOfWeek;
+
+    @NotNull
+    @Column(name = "date", nullable = false)
+    private LocalDate date;
 
     @NotNull
     @Column(name = "start_time", nullable = false)
