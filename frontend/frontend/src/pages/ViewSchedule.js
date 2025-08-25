@@ -113,24 +113,24 @@ const ViewSchedule = () => {
         setFilteredSchedules([]);
         try {
             const response = await axios.get(`/driving-school-management/schedules/by-class/${classId}`);
-            if (response.data && response.data.length > 0) {
-                setSchedules(response.data);
+            setSchedules(response.data);
 
+            if (response.data && response.data.length > 0) {
                 const now = new Date();
                 setFilterYear(now.getFullYear().toString());
                 setFilterWeek(getISOWeek(now).toString());
             } else {
-                setError('Không tìm thấy lịch học cho ID lớp học này.');
-                setSchedules([]);
+                setFilterYear('');
+                setFilterWeek('');
             }
         } catch (err) {
             console.error('API Error:', err.response ? err.response.data : err.message);
-            setError('Lỗi khi tải lịch học. Vui lòng kiểm tra ID lớp học và thử lại.');
             setSchedules([]);
         } finally {
             setIsLoading(false);
         }
     };
+
 
     const handleViewDetails = (schedule) => {
         setSelectedSchedule(schedule);
@@ -355,7 +355,7 @@ const ViewSchedule = () => {
                         </Tooltip>
                     </Box>
                     {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-                    {schedules.length > 0 && (
+                    {schedules && (
                         <>
                             <Box sx={{ display: 'flex', gap: 2, mb: 4 }}>
                                 <TextField
