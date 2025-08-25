@@ -35,6 +35,7 @@ import ClassListByCourse from './pages/ClassListByCourse.js';
 import ExamRegistration from './pages/ExamRegistration.js';
 import ExamRegistrationManagement from './pages/ExamRegistrationManagement.js';
 import LearnerProfilePage from './pages/LearnerProfile.js';
+import ViewSchedule from "./pages/ViewSchedule";
 
 function AppContent() {
   const location = useLocation();
@@ -84,6 +85,9 @@ function AppContent() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path= "/verify-otp" element={<VerifyOtp />} />
         <Route path="/change-password" element={<ChangePassword />} />
+
+        <Route path="/view-schedule" element={<ViewSchedule />} />
+
       </Routes>
     </>
   );

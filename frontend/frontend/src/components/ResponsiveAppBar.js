@@ -25,6 +25,8 @@ const pages = [
   { name: 'Lớp học', path: '/classes' },
   { name: 'Đăng ký thi', path: '/exam-registration' },
   { name: 'Quản lý đăng ký thi', path: '/exam-registration-management' },
+  { name: 'Lịch Học', path: '/view-schedule' },
+
 ];
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -34,10 +36,9 @@ function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-  // 🔑 lấy userId từ token
   const token = getToken();
   const decoded = decodeToken(token);
-  const userId = decoded?.userId; // key này đúng với token bạn gửi ở trên
+  const userId = decoded?.userId;
 
   const handleOpenNavMenu = (event) => setAnchorElNav(event.currentTarget);
   const handleOpenUserMenu = (event) => setAnchorElUser(event.currentTarget);
@@ -50,7 +51,7 @@ function ResponsiveAppBar() {
         await axios.post('/driving-school-management/auth/logout', { token });
       }
     } catch (e) {
-      // ignore
+
     } finally {
       removeToken();
       navigate('/login');
