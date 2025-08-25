@@ -34,6 +34,7 @@ const adminPages = [
 // Learner pages
 const learnerPages = [
   { name: 'Lịch thi của tôi', path: '/my-exam-schedules' },
+  { name: 'Kết quả thi của tôi', path: 'my-exam-results'}
 ];
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];

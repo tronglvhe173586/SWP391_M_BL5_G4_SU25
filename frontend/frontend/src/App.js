@@ -38,6 +38,8 @@ import ExamRegistrationManagement from './pages/ExamRegistrationManagement.js';
 import LearnerProfilePage from './pages/LearnerProfile.js';
 import ExamResults from './pages/ExamResults.js';
 import AddExamResult from './pages/AddExamResult.js';
+import EditExamResult from './pages/EditExamResult.js';
+import MyExamResults from './pages/MyExamResults.js';
 
 function AppContent() {
   const location = useLocation();
@@ -83,6 +85,8 @@ function AppContent() {
         <Route path="/exam-registration-management" element={<ExamRegistrationManagement />} />
         <Route path="/exam-results" element={<ExamResults />} />
         <Route path="/exam-results/add" element={<AddExamResult />} />
+        <Route path="/exam-results/edit/:id" element={<EditExamResult />} />
+        <Route path="/my-exam-results" element={<MyExamResults />} />
 
         <Route path="/register" element={<Register />} />
         <Route path="/users/:id" element={<UserDetails />} />

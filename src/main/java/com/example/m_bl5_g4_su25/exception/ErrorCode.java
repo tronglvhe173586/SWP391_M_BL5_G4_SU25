@@ -24,7 +24,8 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR(1015, "Internal server error", HttpStatus.INTERNAL_SERVER_ERROR),
     EXAM_RESULT_ALREADY_EXISTS(1016, "Exam result already exists for this learner and exam schedule",
             HttpStatus.BAD_REQUEST),
-            ;
+    EXAM_RESULT_NOT_FOUND(1017, "Exam result not found", HttpStatus.NOT_FOUND),
+    ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

@@ -19,6 +19,7 @@ import { viVN } from '@mui/x-data-grid/locales';
 import { configuration } from '../configurations/configuration';
 import { useNavigate } from 'react-router-dom';
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 
 const ExamResults = () => {
@@ -77,6 +78,25 @@ const ExamResults = () => {
                     <Chip label="Đạt" color="success" /> : 
                     <Chip label="Không đạt" color="error" />;
             }
+        },
+        {
+            field: 'actions',
+            headerName: 'Hành động',
+            width: 160,
+            sortable: false,
+            filterable: false,
+            renderCell: (params) => (
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                    <Button
+                        size="small"
+                        variant="outlined"
+                        startIcon={<EditIcon />}
+                        onClick={() => navigate(`/exam-results/edit/${params.row.id}`)}
+                    >
+                        Sửa
+                    </Button>
+                </Box>
+            )
         }
     ];
 
