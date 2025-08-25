@@ -36,6 +36,17 @@ public class ScheduleService {
     }
 
     public Schedule addSchedule(Schedule schedule) {
+        List<Schedule> overlappingSchedules = scheduleRepository.findOverlappingSchedules(
+                schedule.getClassField().getId(),
+                schedule.getDate(),
+                schedule.getStartTime(),
+                schedule.getEndTime()
+        );
+
+        if (!overlappingSchedules.isEmpty()) {
+            throw new RuntimeException("Lịch học đã bị trùng, vui lòng chọn slot khác.");
+        }
+
         return scheduleRepository.save(schedule);
     }
 

@@ -226,11 +226,13 @@ const ViewSchedule = () => {
 
             if (err.response) {
                 if (err.response.status === 404) {
-                    setError('Lỗi: Không tìm thấy lịch học hoặc ID lớp học không hợp lệ. Vui lòng kiểm tra lại.');
+                    setError('Không tìm thấy lịch học hoặc ID lớp học không hợp lệ. Vui lòng kiểm tra lại.');
                 } else if (err.response.status === 400) {
-                    setError('Lỗi: Dữ liệu bạn gửi không hợp lệ. Vui lòng kiểm tra lại các trường thông tin.');
+                    setError('Dữ liệu bạn gửi không hợp lệ. Vui lòng kiểm tra lại các trường thông tin.');
+                } else if (err.response.status === 409) {
+                    setError('Lịch học bạn muốn tạo đã bị trùng. Vui lòng chọn slot khác.');
                 } else {
-                    setError(`Lỗi ${err.response.status}: ${err.response.data.message || 'Có lỗi xảy ra khi lưu lịch học.'}`);
+                    setError(`${err.response.status}: ${err.response.data.message || 'Có lỗi xảy ra khi lưu lịch học.'}`);
                 }
             } else {
                 setError('Lỗi kết nối mạng hoặc server không phản hồi.');

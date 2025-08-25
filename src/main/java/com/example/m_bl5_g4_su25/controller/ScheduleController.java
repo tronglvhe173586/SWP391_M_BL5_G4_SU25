@@ -36,9 +36,13 @@ public class ScheduleController {
     }
 
     @PostMapping
-    public ResponseEntity<Schedule> addSchedule(@RequestBody Schedule schedule) {
-        Schedule newSchedule = scheduleService.addSchedule(schedule);
-        return new ResponseEntity<>(newSchedule, HttpStatus.CREATED);
+    public ResponseEntity<?> addSchedule(@RequestBody Schedule schedule) {
+        try {
+            Schedule newSchedule = scheduleService.addSchedule(schedule);
+            return new ResponseEntity<>(newSchedule, HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        }
     }
 
 
