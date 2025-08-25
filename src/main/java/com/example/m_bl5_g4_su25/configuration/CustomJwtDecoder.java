@@ -31,6 +31,8 @@ public class CustomJwtDecoder implements JwtDecoder {
 
     @Override
     public Jwt decode(String token) throws JwtException {
+//        System.out.println("CustomJwtDecoder.decode called with token: "
+//                + (token != null ? token.substring(0, Math.min(50, token.length())) + "..." : "null"));
 
         if (Objects.isNull(nimbusJwtDecoder)) {
             byte[] keyBytes = Base64.getDecoder().decode(signerKey);
@@ -38,6 +40,7 @@ public class CustomJwtDecoder implements JwtDecoder {
             nimbusJwtDecoder = NimbusJwtDecoder.withSecretKey(secretKeySpec)
                     .macAlgorithm(MacAlgorithm.HS256)
                     .build();
+            //System.out.println("Created new NimbusJwtDecoder with key length: " + keyBytes.length);
         }
 
         return nimbusJwtDecoder.decode(token);

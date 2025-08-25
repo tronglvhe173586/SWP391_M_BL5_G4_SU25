@@ -4,11 +4,14 @@ import com.example.m_bl5_g4_su25.dto.request.ExamScheduleCreateRequest;
 import com.example.m_bl5_g4_su25.dto.request.ExamScheduleUpdateRequest;
 import com.example.m_bl5_g4_su25.dto.response.ExamScheduleDetailResponse;
 import com.example.m_bl5_g4_su25.dto.response.ExamScheduleResponse;
+import com.example.m_bl5_g4_su25.dto.response.LearnerExamScheduleResponse;
 import com.example.m_bl5_g4_su25.entity.DrivingClass;
 import com.example.m_bl5_g4_su25.entity.Exam;
 import com.example.m_bl5_g4_su25.entity.ExamSchedule;
 import com.example.m_bl5_g4_su25.entity.Enrollment;
 import com.example.m_bl5_g4_su25.entity.User;
+import com.example.m_bl5_g4_su25.entity.ExamRegistration;
+import com.example.m_bl5_g4_su25.entity.ExamResult;
 import com.example.m_bl5_g4_su25.exception.AppException;
 import com.example.m_bl5_g4_su25.exception.ErrorCode;
 import com.example.m_bl5_g4_su25.repository.*;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class ExamScheduleService implements IExamScheduleService {
@@ -36,6 +40,12 @@ public class ExamScheduleService implements IExamScheduleService {
         @Autowired
         private EnrollmentRepository enrollmentRepository;
 
+        @Autowired
+        private ExamRegistrationRepository examRegistrationRepository;
+
+        @Autowired
+        private ExamResultRepository examResultRepository;
+
         @Override
         public List<ExamScheduleResponse> getAllExamSchedules() {
                 List<ExamSchedule> examSchedules = examScheduleRepository.findAll();
@@ -48,8 +58,8 @@ public class ExamScheduleService implements IExamScheduleService {
         public ExamScheduleResponse createExamSchedule(ExamScheduleCreateRequest request) {
                 // Validate exam exists
                 Exam exam = examRepository.findById(request.getExamId())
-                        .orElseThrow(() -> new RuntimeException(
-                                "Exam not found with id: " + request.getExamId()));
+                                .orElseThrow(() -> new RuntimeException(
+                                                "Exam not found with id: " + request.getExamId()));
 
                 // Create new exam schedule
                 ExamSchedule examSchedule = new ExamSchedule();
@@ -62,16 +72,16 @@ public class ExamScheduleService implements IExamScheduleService {
                 // Set class if provided
                 if (request.getClassId() != null) {
                         DrivingClass classField = classRepository.findById(request.getClassId())
-                                .orElseThrow(() -> new RuntimeException(
-                                        "Class not found with id: " + request.getClassId()));
+                                        .orElseThrow(() -> new RuntimeException(
+                                                        "Class not found with id: " + request.getClassId()));
                         examSchedule.setClassField(classField);
                 }
 
                 // Set instructor if provided
                 if (request.getInstructorId() != null) {
                         User instructor = userRepository.findById(request.getInstructorId())
-                                .orElseThrow(() -> new RuntimeException(
-                                        "Instructor not found with id: " + request.getInstructorId()));
+                                        .orElseThrow(() -> new RuntimeException(
+                                                        "Instructor not found with id: " + request.getInstructorId()));
                         examSchedule.setInstructor(instructor);
                 }
 
@@ -133,6 +143,28 @@ public class ExamScheduleService implements IExamScheduleService {
                                 .build();
         }
 
+        @Override
+        public List<LearnerExamScheduleResponse> getExamSchedulesForLearner(Long learnerId) {
+                // Validate learner exists
+                User learner = userRepository.findById(learnerId)
+                                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+                // Get all driving classes where the learner is enrolled in
+                List<ExamSchedule> examSchedules = examScheduleRepository.findByClassFieldLearnersId(learner.getId());
+
+                // Check if learner is enrolled in any classes
+                if (examSchedules.isEmpty()) {
+                        // Return empty list instead of throwing exception - learner might not be
+                        // enrolled yet
+                        return List.of();
+                }
+
+                return examSchedules.stream()
+                                .map(examSchedule -> convertToLearnerExamScheduleResponse(examSchedule,
+                                                learner.getId()))
+                                .collect(Collectors.toList());
+        }
+
         private ExamScheduleResponse convertToResponse(ExamSchedule examSchedule) {
                 return new ExamScheduleResponse(
                                 examSchedule.getId(),
@@ -159,6 +191,50 @@ public class ExamScheduleService implements IExamScheduleService {
                                                 ? enrollment.getLearner().getLearnerProfile().getPhoneNumber()
                                                 : null)
                                 .status(String.valueOf(enrollment.getStatus()))
+                                .build();
+        }
+
+        private LearnerExamScheduleResponse convertToLearnerExamScheduleResponse(ExamSchedule examSchedule,
+                        Long learnerId) {
+                // Get registration status for this learner
+                String registrationStatus = "NOT_REGISTERED";
+                String examResult = "N/A";
+
+                // Check if learner has registered for this exam
+                Optional<ExamRegistration> registration = examRegistrationRepository
+                                .findByExamSchedule_IdAndLearner_Id(examSchedule.getId(), learnerId);
+
+                if (registration.isPresent()) {
+                        registrationStatus = registration.get().getStatus();
+
+                        // Check if there's an exam result
+                        List<ExamResult> results = examResultRepository
+                                        .findByLearnerIdAndExamScheduleId(learnerId, examSchedule.getId());
+
+                        if (!results.isEmpty()) {
+                                examResult = results.get(0).getScore() != null ? results.get(0).getScore().toString()
+                                                : "N/A";
+                        }
+                }
+
+                return LearnerExamScheduleResponse.builder()
+                                .id(examSchedule.getId())
+                                .examName(examSchedule.getExam().getExamName())
+                                .examType(examSchedule.getExam().getExamType() != null
+                                                ? examSchedule.getExam().getExamType().toString()
+                                                : "N/A")
+                                .className(examSchedule.getClassField() != null
+                                                ? examSchedule.getClassField().getClassName()
+                                                : "N/A")
+                                .examDate(examSchedule.getExamDate())
+                                .startTime(examSchedule.getStartTime())
+                                .location(examSchedule.getLocation())
+                                .instructorName(examSchedule.getInstructor() != null
+                                                ? (examSchedule.getInstructor().getFirstName() + " " +
+                                                                examSchedule.getInstructor().getLastName())
+                                                : "N/A")
+                                .registrationStatus(registrationStatus)
+                                .examResult(examResult)
                                 .build();
         }
 }

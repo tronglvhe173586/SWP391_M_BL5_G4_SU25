@@ -17,16 +17,20 @@ import axios from 'axios';
 import { getToken, removeToken } from '../services/localStorageService';
 import { useNavigate } from 'react-router-dom';
 
-const pages = [
+// Admin/Instructor pages
+const adminPages = [
   { name: 'Tài Khoản', path: '/users' },
   { name: 'Khóa Học', path: '/courses' },
   { name: 'Bài Thi', path: '/exams' },
-  {
-    name: 'Lịch Thi', path: '/exam-schedules'
-  },
+  { name: 'Lịch Thi', path: '/exam-schedules' },
   { name: 'Lớp học', path: '/classes' },
   { name: 'Đăng ký thi', path: '/exam-registration' },
   { name: 'Quản lý đăng ký thi', path: '/exam-registration-management' },
+];
+
+// Learner pages
+const learnerPages = [
+  { name: 'Lịch thi của tôi', path: '/my-exam-schedules' },
 ];
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -35,6 +39,10 @@ function ResponsiveAppBar() {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+  // Get user role from localStorage
+  const userRole = localStorage.getItem('userRole') || 'ROLE_LEARNER'; // Default to ROLE_LEARNER for safety
+  const pages = userRole === 'ROLE_ADMIN' || userRole === 'ROLE_INSTRUCTOR' ? adminPages : learnerPages;
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -59,6 +67,8 @@ function ResponsiveAppBar() {
       // ignore
     } finally {
       removeToken();
+      localStorage.removeItem('userRole');
+      localStorage.removeItem('userId');
       navigate('/login');
     }
   };

@@ -10,6 +10,9 @@ import java.util.Optional;
 @Repository
 public interface ExamRegistrationRepository extends JpaRepository<ExamRegistration, Long> {
     long countByExamSchedule_Id(Long examScheduleId);
+
     Optional<ExamRegistration> findByExamSchedule_IdAndLearner_Id(Long examScheduleId, Long learnerId);
+
     List<ExamRegistration> findByLearner_IdAndExamSchedule_IdIn(Long learnerId, List<Long> examScheduleIds);
+
 }

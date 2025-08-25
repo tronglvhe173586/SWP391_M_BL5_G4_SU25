@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { setToken } from "../services/localStorageService";
 import { Box, CircularProgress, Typography } from "@mui/material";
+import { jwtDecode } from "jwt-decode";
 
 export default function Authenticate() {
     const navigate = useNavigate();
@@ -29,6 +30,18 @@ export default function Authenticate() {
                     console.log(data);
 
                     setToken(data.result?.token);
+                    
+                    // Decode token to get user information
+                    if (data.result?.token) {
+                        const decodedToken = jwtDecode(data.result.token);
+                        const userRole = decodedToken.role;
+                        const userId = decodedToken.userId;
+                        
+                        // Store user information in localStorage
+                        localStorage.setItem('userRole', userRole);
+                        localStorage.setItem('userId', userId);
+                    }
+                    
                     setIsLoggedin(true);
                 });
         }
@@ -36,7 +49,16 @@ export default function Authenticate() {
 
     useEffect(() => {
         if (isLoggedin) {
-            navigate("/users");
+            const userRole = localStorage.getItem('userRole');
+            if (userRole === "ROLE_ADMIN") {
+                navigate("/users");
+            } else if (userRole === "ROLE_LEARNER") {
+                navigate("/my-exam-schedules");
+            } else if (userRole === "ROLE_INSTRUCTOR") {
+                navigate("/instructors");
+            } else {
+                navigate("/users");
+            }
         }
     }, [isLoggedin, navigate]);
 
