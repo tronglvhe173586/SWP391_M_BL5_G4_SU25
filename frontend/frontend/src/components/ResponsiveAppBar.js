@@ -28,6 +28,8 @@ const adminPages = [
   { name: 'Lớp học', path: '/classes' },
   { name: 'Đăng ký thi', path: '/exam-registration' },
   { name: 'Quản lý đăng ký thi', path: '/exam-registration-management' },
+  { name: 'Lịch Học', path: '/view-schedule' },
+
   { name: 'Kết quả thi', path: '/exam-results' },
 ];
 
@@ -62,7 +64,7 @@ function ResponsiveAppBar() {
   // 🔑 lấy userId từ token
   const token = getToken();
   const decoded = decodeToken(token);
-  const userId = decoded?.userId; // key này đúng với token bạn gửi ở trên
+  const userId = decoded?.userId;
 
   const handleLogout = async () => {
     try {
@@ -70,7 +72,7 @@ function ResponsiveAppBar() {
         await axios.post('http://localhost:8080/driving-school-management/auth/logout', { token });
       }
     } catch (e) {
-      // ignore
+
     } finally {
       removeToken();
       localStorage.removeItem('userRole');

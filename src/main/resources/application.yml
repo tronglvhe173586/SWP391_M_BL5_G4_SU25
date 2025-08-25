@@ -13,6 +13,7 @@ spring:
   jpa:
     properties:
       hibernate:
+        ddl-auto: update
         physical_naming_strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
   mail:
     host: smtp.gmail.com
