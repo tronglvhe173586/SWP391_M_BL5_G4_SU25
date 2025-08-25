@@ -66,7 +66,7 @@ function ResponsiveAppBar() {
   const handleLogout = async () => {
     try {
       if (token) {
-        await axios.post('/driving-school-management/auth/logout', { token });
+        await axios.post('http://localhost:8080/driving-school-management/auth/logout', { token });
       }
     } catch (e) {
       // ignore

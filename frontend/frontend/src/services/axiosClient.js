@@ -49,7 +49,7 @@ export const setupAxiosInterceptors = (navigate) => {
         try {
           const currentToken = getToken();
           if (!currentToken) throw new Error('No token');
-          const refreshResp = await axios.post('/driving-school-management/auth/refresh', { token: currentToken });
+          const refreshResp = await axios.post('http://localhost:8080/driving-school-management/auth/refresh', { token: currentToken });
           const newToken = refreshResp?.data?.result?.token;
           if (!newToken) throw new Error('No token in refresh response');
           setToken(newToken);

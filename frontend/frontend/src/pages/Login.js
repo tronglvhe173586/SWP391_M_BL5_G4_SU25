@@ -58,7 +58,7 @@ export default function Login() {
 
         try {
             const response = await axios.post(
-                "/driving-school-management/auth/token",
+                "http://localhost:8080/driving-school-management/auth/token",
                 {
                     username: form.username,
                     password: form.password
