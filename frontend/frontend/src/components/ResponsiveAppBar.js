@@ -12,17 +12,19 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getToken, removeToken } from '../services/localStorageService';
-import { useNavigate } from 'react-router-dom';
+import { decodeToken } from '../helpers/jwtDecode';
 
 // Admin/Instructor pages
 const adminPages = [
   { name: 'Tài Khoản', path: '/users' },
   { name: 'Khóa Học', path: '/courses' },
   { name: 'Bài Thi', path: '/exams' },
-  { name: 'Lịch Thi', path: '/exam-schedules' },
+  {
+    name: 'Lịch Thi', path: '/exam-schedules'
+  },
   { name: 'Lớp học', path: '/classes' },
   { name: 'Đăng ký thi', path: '/exam-registration' },
   { name: 'Quản lý đăng ký thi', path: '/exam-registration-management' },
@@ -56,10 +58,13 @@ function ResponsiveAppBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  // 🔑 lấy userId từ token
+  const token = getToken();
+  const decoded = decodeToken(token);
+  const userId = decoded?.userId; // key này đúng với token bạn gửi ở trên
 
   const handleLogout = async () => {
     try {
-      const token = getToken();
       if (token) {
         await axios.post('/driving-school-management/auth/logout', { token });
       }
@@ -72,6 +77,16 @@ function ResponsiveAppBar() {
       navigate('/login');
     }
   };
+
+  const handleSettingClick = (setting) => {
+  handleCloseUserMenu();
+  if (setting === 'Logout') {
+    handleLogout();
+  } else if (setting === 'Profile' && userId) {
+    navigate(`/users/${userId}/profile`);
+  }
+};
+
 
   return (
     <AppBar position="static">
@@ -96,33 +111,21 @@ function ResponsiveAppBar() {
             Driving School
           </Typography>
 
-          {/* Menu cho mobile */}
+          {/* Menu mobile */}
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
+            <IconButton size="large" onClick={handleOpenNavMenu} color="inherit">
               <MenuIcon />
             </IconButton>
-            <Menu
-              anchorEl={anchorElNav}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-            >
+            <Menu anchorEl={anchorElNav} open={Boolean(anchorElNav)} onClose={handleCloseNavMenu}>
               {pages.map((page) => (
-                <MenuItem
-                  key={page.name}
-                  component={Link}
-                  to={page.path}
-                  onClick={handleCloseNavMenu}
-                >
+                <MenuItem key={page.name} component={Link} to={page.path} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">{page.name}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
 
+          {/* Menu desktop */}
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
@@ -150,15 +153,7 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem
-                  key={setting}
-                  onClick={() => {
-                    handleCloseUserMenu();
-                    if (setting === 'Logout') {
-                      handleLogout();
-                    }
-                  }}
-                >
+                <MenuItem key={setting} onClick={() => handleSettingClick(setting)}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}

@@ -73,7 +73,7 @@ export default function UserTable() {
     try {
       const token = localStorage.getItem("jwtToken");
       const res = await axios.get(
-        "http://localhost:8080/driving-school-management/users/users_pagination",
+        "/driving-school-management/users/users_pagination",
         {
           params: {
             page: page,

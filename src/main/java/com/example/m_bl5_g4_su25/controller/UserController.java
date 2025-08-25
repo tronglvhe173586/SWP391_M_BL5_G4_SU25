@@ -3,6 +3,7 @@ package com.example.m_bl5_g4_su25.controller;
 import com.example.m_bl5_g4_su25.dto.request.AddInstructorRequest;
 import com.example.m_bl5_g4_su25.dto.request.EditUserRequest;
 import com.example.m_bl5_g4_su25.dto.request.UserCreationRequest;
+import com.example.m_bl5_g4_su25.dto.response.LearnerProfileResponse;
 import com.example.m_bl5_g4_su25.dto.response.ListUserResponse;
 import com.example.m_bl5_g4_su25.dto.response.UserResponse;
 import com.example.m_bl5_g4_su25.service.IUserService;
@@ -39,6 +40,7 @@ public class UserController {
         userService.addInstructor(request);
         return ResponseEntity.ok("Instructor created successfully");
     }
+
     @GetMapping("/users_pagination")
     public Page<ListUserResponse> getAllUsers(
             @RequestParam(required = false) String keyword,
@@ -47,6 +49,7 @@ public class UserController {
     ) {
         return userService.getAllUsersPagination(keyword, page, size);
     }
+
     @GetMapping("/{id}")
     public ListUserResponse getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
@@ -55,6 +58,12 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<UserResponse> register(@RequestBody UserCreationRequest request) {
         UserResponse response = userService.register(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}/profile")
+    public ResponseEntity<?> getUserProfile(@PathVariable Long id) {
+        Object response = userService.getProfileById(id);
         return ResponseEntity.ok(response);
     }
 }

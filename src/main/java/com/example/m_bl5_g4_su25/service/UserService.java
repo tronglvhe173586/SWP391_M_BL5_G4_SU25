@@ -3,9 +3,12 @@ package com.example.m_bl5_g4_su25.service;
 import com.example.m_bl5_g4_su25.dto.request.AddInstructorRequest;
 import com.example.m_bl5_g4_su25.dto.request.EditUserRequest;
 import com.example.m_bl5_g4_su25.dto.request.UserCreationRequest;
+import com.example.m_bl5_g4_su25.dto.response.InstructorProfileResponse;
+import com.example.m_bl5_g4_su25.dto.response.LearnerProfileResponse;
 import com.example.m_bl5_g4_su25.dto.response.ListUserResponse;
 import com.example.m_bl5_g4_su25.dto.response.UserResponse;
 import com.example.m_bl5_g4_su25.entity.InstructorProfile;
+import com.example.m_bl5_g4_su25.entity.LearnerProfile;
 import com.example.m_bl5_g4_su25.entity.Provinces;
 import com.example.m_bl5_g4_su25.entity.User;
 import com.example.m_bl5_g4_su25.enums.Gender;
@@ -17,7 +20,6 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -192,6 +194,53 @@ public class UserService implements IUserService {
                 .provinceName(province.getName())
                 .build();
     }
+
+    @Override
+    public Object getProfileById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+
+        Provinces province = user.getProvince();
+
+        // Check role trong cột role của User
+        if ("INSTRUCTOR".equalsIgnoreCase(String.valueOf(user.getRole()))) {
+            InstructorProfile instructorProfile = user.getInstructorProfile();
+
+            return new InstructorProfileResponse(
+                    user.getUsername(),
+                    user.getEmail(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getGender(),
+                    user.getDateOfBirth(),
+                    province != null ? province.getName() : null,
+                    instructorProfile != null ? instructorProfile.getEmployeeId() : null,
+                    instructorProfile != null ? instructorProfile.getHireDate() : null,
+                    instructorProfile != null ? instructorProfile.getAddress() : null,
+                    instructorProfile != null ? instructorProfile.getPhoneNumber() : null,
+                    instructorProfile != null ? instructorProfile.getCertificationInfo() : null
+            );
+        } else if ("LEARNER".equalsIgnoreCase(String.valueOf(user.getRole()))) {
+            LearnerProfile learnerProfile = user.getLearnerProfile();
+
+            return new LearnerProfileResponse(
+                    user.getUsername(),
+                    user.getEmail(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getGender(),
+                    user.getDateOfBirth(),
+                    province != null ? province.getName() : null,
+                    learnerProfile != null ? learnerProfile.getAddress() : null,
+                    learnerProfile != null ? learnerProfile.getPhoneNumber() : null
+            );
+        }
+
+        throw new IllegalArgumentException("Unsupported role: " + user.getRole());
+    }
+
+
+
     private String generateEmployeeId() {
         long count = instructorProfileRepository.count() + 1;
         String year = String.valueOf(LocalDate.now().getYear());
