@@ -14,7 +14,7 @@ import axios from "axios";
 const EditUser = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  
+
   const userRole = localStorage.getItem("userRole") || "ROLE_LEARNER";
     useEffect(() => {
         if (userRole !== "ROLE_ADMIN" && userRole !== "ROLE_INSTRUCTOR") {
@@ -92,7 +92,7 @@ const EditUser = () => {
       navigate("/users");
     } catch (err) {
       console.error(err);
-      alert("Cập nhật người dùng thất bại");
+      alert("Email hoặc username đã tồn tại! Vui lòng kiểm tra lại.");
     }
   };
 

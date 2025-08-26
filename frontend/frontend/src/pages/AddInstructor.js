@@ -58,6 +58,33 @@ export default function AddInstructor() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (form.passwordHash.length < 8) {
+    alert("Mật khẩu phải có ít nhất 8 ký tự!");
+    return;
+    }
+
+    if (form.phoneNumber.length < 10 || form.phoneNumber.length > 11) {
+      alert("Số điện thoại phải từ 10 đến 11 số.");
+      return;
+    }
+    
+    const today = new Date();
+    const dob = new Date(form.dateOfBirth);
+    const age = today.getFullYear() - dob.getFullYear();
+    const monthDiff = today.getMonth() - dob.getMonth();
+    const dayDiff = today.getDate() - dob.getDate();
+
+    const isUnder18 =
+      age < 18 ||
+      (age === 18 && (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)));
+
+    if (isUnder18) {
+      alert("Người dùng phải đủ 18 tuổi trở lên!");
+      return;
+    }
+    
+
     try {
       const token = localStorage.getItem("jwtToken");
       await axios.post(
