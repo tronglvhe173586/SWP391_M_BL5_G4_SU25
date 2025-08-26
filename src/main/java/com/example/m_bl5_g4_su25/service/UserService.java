@@ -95,7 +95,7 @@ public class UserService implements IUserService {
         }
         User user = new User();
         user.setUsername(request.getUsername());
-        user.setPasswordHash(request.getPasswordHash());
+        user.setPasswordHash(passwordEncoder.encode(request.getPasswordHash()));
         user.setEmail(request.getEmail());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
