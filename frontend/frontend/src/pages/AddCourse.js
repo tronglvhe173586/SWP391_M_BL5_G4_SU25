@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   TextField,
@@ -14,15 +14,23 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function AddCourse() {
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
+  const userRole = localStorage.getItem("userRole") || "ROLE_LEARNER";
+
+  useEffect(() => {
+    if (userRole !== "ROLE_ADMIN") {
+      alert("Bạn không có quyền truy cập trang này.");
+      navigate("/");
+    }
+  }, [userRole, navigate]);
   const [form, setForm] = useState({
     courseName: "",
     courseType: "",
     description: "",
     price: "",
     duration: "",
-    isDeleted: false, // mặc định
+    isDeleted: false, 
   });
 
   const handleChange = (e) => {

@@ -25,6 +25,16 @@ export default function CourseDetail() {
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const userRole = localStorage.getItem("userRole") || "ROLE_LEARNER";
+  useEffect(() => {
+      if (userRole !== "ROLE_ADMIN" && userRole !== "ROLE_INSTRUCTOR") {
+        navigate("/")
+        alert("Bạn không có quyền truy cập trang này."); 
+        return;
+      }
+    }
+    );
+
   useEffect(() => {
     const fetchCourse = async () => {
       try {

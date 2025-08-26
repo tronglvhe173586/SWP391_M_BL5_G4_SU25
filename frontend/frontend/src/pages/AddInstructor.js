@@ -15,6 +15,15 @@ import axios from "axios";
 
 export default function AddInstructor() {
   const navigate = useNavigate();
+  
+  const userRole = localStorage.getItem("userRole") || "ROLE_LEARNER";
+  
+    useEffect(() => {
+      if (userRole !== "ROLE_ADMIN") {
+        alert("Bạn không có quyền truy cập trang này.");
+        navigate("/");
+      }
+    }, [userRole, navigate]);
 
   const [form, setForm] = useState({
     username: "",
@@ -22,12 +31,12 @@ export default function AddInstructor() {
     email: "",
     firstName: "",
     lastName: "",
-    gender: "Nam", // mặc định Enum Nam
-    provinceId: "", // id tỉnh
+    gender: "Nam", 
+    provinceId: "", 
     address: "",
     phoneNumber: "",
     certificationInfo: "Bằng lái hạng A1",
-    dateOfBirth: "", // 👈 thêm ngày sinh
+    dateOfBirth: "", 
   });
 
   const [provinces, setProvinces] = useState([]);
@@ -73,7 +82,7 @@ export default function AddInstructor() {
         address: "",
         phoneNumber: "",
         certificationInfo: "",
-        dateOfBirth: "", // reset ngày sinh
+        dateOfBirth: "", 
       });
       navigate("/users");
     } catch (error) {
@@ -130,7 +139,6 @@ export default function AddInstructor() {
           required
         />
 
-        {/* Gender */}
         <FormControl fullWidth>
           <InputLabel>Giới tính</InputLabel>
           <Select
@@ -144,7 +152,6 @@ export default function AddInstructor() {
           </Select>
         </FormControl>
 
-        {/* Date of Birth */}
         <TextField
           label="Ngày sinh"
           name="dateOfBirth"
@@ -155,7 +162,6 @@ export default function AddInstructor() {
           required
         />
 
-        {/* Province */}
         <FormControl fullWidth>
           <InputLabel>Tỉnh/Thành phố</InputLabel>
           <Select
@@ -188,7 +194,6 @@ export default function AddInstructor() {
           required
         />
 
-        {/* Certification */}
         <FormControl fullWidth>
           <InputLabel>Chứng chỉ</InputLabel>
           <Select

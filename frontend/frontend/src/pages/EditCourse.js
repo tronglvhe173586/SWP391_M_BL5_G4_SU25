@@ -19,9 +19,19 @@ const EditCourse = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const userRole = localStorage.getItem("userRole") || "ROLE_LEARNER";
+    useEffect(() => {
+        if (userRole !== "ROLE_ADMIN" && userRole !== "ROLE_INSTRUCTOR") {
+          navigate("/")
+          alert("Bạn không có quyền truy cập trang này."); 
+          return;
+        }
+      }
+      );
+
   const [form, setForm] = useState({
     courseName: "",
-    courseType: "A1", // mặc định
+    courseType: "A1", 
     description: "",
     price: "",
     duration: "",
@@ -30,7 +40,6 @@ const EditCourse = () => {
 
   const [loading, setLoading] = useState(true);
 
-  // Lấy dữ liệu course
   useEffect(() => {
     const fetchCourse = async () => {
       try {
