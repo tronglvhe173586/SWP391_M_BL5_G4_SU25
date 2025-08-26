@@ -68,7 +68,7 @@ function AppContent() {
         <Route path="/classes/add" element={<AddClass />} />
         <Route path="/classes/:id" element={<ViewClass />} />
         <Route path="/classes/edit/:id" element={<EditClass />} />
-        <Route path="/class/:id/learners" element={<ClassLearners />} />
+        <Route path="/enrollments" element={<ClassLearners />} />
         <Route path="/enrollments/add" element={<AddLearner />} />
         <Route path="/enrollments/:id" element={<ViewLearner />} />
         <Route path="/enrollments/edit/:id" element={<EditLearner />} />

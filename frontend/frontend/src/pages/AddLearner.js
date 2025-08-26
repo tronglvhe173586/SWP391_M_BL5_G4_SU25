@@ -1,14 +1,17 @@
 import React, { useState } from "react";
-import { Container, TextField, Button, Typography, Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Container, TextField, Button, Typography, Box } from "@mui/material";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
 export default function AddLearner() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const preFilledClassId = queryParams.get('classId') || "";
 
   const [form, setForm] = useState({
     learnerId: "",
-    classId: ""
+    classId: preFilledClassId,
   });
 
   const handleChange = (e) => {
@@ -35,9 +38,9 @@ export default function AddLearner() {
       alert("Thêm học viên thành công!");
       setForm({
         learnerId: "",
-        classId: ""
+        classId: preFilledClassId,
       });
-      navigate("/class/:id/learners");
+      navigate(`/enrollments?classId=${form.classId}`);
     } catch (error) {
       console.error(error);
       alert("Thêm học viên thất bại!");
@@ -69,6 +72,7 @@ export default function AddLearner() {
           onChange={handleChange}
           required
           fullWidth
+          disabled={!!preFilledClassId}  // Disable if pre-filled
         />
         <Button type="submit" variant="contained" color="primary">
           Thêm
@@ -76,7 +80,7 @@ export default function AddLearner() {
         <Button
           variant="outlined"
           color="secondary"
-          onClick={() => navigate("/class/:id/learners")}
+          onClick={() => navigate(`/enrollments?classId=${form.classId}`)}
         >
           Hủy
         </Button>

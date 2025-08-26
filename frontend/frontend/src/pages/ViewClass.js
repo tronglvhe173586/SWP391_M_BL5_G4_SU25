@@ -46,7 +46,7 @@ const ViewClass = () => {
           <Box sx={{ mt: 3 }}>
             <Button
                 component={Link}
-                to={`/class/${id}/learners`}
+                to={`/enrollments?classId=${id}`}
                 variant="contained"
                 color="primary"
                 startIcon={<PeopleIcon />}

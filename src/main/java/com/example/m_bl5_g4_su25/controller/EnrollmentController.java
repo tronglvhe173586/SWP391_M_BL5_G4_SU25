@@ -19,8 +19,8 @@ public class EnrollmentController {
     @Autowired
     private IEnrollmentService enrollmentService;
 
-    @GetMapping("/class/{classId}")
-    public ResponseEntity<List<EnrollmentResponse>> listLearnersInClass(@PathVariable Long classId) {
+    @GetMapping
+    public ResponseEntity<List<EnrollmentResponse>> listLearnersInClass(@RequestParam(required = false) Long classId) {
         List<EnrollmentResponse> enrollments = enrollmentService.listLearnersInClass(classId);
         return ResponseEntity.ok(enrollments);
     }
