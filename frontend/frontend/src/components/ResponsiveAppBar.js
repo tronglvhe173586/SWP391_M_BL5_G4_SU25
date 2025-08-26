@@ -39,16 +39,16 @@ const learnerPages = [
   { name: 'Kết quả thi của tôi', path: 'my-exam-results'}
 ];
 
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+
 
 function ResponsiveAppBar() {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-  // Get user role from localStorage
-  const userRole = localStorage.getItem('userRole') || 'ROLE_LEARNER'; // Default to ROLE_LEARNER for safety
+  const userRole = localStorage.getItem('userRole') || 'ROLE_LEARNER'; 
   const pages = userRole === 'ROLE_ADMIN' || userRole === 'ROLE_INSTRUCTOR' ? adminPages : learnerPages;
+const settings = userRole === 'ROLE_ADMIN' ? ['Logout'] : ['Profile', 'Logout'];
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -62,7 +62,6 @@ function ResponsiveAppBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  // 🔑 lấy userId từ token
   const token = getToken();
   const decoded = decodeToken(token);
   const userId = decoded?.userId;
