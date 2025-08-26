@@ -49,15 +49,12 @@ public class ExamResultService implements IExamResultService {
         @Override
         @Transactional
         public ExamResultResponse createExamResult(ExamResultCreateRequest request) {
-                // Validate learner exists
                 User learner = userRepository.findById(request.getLearnerId())
                                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-                // Validate exam schedule exists
                 ExamSchedule examSchedule = examScheduleRepository.findById(request.getExamScheduleId())
                                 .orElseThrow(() -> new AppException(ErrorCode.EXAM_SCHEDULE_NOT_FOUND));
 
-                // Check if exam result already exists for this learner and exam schedule
                 List<ExamResult> existingResults = examResultRepository.findByLearnerIdAndExamScheduleId(
                                 request.getLearnerId(), request.getExamScheduleId());
 
@@ -65,13 +62,9 @@ public class ExamResultService implements IExamResultService {
                         throw new AppException(ErrorCode.EXAM_RESULT_ALREADY_EXISTS);
                 }
 
-                // Calculate pass status based on score and exam pass score
-                // The pass score is automatically retrieved from the exam configuration in the
-                // Exam table
                 boolean isPassed = request.getScore()
                                 .compareTo(BigDecimal.valueOf(examSchedule.getExam().getPassScore())) >= 0;
 
-                // Create and save exam result
                 ExamResult examResult = ExamResult.builder()
                                 .learner(learner)
                                 .examSchedule(examSchedule)

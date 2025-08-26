@@ -75,7 +75,6 @@ public class ExamScheduleController {
     @GetMapping("/learner/my-schedules")
     //@PreAuthorize("hasAuthority('ROLE_LEARNER')")
     public ResponseEntity<ApiResponse<List<LearnerExamScheduleResponse>>> getMyExamSchedules() {
-        // Get current authenticated user's ID from JWT token
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         System.out.println("Authentication: " + authentication);
         System.out.println("Principal: " + authentication.getPrincipal());

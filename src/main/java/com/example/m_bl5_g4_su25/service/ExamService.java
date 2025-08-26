@@ -37,7 +37,6 @@ public class ExamService implements IExamService {
 
     @Override
     public ExamResponse createExam(Exam exam) {
-        // Validate exam name uniqueness (optional - you can remove this if not needed)
         validateExamName(exam.getExamName());
 
         Exam savedExam = examRepository.save(exam);
@@ -74,7 +73,6 @@ public class ExamService implements IExamService {
             throw new ExamValidationException("Exam name cannot be null or empty");
         }
 
-        // Check if exam name already exists
         if (examRepository.existsByExamName(examName.trim())) {
             throw new ExamValidationException("Exam with name '" + examName + "' already exists");
         }
