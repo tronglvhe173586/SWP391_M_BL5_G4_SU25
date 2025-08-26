@@ -15,11 +15,9 @@ const LearnerExamSchedule = () => {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
-    // Get user role and ID from localStorage
     const userRole = localStorage.getItem('userRole');
     const learnerId = localStorage.getItem('userId');
 
-    // Debug logging
     useEffect(() => {
         console.log('Current userRole:', userRole);
         console.log('Current learnerId:', learnerId);
@@ -28,10 +26,8 @@ const LearnerExamSchedule = () => {
         console.log('jwtToken exists:', !!localStorage.getItem('jwtToken'));
     }, [userRole, learnerId]);
 
-    // Check if user is a learner and redirect if necessary
     useEffect(() => {
         if (userRole && userRole !== 'ROLE_LEARNER') {
-            // Redirect non-learner users to appropriate page
             if (userRole === 'ROLE_ADMIN') {
                 navigate('/users');
             } else if (userRole === 'ROLE_INSTRUCTOR') {
@@ -42,7 +38,6 @@ const LearnerExamSchedule = () => {
         }
     }, [userRole, navigate]);
 
-    // Fetch exam schedules
     useEffect(() => {
         if (learnerId && userRole === 'ROLE_LEARNER') {
             const fetchExamSchedules = async () => {
@@ -69,8 +64,7 @@ const LearnerExamSchedule = () => {
                         setLoading(false);
                         return;
                     }
-                    
-                    // Decode and log token content for debugging
+
                     try {
                         const decodedToken = JSON.parse(atob(token.split('.')[1]));
                         console.log('Decoded token claims:', decodedToken);
@@ -184,7 +178,6 @@ const LearnerExamSchedule = () => {
         }
     ];
 
-    // Check if user is logged in
     if (!userRole || !learnerId) {
         return (
             <Container maxWidth="md" sx={{ mt: 4 }}>
@@ -202,7 +195,6 @@ const LearnerExamSchedule = () => {
         );
     }
 
-    // If not a learner, don't render the component
     if (userRole && userRole !== 'ROLE_LEARNER') {
         return (
             <Container maxWidth="md" sx={{ mt: 4 }}>
@@ -286,7 +278,6 @@ const LearnerExamSchedule = () => {
                     disableRowSelectionOnClick
                     localeText={viVN.components.MuiDataGrid.defaultProps.localeText}
                     getRowClassName={(params) => {
-                        // Highlight upcoming exams
                         const examDate = new Date(params.row.examDate);
                         const today = new Date();
                         today.setHours(0, 0, 0, 0);

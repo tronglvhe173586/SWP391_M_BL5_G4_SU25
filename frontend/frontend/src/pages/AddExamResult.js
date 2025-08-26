@@ -52,16 +52,14 @@ const AddExamResult = () => {
                 `${configuration.API_BASE_URL}/users/learners`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            
-            // The /users/learners endpoint returns List<ListUserResponse> directly (not wrapped in ApiResponse)
-            // All users returned are already filtered to be learners only
+
             const learnerUsers = response.data || [];
             
             if (learnerUsers.length === 0) {
                 setError('Không tìm thấy học viên nào trong hệ thống. Vui lòng kiểm tra dữ liệu người dùng.');
             } else {
                 setLearners(learnerUsers);
-                setError(''); // Clear any previous errors
+                setError('');
             }
         } catch (err) {
             console.error('Error fetching learners:', err);
@@ -111,7 +109,6 @@ const AddExamResult = () => {
             [name]: value
         }));
 
-        // If exam schedule is selected, get the pass score
         if (name === 'examScheduleId') {
             const selectedSchedule = examSchedules.find(schedule => schedule.id == value);
             if (selectedSchedule) {
@@ -156,8 +153,7 @@ const AddExamResult = () => {
             setForm({ learnerId: '', examScheduleId: '', score: '' });
             setSelectedExamSchedule(null);
             setPassScore(null);
-            
-            // Redirect after 2 seconds
+
             setTimeout(() => {
                 navigate('/exam-results');
             }, 2000);

@@ -70,7 +70,6 @@ export default function ExamTable() {
     fetchExams();
   }, []);
 
-  // Lọc kỳ thi theo từ khóa
   const filteredExams = exams.filter(exam =>
     exam.examName.toLowerCase().includes(keyword.toLowerCase()) ||
     exam.examType.toLowerCase().includes(keyword.toLowerCase())

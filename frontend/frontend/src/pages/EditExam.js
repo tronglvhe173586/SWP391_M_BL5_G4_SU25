@@ -25,7 +25,6 @@ const EditExam = () => {
 
   const [loading, setLoading] = useState(true);
 
-  // Lấy thông tin kỳ thi
   useEffect(() => {
     const fetchExam = async () => {
       try {

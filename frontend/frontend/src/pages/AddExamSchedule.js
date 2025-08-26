@@ -41,21 +41,18 @@ export default function AddExamSchedule() {
             try {
                 const token = localStorage.getItem('jwtToken');
 
-                // Fetch exams
                 const examsResponse = await axios.get(
                     `${configuration.API_BASE_URL}/exams`,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
                 setExams(examsResponse.data || []);
 
-                // Fetch classes
                 const classesResponse = await axios.get(
                     `${configuration.API_BASE_URL}/classes`,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
                 setClasses(classesResponse.data || []);
 
-                // Fetch instructors (users with role INSTRUCTOR)
                 const usersResponse = await axios.get(
                     `${configuration.API_BASE_URL}/users`,
                     { headers: { Authorization: `Bearer ${token}` } }
@@ -77,11 +74,10 @@ export default function AddExamSchedule() {
         const { name, value } = e.target;
         setForm({
             ...form,
-            [name]: value // luôn là string
+            [name]: value
         });
     };
 
-    // handleSubmit
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);

@@ -33,7 +33,6 @@ const EditExamResult = () => {
 
     useEffect(() => {
         fetchDetail();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
     const handleSave = async (e) => {
