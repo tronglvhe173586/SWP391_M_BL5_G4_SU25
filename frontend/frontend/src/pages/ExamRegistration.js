@@ -80,8 +80,11 @@ const ExamRegistration = () => {
       await axios.post(`/driving-school-management/exam-registrations`, {
         examScheduleId: scheduleId,
       });
-      // Reload only the status for this schedule
-      fetchStatuses([scheduleId]);
+      setStatusByScheduleId(prevStatus => ({
+        ...prevStatus,
+        [scheduleId]: 'PENDING'
+      }));
+
     } catch (e) {
       const msg = e?.response?.data?.message || 'Đăng ký thất bại';
       alert(msg);
