@@ -15,16 +15,28 @@ import AdbIcon from '@mui/icons-material/Adb';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getToken, removeToken } from '../services/localStorageService';
-import { decodeToken } from '../helpers/jwtDecode';   
+import { decodeToken } from '../helpers/jwtDecode';
 
-const pages = [
+// Admin/Instructor pages
+const adminPages = [
   { name: 'Tài Khoản', path: '/users' },
   { name: 'Khóa Học', path: '/courses' },
   { name: 'Bài Thi', path: '/exams' },
-  { name: 'Lịch Thi', path: '/exam-schedules' },
+  {
+    name: 'Lịch Thi', path: '/exam-schedules'
+  },
   { name: 'Lớp học', path: '/classes' },
   { name: 'Đăng ký thi', path: '/exam-registration' },
   { name: 'Quản lý đăng ký thi', path: '/exam-registration-management' },
+  { name: 'Lịch Học', path: '/view-schedule' },
+
+  { name: 'Kết quả thi', path: '/exam-results' },
+];
+
+// Learner pages
+const learnerPages = [
+  { name: 'Lịch thi của tôi', path: '/my-exam-schedules' },
+  { name: 'Kết quả thi của tôi', path: 'my-exam-results'}
 ];
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -34,25 +46,38 @@ function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
+  // Get user role from localStorage
+  const userRole = localStorage.getItem('userRole') || 'ROLE_LEARNER'; // Default to ROLE_LEARNER for safety
+  const pages = userRole === 'ROLE_ADMIN' || userRole === 'ROLE_INSTRUCTOR' ? adminPages : learnerPages;
+
+  const handleOpenNavMenu = (event) => {
+    setAnchorElNav(event.currentTarget);
+  };
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
   // 🔑 lấy userId từ token
   const token = getToken();
   const decoded = decodeToken(token);
-  const userId = decoded?.userId; // key này đúng với token bạn gửi ở trên
-
-  const handleOpenNavMenu = (event) => setAnchorElNav(event.currentTarget);
-  const handleOpenUserMenu = (event) => setAnchorElUser(event.currentTarget);
-  const handleCloseNavMenu = () => setAnchorElNav(null);
-  const handleCloseUserMenu = () => setAnchorElUser(null);
+  const userId = decoded?.userId;
 
   const handleLogout = async () => {
     try {
       if (token) {
-        await axios.post('/driving-school-management/auth/logout', { token });
+        await axios.post('http://localhost:8080/driving-school-management/auth/logout', { token });
       }
     } catch (e) {
-      // ignore
+
     } finally {
       removeToken();
+      localStorage.removeItem('userRole');
+      localStorage.removeItem('userId');
       navigate('/login');
     }
   };

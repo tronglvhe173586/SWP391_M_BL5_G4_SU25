@@ -8,7 +8,7 @@ import axios from "axios";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
-export default function LearnerTable() {
+export default function LearnerTable({ classId }) {
   const navigate = useNavigate();
   const [learners, setLearners] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -53,12 +53,11 @@ export default function LearnerTable() {
     setLoading(true);
     try {
       const token = localStorage.getItem("jwtToken");
-      const res = await axios.get(
-        "http://localhost:8080/driving-school-management/enrollments",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const params = classId ? { classId } : {};
+      const res = await axios.get("http://localhost:8080/driving-school-management/enrollments", {
+        params,
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setLearners(res.data);
     } catch (err) {
       console.error("Lỗi khi lấy danh sách học viên:", err);
@@ -68,7 +67,7 @@ export default function LearnerTable() {
 
   useEffect(() => {
     fetchLearners();
-  }, []);
+  }, [classId]);
 
   const filteredLearners = learners.filter((learner) =>
     learner.learnerName.toLowerCase().includes(keyword.toLowerCase()) ||

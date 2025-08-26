@@ -45,7 +45,6 @@ public class AuthenticationService implements IAuthenticationService {
     OutboundUserClient outboundUserClient;
     InvalidatedTokenRepository invalidatedTokenRepository;
 
-
     @NonFinal
     @Value("${jwt.signerKey}")
     protected String SIGNER_KEY;
@@ -57,7 +56,6 @@ public class AuthenticationService implements IAuthenticationService {
     @NonFinal
     @Value("${jwt.refreshable-duration}")
     protected long REFRESHABLE_DURATION;
-
 
     @NonFinal
     @Value("${outbound.identity.client-id}")
@@ -75,7 +73,7 @@ public class AuthenticationService implements IAuthenticationService {
     protected final String GRANT_TYPE = "authorization_code";
 
     @Override
-    public AuthenticationResponse outboundAuthenticate(String code){
+    public AuthenticationResponse outboundAuthenticate(String code) {
         var response = outboundIdentityClient.exchangeToken(ExchangeTokenRequest.builder()
                 .code(code)
                 .clientId(CLIENT_ID)
@@ -125,8 +123,7 @@ public class AuthenticationService implements IAuthenticationService {
             String jit = signToken.getJWTClaimsSet().getJWTID();
             Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
 
-            InvalidatedToken invalidatedToken =
-                    InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
+            InvalidatedToken invalidatedToken = InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
 
             invalidatedTokenRepository.save(invalidatedToken);
         } catch (AppException exception) {
@@ -140,11 +137,11 @@ public class AuthenticationService implements IAuthenticationService {
         SignedJWT signedJWT = SignedJWT.parse(token);
         Date expiryTime = (isRefresh)
                 ? new Date(signedJWT
-                .getJWTClaimsSet()
-                .getIssueTime()
-                .toInstant()
-                .plus(REFRESHABLE_DURATION, ChronoUnit.SECONDS)
-                .toEpochMilli())
+                        .getJWTClaimsSet()
+                        .getIssueTime()
+                        .toInstant()
+                        .plus(REFRESHABLE_DURATION, ChronoUnit.SECONDS)
+                        .toEpochMilli())
                 : signedJWT.getJWTClaimsSet().getExpirationTime();
 
         var verified = signedJWT.verify(verifier);
@@ -168,7 +165,8 @@ public class AuthenticationService implements IAuthenticationService {
 
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPasswordHash());
 
-        if (!authenticated) throw new AppException(ErrorCode.USER_NOT_EXISTED);
+        if (!authenticated)
+            throw new AppException(ErrorCode.USER_NOT_EXISTED);
 
         var token = generateToken(user);
 
@@ -180,22 +178,22 @@ public class AuthenticationService implements IAuthenticationService {
 
         var jit = signedJWT.getJWTClaimsSet().getJWTID();
         var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
-        InvalidatedToken invalidatedToken =
-                InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
+        InvalidatedToken invalidatedToken = InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
 
         invalidatedTokenRepository.save(invalidatedToken);
 
         var username = signedJWT.getJWTClaimsSet().getSubject();
-        var user =
-                userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
 
         var token = generateToken(user);
 
         return AuthenticationResponse.builder().token(token).authenticated(true).build();
     }
 
-
     private String generateToken(User user) {
+        //System.out.println("Generating token for user: " + user.getUsername() + " with role: " + user.getRole());
+
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS256);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
@@ -209,14 +207,19 @@ public class AuthenticationService implements IAuthenticationService {
                 .claim("userId", user.getId())
                 .build();
 
+        //System.out.println("JWT Claims Set: " + jwtClaimsSet.toJSONObject());
+
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
 
         JWSObject jwsObject = new JWSObject(header, payload);
 
         try {
             byte[] keyBytes = Base64.getDecoder().decode(SIGNER_KEY);
+            //System.out.println("Using signer key length: " + keyBytes.length);
             jwsObject.sign(new MACSigner(keyBytes));
-            return jwsObject.serialize();
+            String token = jwsObject.serialize();
+            //System.out.println("Generated token: " + token.substring(0, Math.min(50, token.length())) + "...");
+            return token;
         } catch (JOSEException e) {
             log.error("Cannot create token", e);
             throw new RuntimeException(e);

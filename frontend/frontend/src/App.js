@@ -12,6 +12,7 @@ import ExamScheduleList from "./pages/ExamScheduleList.js";
 import EditExamSchedule from "./pages/EditExamSchedule.js";
 import ViewExamSchedule from "./pages/ViewExamSchedule.js";
 import AddExamSchedule from "./pages/AddExamSchedule";
+import LearnerExamSchedule from "./pages/LearnerExamSchedule.js";
 import Login from './pages/Login.js';
 import UserDetails from "./pages/UserDetails.js";
 import Register from "./pages/Register.js";
@@ -35,6 +36,11 @@ import ClassListByCourse from './pages/ClassListByCourse.js';
 import ExamRegistration from './pages/ExamRegistration.js';
 import ExamRegistrationManagement from './pages/ExamRegistrationManagement.js';
 import LearnerProfilePage from './pages/LearnerProfile.js';
+import ExamResults from './pages/ExamResults.js';
+import AddExamResult from './pages/AddExamResult.js';
+import EditExamResult from './pages/EditExamResult.js';
+import MyExamResults from './pages/MyExamResults.js';
+import ViewSchedule from "./pages/ViewSchedule";
 
 function AppContent() {
   const location = useLocation();
@@ -62,7 +68,7 @@ function AppContent() {
         <Route path="/classes/add" element={<AddClass />} />
         <Route path="/classes/:id" element={<ViewClass />} />
         <Route path="/classes/edit/:id" element={<EditClass />} />
-        <Route path="/class/:id/learners" element={<ClassLearners />} />
+        <Route path="/enrollments" element={<ClassLearners />} />
         <Route path="/enrollments/add" element={<AddLearner />} />
         <Route path="/enrollments/:id" element={<ViewLearner />} />
         <Route path="/enrollments/edit/:id" element={<EditLearner />} />
@@ -75,8 +81,13 @@ function AppContent() {
         <Route path="/exam-schedules/edit/:id" element={<EditExamSchedule />} />
         <Route path="/exam-schedules/:id" element={<ViewExamSchedule />} />
         <Route path={"/exam-schedules/add"} element={<AddExamSchedule />} />
+        <Route path="/my-exam-schedules" element={<LearnerExamSchedule />} />
         <Route path="/exam-registration" element={<ExamRegistration />} />
         <Route path="/exam-registration-management" element={<ExamRegistrationManagement />} />
+        <Route path="/exam-results" element={<ExamResults />} />
+        <Route path="/exam-results/add" element={<AddExamResult />} />
+        <Route path="/exam-results/edit/:id" element={<EditExamResult />} />
+        <Route path="/my-exam-results" element={<MyExamResults />} />
 
         <Route path="/register" element={<Register />} />
         <Route path="/users/:id" element={<UserDetails />} />
@@ -84,6 +95,9 @@ function AppContent() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path= "/verify-otp" element={<VerifyOtp />} />
         <Route path="/change-password" element={<ChangePassword />} />
+
+        <Route path="/view-schedule" element={<ViewSchedule />} />
+
       </Routes>
     </>
   );

@@ -12,14 +12,15 @@ import java.time.LocalTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExamScheduleResponse {
+public class LearnerExamScheduleResponse {
     private Long id;
     private String examName;
+    private String examType;
     private String className;
     private LocalDate examDate;
     private LocalTime startTime;
     private String location;
-    private Integer maxParticipants;
     private String instructorName;
-    private Integer passScore;
+    private String registrationStatus;
+    private String examResult;
 }

@@ -58,7 +58,7 @@ export default function Login() {
 
         try {
             const response = await axios.post(
-                "/driving-school-management/auth/token",
+                "http://localhost:8080/driving-school-management/auth/token",
                 {
                     username: form.username,
                     password: form.password
@@ -74,14 +74,20 @@ export default function Login() {
 
             const decodedToken = jwtDecode(token);
             const userRole = decodedToken.role;
+            const userId = decodedToken.userId;
+            
+            // Store user information in localStorage
+            localStorage.setItem('userRole', userRole);
+            localStorage.setItem('userId', userId);
+            
             if (userRole === "ROLE_ADMIN") {
                 navigate("/users");
             } else if (userRole === "ROLE_LEARNER"){
-
-                navigate("/users");
-
-            } else {
+                navigate("/my-exam-schedules");
+            } else if (userRole === "ROLE_INSTRUCTOR") {
                 navigate("/instructors");
+            } else {
+                navigate("/users");
             }
         } catch (error) {
             console.error("Login failed:", error);

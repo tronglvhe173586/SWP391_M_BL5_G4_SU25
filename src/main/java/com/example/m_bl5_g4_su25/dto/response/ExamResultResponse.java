@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -12,14 +14,21 @@ import java.time.LocalTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExamScheduleResponse {
+public class ExamResultResponse {
     private Long id;
+    private Long learnerId;
+    private String learnerName;
+    private String learnerEmail;
+    private Long examScheduleId;
     private String examName;
+    private String examType;
     private String className;
     private LocalDate examDate;
     private LocalTime startTime;
     private String location;
-    private Integer maxParticipants;
     private String instructorName;
+    private BigDecimal score;
+    private Boolean isPassed;
+    private Instant resultDate;
     private Integer passScore;
 }
