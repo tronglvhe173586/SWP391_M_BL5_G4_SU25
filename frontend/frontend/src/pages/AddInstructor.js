@@ -15,15 +15,15 @@ import axios from "axios";
 
 export default function AddInstructor() {
   const navigate = useNavigate();
-  
+
   const userRole = localStorage.getItem("userRole") || "ROLE_LEARNER";
-  
-    useEffect(() => {
-      if (userRole !== "ROLE_ADMIN") {
-        alert("Bạn không có quyền truy cập trang này.");
-        navigate("/");
-      }
-    }, [userRole, navigate]);
+
+  useEffect(() => {
+    if (userRole !== "ROLE_ADMIN") {
+      alert("Bạn không có quyền truy cập trang này.");
+      navigate("/");
+    }
+  }, [userRole, navigate]);
 
   const [form, setForm] = useState({
     username: "",
@@ -31,12 +31,20 @@ export default function AddInstructor() {
     email: "",
     firstName: "",
     lastName: "",
-    gender: "Nam", 
-    provinceId: "", 
+    gender: "Nam",
+    provinceId: "",
     address: "",
     phoneNumber: "",
     certificationInfo: "Bằng lái hạng A1",
-    dateOfBirth: "", 
+    dateOfBirth: "",
+  });
+
+  const [errors, setErrors] = useState({
+    username: "",
+    email: "",
+    firstName: "",
+    lastName: "",
+    address: "",
   });
 
   const [provinces, setProvinces] = useState([]);
@@ -49,34 +57,65 @@ export default function AddInstructor() {
       .catch((err) => console.error("Error loading provinces:", err));
   }, []);
 
+  const validateField = (name, value) => {
+    let errorMsg = "";
+
+    if (name === "firstName" || name === "lastName") {
+      if (!/^[\p{L}\s]+$/u.test(value)) {
+        errorMsg = "Chỉ được nhập chữ cái";
+      } else if (value.length > 20) {
+        errorMsg = "Tối đa 20 ký tự";
+      }
+    }
+
+    if (name === "username") {
+      if (value.length > 30) errorMsg = "Tối đa 30 ký tự";
+    }
+
+    if (name === "email") {
+      if (value.length > 50) errorMsg = "Tối đa 50 ký tự";
+    }
+
+    if (name === "address") {
+      if (value.length > 255) errorMsg = "Tối đa 255 ký tự";
+    }
+
+    setErrors((prev) => ({ ...prev, [name]: errorMsg }));
+  };
+
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setForm({
       ...form,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+    validateField(name, value);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
+    // Nếu còn lỗi thì không submit
+    if (Object.values(errors).some((err) => err !== "")) {
+      alert("Vui lòng sửa lỗi trước khi gửi!");
+      return;
+    }
+
     if (form.passwordHash.length < 8) {
-    alert("Mật khẩu phải có ít nhất 8 ký tự!");
-    return;
+      alert("Mật khẩu phải có ít nhất 8 ký tự!");
+      return;
     }
 
     if (form.phoneNumber.length < 10 || form.phoneNumber.length > 11) {
       alert("Số điện thoại phải từ 10 đến 11 số.");
       return;
     }
-    
+
     const today = new Date();
     const dob = new Date(form.dateOfBirth);
     const age = today.getFullYear() - dob.getFullYear();
     const monthDiff = today.getMonth() - dob.getMonth();
     const dayDiff = today.getDate() - dob.getDate();
-
-
-
 
     const isUnder18 =
       age < 18 ||
@@ -86,7 +125,6 @@ export default function AddInstructor() {
       alert("Người dùng phải đủ 18 tuổi trở lên!");
       return;
     }
-    
 
     try {
       const token = localStorage.getItem("jwtToken");
@@ -112,7 +150,7 @@ export default function AddInstructor() {
         address: "",
         phoneNumber: "",
         certificationInfo: "",
-        dateOfBirth: "", 
+        dateOfBirth: "",
       });
       navigate("/users");
     } catch (error) {
@@ -137,6 +175,9 @@ export default function AddInstructor() {
           value={form.username}
           onChange={handleChange}
           required
+          inputProps={{ maxLength: 30 }}
+          error={!!errors.username}
+          helperText={errors.username}
         />
         <TextField
           label="Mật khẩu"
@@ -153,6 +194,9 @@ export default function AddInstructor() {
           onChange={handleChange}
           type="email"
           required
+          inputProps={{ maxLength: 50 }}
+          error={!!errors.email}
+          helperText={errors.email}
         />
         <TextField
           label="Họ"
@@ -160,6 +204,9 @@ export default function AddInstructor() {
           value={form.firstName}
           onChange={handleChange}
           required
+          inputProps={{ maxLength: 20 }}
+          error={!!errors.firstName}
+          helperText={errors.firstName}
         />
         <TextField
           label="Tên"
@@ -167,6 +214,9 @@ export default function AddInstructor() {
           value={form.lastName}
           onChange={handleChange}
           required
+          inputProps={{ maxLength: 20 }}
+          error={!!errors.lastName}
+          helperText={errors.lastName}
         />
 
         <FormControl fullWidth>
@@ -215,6 +265,9 @@ export default function AddInstructor() {
           value={form.address}
           onChange={handleChange}
           required
+          inputProps={{ maxLength: 255 }}
+          error={!!errors.address}
+          helperText={errors.address}
         />
         <TextField
           label="Số điện thoại"

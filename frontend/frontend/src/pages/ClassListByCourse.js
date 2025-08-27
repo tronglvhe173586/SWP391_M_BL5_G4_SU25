@@ -88,7 +88,6 @@ const ClassListByCourse = () => {
               <TableCell><b>Ngày bắt đầu</b></TableCell>
               <TableCell><b>Ngày kết thúc</b></TableCell>
               <TableCell align="center"><b>Sĩ số tối đa</b></TableCell>
-              <TableCell><b>ID Giáo viên</b></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -107,8 +106,7 @@ const ClassListByCourse = () => {
                       ? new Date(cls.endDate).toLocaleDateString("vi-VN")
                       : "Chưa có"}
                   </TableCell>
-                  <TableCell align="center">{cls.maxStudents}</TableCell>
-                  <TableCell>{cls.instructor|| "Chưa phân công"}</TableCell>
+                  <TableCell align="center">{cls.maxStudents}</TableCell>                  
                 </TableRow>
               ))
             ) : (
