@@ -75,6 +75,9 @@ export default function AddInstructor() {
     const monthDiff = today.getMonth() - dob.getMonth();
     const dayDiff = today.getDate() - dob.getDate();
 
+
+
+
     const isUnder18 =
       age < 18 ||
       (age === 18 && (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)));
