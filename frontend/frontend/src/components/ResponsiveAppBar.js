@@ -41,7 +41,8 @@ const learnerPages = [
 ];
 
 const staffPages = [
-  { name: 'Thêm kết quả thi', path: '/exam-results/add'}
+  { name: 'Lịch Học', path: '/view-schedule' },
+  { name: 'Kết quả thi', path: '/exam-results' },
 ];
 
 function ResponsiveAppBar() {
