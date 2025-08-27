@@ -72,4 +72,32 @@ public class ScheduleService {
             throw new RuntimeException("Schedule not found with ID: " + scheduleId);
         }
     }
+
+    public List<ScheduleResponse> getSchedulesForLearner(Long learnerId) {
+        return scheduleRepository.findByLearnerId(learnerId).stream()
+                .map(s -> new ScheduleResponse(
+                        s.getId(),
+                        s.getDayOfWeek(),
+                        s.getDate(),
+                        s.getStartTime(),
+                        s.getEndTime(),
+                        s.getTopic(),
+                        s.getClassField().getId()
+                ))
+                .toList();
+    }
+
+    public List<ScheduleResponse> getSchedulesForInstructor(Long instructorId) {
+        return scheduleRepository.findByInstructorId(instructorId).stream()
+                .map(s -> new ScheduleResponse(
+                        s.getId(),
+                        s.getDayOfWeek(),
+                        s.getDate(),
+                        s.getStartTime(),
+                        s.getEndTime(),
+                        s.getTopic(),
+                        s.getClassField().getId()
+                ))
+                .toList();
+    }
 }

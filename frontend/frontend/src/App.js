@@ -41,6 +41,7 @@ import AddExamResult from './pages/AddExamResult.js';
 import EditExamResult from './pages/EditExamResult.js';
 import MyExamResults from './pages/MyExamResults.js';
 import ViewSchedule from "./pages/ViewSchedule";
+import LearnerClassSchedule from './pages/LearnerClassSchedule';
 
 function AppContent() {
   const location = useLocation();
@@ -97,6 +98,7 @@ function AppContent() {
         <Route path="/change-password" element={<ChangePassword />} />
 
         <Route path="/view-schedule" element={<ViewSchedule />} />
+        <Route path="/my-class-schedules" element={<LearnerClassSchedule />} />
 
       </Routes>
     </>

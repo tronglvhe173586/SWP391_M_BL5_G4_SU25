@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 
-// Icons
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
@@ -83,12 +82,14 @@ export default function UserTable() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+
       setUsers(res.data.content || []);
       setTotalElements(res.data.totalElements || 0);
     } catch (err) {
       console.error("Lỗi khi tải danh sách người dùng:", err);
     }
     setLoading(false);
+    
   };
 
   useEffect(() => {

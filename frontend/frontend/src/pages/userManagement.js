@@ -5,12 +5,9 @@ import { Link, Navigate } from "react-router-dom";
 
 export default function UserManagement() {
   const userRole = localStorage.getItem("userRole") || "ROLE_LEARNER";
-
-  // Nếu không phải ADMIN thì redirect về trang Home hoặc trang khác
   if (userRole !== "ROLE_ADMIN") {
     alert("Bạn không có quyền truy cập trang này.");
     return <Navigate to="/" replace />;
-    // Hoặc có thể return <Typography>Bạn không có quyền truy cập</Typography>;
   }
 
   return (

@@ -131,7 +131,21 @@ public class CourseService implements ICourseService {
                 .collect(Collectors.toList());
     }
 
-
+    @Override
+    public List<ListCourseResponse> getAllCourses() {
+        return courseRepository.findAll().stream()
+                .filter(course -> !course.getIsDeleted())
+                .map(course -> new ListCourseResponse(
+                        course.getId(),
+                        course.getCourseName(),
+                        course.getCourseType(),
+                        course.getDescription(),
+                        course.getPrice(),
+                        course.getDuration(),
+                        false
+                ))
+                .toList();
+    }
 
 }
 
