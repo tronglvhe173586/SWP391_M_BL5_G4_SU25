@@ -14,7 +14,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function AddCourse() {
-
   const navigate = useNavigate();
   const userRole = localStorage.getItem("userRole") || "ROLE_LEARNER";
 
@@ -24,29 +23,57 @@ export default function AddCourse() {
       navigate("/");
     }
   }, [userRole, navigate]);
+
   const [form, setForm] = useState({
     courseName: "",
     courseType: "",
     description: "",
     price: "",
     duration: "",
-    isDeleted: false, 
+    isDeleted: false,
   });
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    // Chặn ký tự không phải số cho price và duration
+    if ((name === "price" || name === "duration") && value !== "") {
+      if (!/^\d*$/.test(value)) return; // chỉ cho số
+    }
+
     setForm({
       ...form,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!form.courseName.trim()) {
+      alert("Tên khóa học không được để trống");
+      return;
+    }
+
+    if (Number(form.price) <= 0) {
+      alert("Giá phải lớn hơn 0");
+      return;
+    }
+
+    if (Number(form.duration) <= 0) {
+      alert("Thời lượng phải lớn hơn 0");
+      return;
+    }
+
     try {
       const token = localStorage.getItem("jwtToken");
       await axios.post(
         "http://localhost:8080/driving-school-management/courses/add_courses",
-        form,
+        {
+          ...form,
+          price: Number(form.price),
+          duration: Number(form.duration),
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -98,13 +125,13 @@ export default function AddCourse() {
             required
           >
             <MenuItem value="A1">A1</MenuItem>
-                <MenuItem value="A2">A2</MenuItem>
-                <MenuItem value="B1">B1</MenuItem>
-                <MenuItem value="B2">B2</MenuItem>
-                <MenuItem value="C">C</MenuItem>
-                <MenuItem value="D">D</MenuItem>
-                <MenuItem value="E">E</MenuItem>
-                <MenuItem value="F">F</MenuItem>
+            <MenuItem value="A2">A2</MenuItem>
+            <MenuItem value="B1">B1</MenuItem>
+            <MenuItem value="B2">B2</MenuItem>
+            <MenuItem value="C">C</MenuItem>
+            <MenuItem value="D">D</MenuItem>
+            <MenuItem value="E">E</MenuItem>
+            <MenuItem value="F">F</MenuItem>
           </Select>
         </FormControl>
 
@@ -123,8 +150,8 @@ export default function AddCourse() {
           name="price"
           value={form.price}
           onChange={handleChange}
-          type="number"
           required
+          inputProps={{ min: 1 }}
         />
 
         <TextField
@@ -132,8 +159,8 @@ export default function AddCourse() {
           name="duration"
           value={form.duration}
           onChange={handleChange}
-          type="number"
           required
+          inputProps={{ min: 1 }}
         />
 
         <Button type="submit" variant="contained">

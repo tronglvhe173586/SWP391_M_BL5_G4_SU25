@@ -21,6 +21,11 @@ export default function UserManagement() {
           Thêm giảng viên
         </Button>
       </Link>
+      <Link to="/add_staff" style={{ marginLeft: '10px' }}>
+        <Button variant="contained" color="success" sx={{ mt: 10 }}>
+          Thêm nhân viên
+        </Button>
+      </Link>
     </Container>
   );
 }

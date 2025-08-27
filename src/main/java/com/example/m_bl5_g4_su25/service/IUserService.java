@@ -19,7 +19,7 @@ public interface IUserService {
     ListUserResponse editUser(Long id, EditUserRequest request);
 
     void addInstructor(AddInstructorRequest request);
-
+    void addStaff(AddInstructorRequest request);
     Page<ListUserResponse> getAllUsersPagination(String keyword, int page, int size);
 
     ListUserResponse getUserById(Long id);

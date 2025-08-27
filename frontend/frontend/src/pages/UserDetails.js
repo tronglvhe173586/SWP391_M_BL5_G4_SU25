@@ -24,6 +24,12 @@ export default function UserDetails() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const roleMapping = {
+  "LEARNER": "HỌC VIÊN",
+  "INSTRUCTOR": "GIẢNG VIÊN",
+  "ADMIN": "QUẢN TRỊ VIÊN",
+  "STAFF": "NHÂN VIÊN"
+};
 
   const userRole = localStorage.getItem("userRole") || "ROLE_LEARNER";
     useEffect(() => {
@@ -77,14 +83,14 @@ export default function UserDetails() {
       </Box>
     );
 
-  if (!user) return <Typography align="center">Không tìm thấy user</Typography>;
+  if (!user) return <Typography align="center">Không tìm thấy tài khoản</Typography>;
 
   return (
     <Container maxWidth="sm" sx={{ mt: 5 }}>
       <Card sx={{ boxShadow: 3, borderRadius: 3 }}>
         <CardContent>
           <Typography variant="h4" gutterBottom align="center">
-            Thông tin User
+            Thông tin tài khoản
           </Typography>
 
           <Grid container spacing={2}>
@@ -114,12 +120,12 @@ export default function UserDetails() {
                 </Typography>
               </Box>
             </Grid>
-
+         
             <Grid item xs={12}>
               <Box display="flex" alignItems="center" gap={1}>
                 <WorkIcon color="success" />
                 <Typography>
-                  <b>Vai trò:</b> {user.role}
+                  <b>Vai trò:</b> {roleMapping[user.role] || user.role}
                 </Typography>
               </Box>
             </Grid>

@@ -13,7 +13,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export default function AddInstructor() {
+export default function AddStaff() {
   const navigate = useNavigate();
 
   const userRole = localStorage.getItem("userRole") || "ROLE_LEARNER";
@@ -35,7 +35,6 @@ export default function AddInstructor() {
     provinceId: "",
     address: "",
     phoneNumber: "",
-    certificationInfo: "Bằng lái hạng A1",
     dateOfBirth: "",
   });
 
@@ -95,7 +94,6 @@ export default function AddInstructor() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Nếu còn lỗi thì không submit
     if (Object.values(errors).some((err) => err !== "")) {
       alert("Vui lòng sửa lỗi trước khi gửi!");
       return;
@@ -129,7 +127,7 @@ export default function AddInstructor() {
     try {
       const token = localStorage.getItem("jwtToken");
       await axios.post(
-        "http://localhost:8080/driving-school-management/users/Add_Instructor",
+        "http://localhost:8080/driving-school-management/users/add_staff",
         form,
         {
           headers: {
@@ -138,7 +136,7 @@ export default function AddInstructor() {
         }
       );
 
-      alert("Thêm giảng viên thành công!");
+      alert("Thêm nhân viên thành công!");
       setForm({
         username: "",
         passwordHash: "",
@@ -149,20 +147,19 @@ export default function AddInstructor() {
         provinceId: "",
         address: "",
         phoneNumber: "",
-        certificationInfo: "",
         dateOfBirth: "",
       });
       navigate("/users");
     } catch (error) {
       console.error(error);
-      alert("Thêm giảng viên thất bại! Vui lòng kiểm tra lại username, email.");
+      alert("Thêm nhân viên thất bại! Vui lòng kiểm tra lại username, email.");
     }
   };
 
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom>
-        Thêm Giảng Viên
+        Thêm Nhân Viên
       </Typography>
       <Box
         component="form"
@@ -277,26 +274,8 @@ export default function AddInstructor() {
           required
         />
 
-        <FormControl fullWidth>
-          <InputLabel>Chứng chỉ</InputLabel>
-          <Select
-            name="certificationInfo"
-            value={form.certificationInfo}
-            onChange={handleChange}
-          >
-            <MenuItem value="Bằng lái hạng A1">Bằng lái hạng A1</MenuItem>
-            <MenuItem value="Bằng lái hạng A2">Bằng lái hạng A2</MenuItem>
-            <MenuItem value="Bằng lái hạng B1">Bằng lái hạng B1</MenuItem>
-            <MenuItem value="Bằng lái hạng B2">Bằng lái hạng B2</MenuItem>
-            <MenuItem value="Bằng lái hạng C">Bằng lái hạng C</MenuItem>
-            <MenuItem value="Bằng lái hạng D">Bằng lái hạng D</MenuItem>
-            <MenuItem value="Bằng lái hạng E">Bằng lái hạng E</MenuItem>
-            <MenuItem value="Bằng lái hạng F">Bằng lái hạng F</MenuItem>
-          </Select>
-        </FormControl>
-
         <Button type="submit" variant="contained">
-          Thêm Giảng Viên
+          Thêm Nhân Viên
         </Button>
       </Box>
     </Container>

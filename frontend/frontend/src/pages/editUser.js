@@ -6,7 +6,7 @@ import {
   Typography,
   Box,
   FormControlLabel,
-  Checkbox
+  Checkbox,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
@@ -16,21 +16,27 @@ const EditUser = () => {
   const navigate = useNavigate();
 
   const userRole = localStorage.getItem("userRole") || "ROLE_LEARNER";
-    useEffect(() => {
-        if (userRole !== "ROLE_ADMIN" && userRole !== "ROLE_INSTRUCTOR") {
-          navigate("/")
-          alert("Bạn không có quyền truy cập trang này."); 
-          return;
-        }
-      }
-      );
+  useEffect(() => {
+    if (userRole !== "ROLE_ADMIN" && userRole !== "ROLE_INSTRUCTOR") {
+      alert("Bạn không có quyền truy cập trang này.");
+      navigate("/");
+      return;
+    }
+  }, [userRole, navigate]);
 
   const [form, setForm] = useState({
     username: "",
     firstName: "",
     lastName: "",
     email: "",
-    isActive: true
+    isActive: true,
+  });
+
+  const [errors, setErrors] = useState({
+    username: "",
+    firstName: "",
+    lastName: "",
+    email: "",
   });
 
   const [loading, setLoading] = useState(true);
@@ -39,13 +45,13 @@ const EditUser = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const token = localStorage.getItem("jwtToken"); 
+        const token = localStorage.getItem("jwtToken");
         const res = await axios.get(
           `http://localhost:8080/driving-school-management/users/${id}`,
           {
             headers: {
-              Authorization: `Bearer ${token}` 
-            }
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
 
@@ -54,7 +60,7 @@ const EditUser = () => {
           firstName: res.data.firstName,
           lastName: res.data.lastName,
           email: res.data.email,
-          isActive: res.data.isActive
+          isActive: res.data.isActive,
         });
 
         setLoading(false);
@@ -66,26 +72,56 @@ const EditUser = () => {
     fetchUser();
   }, [id]);
 
+  const validateField = (name, value) => {
+    let errorMsg = "";
+    if (name === "firstName" || name === "lastName") {
+      if (!/^[\p{L}\s]+$/u.test(value)) {
+        errorMsg = "Chỉ được nhập chữ cái";
+      } else if (value.length > 20) {
+        errorMsg = "Tối đa 20 ký tự";
+      }
+    }
+    if (name === "username") {
+      if (value.length > 30) {
+        errorMsg = "Tối đa 30 ký tự";
+      }
+    }
+    if (name === "email") {
+      if (value.length > 50) {
+        errorMsg = "Tối đa 50 ký tự";
+      }
+    }
+    setErrors((prev) => ({ ...prev, [name]: errorMsg }));
+  };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    const val = type === "checkbox" ? checked : value;
     setForm((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value
+      [name]: val,
     }));
+    validateField(name, val);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Nếu còn lỗi thì không submit
+    if (Object.values(errors).some((err) => err !== "")) {
+      alert("Vui lòng sửa lỗi trước khi cập nhật!");
+      return;
+    }
+
     try {
-      const token = localStorage.getItem("jwtToken"); 
+      const token = localStorage.getItem("jwtToken");
       await axios.put(
         `http://localhost:8080/driving-school-management/users/edit_User/${id}`,
         form,
         {
           headers: {
-            Authorization: `Bearer ${token}` 
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       alert("Cập nhật người dùng thành công!");
@@ -115,6 +151,9 @@ const EditUser = () => {
           onChange={handleChange}
           fullWidth
           required
+          inputProps={{ maxLength: 30 }}
+          error={!!errors.username}
+          helperText={errors.username}
         />
         <TextField
           label="Họ"
@@ -123,6 +162,9 @@ const EditUser = () => {
           onChange={handleChange}
           fullWidth
           required
+          inputProps={{ maxLength: 20 }}
+          error={!!errors.firstName}
+          helperText={errors.firstName}
         />
         <TextField
           label="Tên"
@@ -131,6 +173,9 @@ const EditUser = () => {
           onChange={handleChange}
           fullWidth
           required
+          inputProps={{ maxLength: 20 }}
+          error={!!errors.lastName}
+          helperText={errors.lastName}
         />
         <TextField
           label="Email"
@@ -140,6 +185,9 @@ const EditUser = () => {
           onChange={handleChange}
           fullWidth
           required
+          inputProps={{ maxLength: 50 }}
+          error={!!errors.email}
+          helperText={errors.email}
         />
         <FormControlLabel
           control={

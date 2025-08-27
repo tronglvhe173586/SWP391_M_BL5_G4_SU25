@@ -42,6 +42,7 @@ import EditExamResult from './pages/EditExamResult.js';
 import MyExamResults from './pages/MyExamResults.js';
 import ViewSchedule from "./pages/ViewSchedule";
 import LearnerClassSchedule from './pages/LearnerClassSchedule';
+import AddStaff from './pages/AddStaff.js';
 
 function AppContent() {
   const location = useLocation();
@@ -62,6 +63,7 @@ function AppContent() {
         <Route path="/courses/:courseId/classes" element={<ClassListByCourse />} />
         <Route path="/users/:id/profile" element={<LearnerProfilePage />} />
         <Route path="/add-instructor" element={<AddInstructor />} />
+        <Route path="/add_staff" element={<AddStaff />} />
 
         <Route path="/edit-user/:id" element={<EditUser />} />
 

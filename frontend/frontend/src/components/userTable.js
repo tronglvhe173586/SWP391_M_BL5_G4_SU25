@@ -19,14 +19,24 @@ export default function UserTable() {
   const [loading, setLoading] = useState(false);
   const [keyword, setKeyword] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
-
+  const roleMapping = {
+    LEARNER: "HỌC VIÊN",
+    INSTRUCTOR: "GIẢNG VIÊN",
+    ADMIN: "QUẢN TRỊ VIÊN",
+    STAFF: "NHÂN VIÊN",
+  };
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
     { field: "username", headerName: "Tên đăng nhập", width: 150 },
     { field: "firstName", headerName: "Họ", width: 150 },
     { field: "lastName", headerName: "Tên", width: 150 },
     { field: "email", headerName: "Email", width: 200 },
-    { field: "role", headerName: "Vai trò", width: 130 },
+    {
+    field: "role",
+    headerName: "Vai trò",
+    width: 150,
+    renderCell: (params) => roleMapping[params.value] || params.value,
+    },
     {
       field: "isActive",
       headerName: "Hoạt động",
