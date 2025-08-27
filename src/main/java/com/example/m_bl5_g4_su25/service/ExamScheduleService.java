@@ -152,7 +152,7 @@ public class ExamScheduleService implements IExamScheduleService {
                         .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
                 List<ExamSchedule> confirmedSchedules =
-                        scheduleRepository.findByClassFieldLearnersId(learner.getId(), "CONFIRMED");
+                        scheduleRepository.findSchedulesByLearnerIdAndConfirmed(learner.getId(), "CONFIRMED");
 
                 return confirmedSchedules.stream()
                         .map(schedule -> convertToLearnerExamScheduleResponse(schedule, learner.getId()))

@@ -14,12 +14,27 @@ import {
   Alert,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ClassListByCourse = () => {
   const { courseId } = useParams(); 
   const [classes, setClasses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
+  const userRole = localStorage.getItem("userRole") || "ROLE_LEARNER";
+
+  useEffect(() => {
+    if (userRole !== "ROLE_ADMIN" && userRole !== "ROLE_INSTRUCTOR") {
+      navigate("/")
+      alert("Bạn không có quyền truy cập trang này."); 
+      return;
+    }
+  }
+  );
+
+  
 
   useEffect(() => {
     const fetchClasses = async () => {

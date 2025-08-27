@@ -51,5 +51,9 @@ public class CourseController {
         List<ClassResponse> classes = courseService.getClassesByCourse(courseId);
         return ResponseEntity.ok(classes);
     }
+    @GetMapping("/all")
+    public ResponseEntity<List<ListCourseResponse>> getAllCoursesNoPagination() {
+        return ResponseEntity.ok(courseService.getAllCourses());
+    }
 
 }

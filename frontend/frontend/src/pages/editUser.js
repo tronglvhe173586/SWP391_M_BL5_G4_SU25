@@ -15,6 +15,16 @@ const EditUser = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const userRole = localStorage.getItem("userRole") || "ROLE_LEARNER";
+    useEffect(() => {
+        if (userRole !== "ROLE_ADMIN" && userRole !== "ROLE_INSTRUCTOR") {
+          navigate("/")
+          alert("Bạn không có quyền truy cập trang này."); 
+          return;
+        }
+      }
+      );
+
   const [form, setForm] = useState({
     username: "",
     firstName: "",
@@ -82,7 +92,7 @@ const EditUser = () => {
       navigate("/users");
     } catch (err) {
       console.error(err);
-      alert("Cập nhật người dùng thất bại");
+      alert("Email hoặc username đã tồn tại! Vui lòng kiểm tra lại.");
     }
   };
 

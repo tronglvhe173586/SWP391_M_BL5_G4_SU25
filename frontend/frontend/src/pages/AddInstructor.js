@@ -15,6 +15,15 @@ import axios from "axios";
 
 export default function AddInstructor() {
   const navigate = useNavigate();
+  
+  const userRole = localStorage.getItem("userRole") || "ROLE_LEARNER";
+  
+    useEffect(() => {
+      if (userRole !== "ROLE_ADMIN") {
+        alert("Bạn không có quyền truy cập trang này.");
+        navigate("/");
+      }
+    }, [userRole, navigate]);
 
   const [form, setForm] = useState({
     username: "",
@@ -22,12 +31,12 @@ export default function AddInstructor() {
     email: "",
     firstName: "",
     lastName: "",
-    gender: "Nam", // mặc định Enum Nam
-    provinceId: "", // id tỉnh
+    gender: "Nam", 
+    provinceId: "", 
     address: "",
     phoneNumber: "",
     certificationInfo: "Bằng lái hạng A1",
-    dateOfBirth: "", // 👈 thêm ngày sinh
+    dateOfBirth: "", 
   });
 
   const [provinces, setProvinces] = useState([]);
@@ -49,6 +58,36 @@ export default function AddInstructor() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (form.passwordHash.length < 8) {
+    alert("Mật khẩu phải có ít nhất 8 ký tự!");
+    return;
+    }
+
+    if (form.phoneNumber.length < 10 || form.phoneNumber.length > 11) {
+      alert("Số điện thoại phải từ 10 đến 11 số.");
+      return;
+    }
+    
+    const today = new Date();
+    const dob = new Date(form.dateOfBirth);
+    const age = today.getFullYear() - dob.getFullYear();
+    const monthDiff = today.getMonth() - dob.getMonth();
+    const dayDiff = today.getDate() - dob.getDate();
+
+
+
+
+    const isUnder18 =
+      age < 18 ||
+      (age === 18 && (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)));
+
+    if (isUnder18) {
+      alert("Người dùng phải đủ 18 tuổi trở lên!");
+      return;
+    }
+    
+
     try {
       const token = localStorage.getItem("jwtToken");
       await axios.post(
@@ -73,7 +112,7 @@ export default function AddInstructor() {
         address: "",
         phoneNumber: "",
         certificationInfo: "",
-        dateOfBirth: "", // reset ngày sinh
+        dateOfBirth: "", 
       });
       navigate("/users");
     } catch (error) {
@@ -130,7 +169,6 @@ export default function AddInstructor() {
           required
         />
 
-        {/* Gender */}
         <FormControl fullWidth>
           <InputLabel>Giới tính</InputLabel>
           <Select
@@ -144,7 +182,6 @@ export default function AddInstructor() {
           </Select>
         </FormControl>
 
-        {/* Date of Birth */}
         <TextField
           label="Ngày sinh"
           name="dateOfBirth"
@@ -155,7 +192,6 @@ export default function AddInstructor() {
           required
         />
 
-        {/* Province */}
         <FormControl fullWidth>
           <InputLabel>Tỉnh/Thành phố</InputLabel>
           <Select
@@ -188,7 +224,6 @@ export default function AddInstructor() {
           required
         />
 
-        {/* Certification */}
         <FormControl fullWidth>
           <InputLabel>Chứng chỉ</InputLabel>
           <Select

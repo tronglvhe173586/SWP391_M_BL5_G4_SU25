@@ -23,9 +23,6 @@ public class ExamResultController {
 
         private final IExamResultService examResultService;
 
-        /**
-         * Get all exam results across all exam schedules (Admin only)
-         */
         @GetMapping
         // @PreAuthorize("hasAuthority('ROLE_ADMIN')")
         public ResponseEntity<ApiResponse<List<ExamResultResponse>>> getAllExamResults() {
@@ -35,9 +32,6 @@ public class ExamResultController {
                                 .build());
         }
 
-        /**
-         * Get exam results for a specific exam schedule (Admin only)
-         */
         @GetMapping("/exam-schedule/{examScheduleId}")
         // @PreAuthorize("hasAuthority('ROLE_ADMIN')")
         public ResponseEntity<ApiResponse<List<ExamResultResponse>>> getExamResultsByExamSchedule(
@@ -48,9 +42,6 @@ public class ExamResultController {
                                 .build());
         }
 
-        /**
-         * Create a new exam result for a learner (Admin only)
-         */
         @PostMapping
         // @PreAuthorize("hasAuthority('ROLE_ADMIN')")
         public ResponseEntity<ApiResponse<ExamResultResponse>> createExamResult(
@@ -62,9 +53,6 @@ public class ExamResultController {
                                                 .build());
         }
 
-        /**
-         * Get current learner's exam results
-         */
         @GetMapping("/my")
         public ResponseEntity<ApiResponse<List<ExamResultResponse>>> getMyExamResults() {
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -74,18 +62,12 @@ public class ExamResultController {
                 return ResponseEntity.ok(ApiResponse.<List<ExamResultResponse>>builder().result(results).build());
         }
 
-        /**
-         * Get a single exam result by id
-         */
         @GetMapping("/{id}")
         public ResponseEntity<ApiResponse<ExamResultResponse>> getExamResult(@PathVariable Long id) {
                 ExamResultResponse result = examResultService.getExamResultById(id);
                 return ResponseEntity.ok(ApiResponse.<ExamResultResponse>builder().result(result).build());
         }
 
-        /**
-         * Update an existing exam result's score (Admin only)
-         */
         @PutMapping("/{id}")
         // @PreAuthorize("hasAuthority('ROLE_ADMIN')")
         public ResponseEntity<ApiResponse<ExamResultResponse>> updateExamResult(
