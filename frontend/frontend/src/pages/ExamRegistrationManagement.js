@@ -51,7 +51,6 @@ const ExamRegistrationManagement = () => {
           Authorization: `Bearer ${token}`
         }
       });
-      // Sửa đổi dòng này để xử lý API trả về mảng trực tiếp hoặc có trường `result`
       const data = response.data.result || response.data;
       if (data) {
         setRegistrations(data);
