@@ -46,6 +46,9 @@ public class ExamScheduleService implements IExamScheduleService {
         @Autowired
         private ExamResultRepository examResultRepository;
 
+        @Autowired
+        private ExamScheduleRepository scheduleRepository;
+
         @Override
         public List<ExamScheduleResponse> getAllExamSchedules() {
                 List<ExamSchedule> examSchedules = examScheduleRepository.findAll();
@@ -141,10 +144,15 @@ public class ExamScheduleService implements IExamScheduleService {
         @Override
         public List<LearnerExamScheduleResponse> getExamSchedulesForLearner(Long learnerId) {
                 User learner = userRepository.findById(learnerId)
-                                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+                        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
+                List<ExamSchedule> confirmedSchedules =
+                        scheduleRepository.findByClassFieldLearnersId(learner.getId(), "CONFIRMED");
                 List<ExamSchedule> examSchedules = examScheduleRepository.findByClassFieldLearnersId(learner.getId());
 
+                return confirmedSchedules.stream()
+                        .map(schedule -> convertToLearnerExamScheduleResponse(schedule, learner.getId()))
+                        .collect(Collectors.toList());
                 if (examSchedules.isEmpty()) {
                         return List.of();
                 }

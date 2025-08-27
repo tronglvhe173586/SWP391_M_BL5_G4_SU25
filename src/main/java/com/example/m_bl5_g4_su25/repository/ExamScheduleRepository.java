@@ -11,5 +11,11 @@ import java.util.List;
 @Repository
 public interface ExamScheduleRepository extends JpaRepository<ExamSchedule, Long> {
     @Query("SELECT es FROM ExamSchedule es JOIN es.classField c JOIN c.enrollments e WHERE e.learner.id = :learnerId")
-    List<ExamSchedule> findByClassFieldLearnersId(@Param("learnerId") Long learnerId);
+    List<ExamSchedule> findByClassFieldLearnersId(@Param("learnerId") Long learnerId, String confirmed);
+    @Query("SELECT s FROM ExamSchedule s " +
+            "JOIN ExamRegistration r ON s.id = r.examSchedule.id " +
+            "WHERE r.learner.id = :learnerId AND r.status = :status")
+    List<ExamSchedule> findSchedulesByLearnerIdAndConfirmed(
+            @Param("learnerId") Long learnerId,
+            @Param("status") String status);
 }
