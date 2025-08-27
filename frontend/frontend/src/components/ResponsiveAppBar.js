@@ -26,23 +26,22 @@ const adminPages = [
     name: 'Lịch Thi', path: '/exam-schedules'
   },
   { name: 'Lớp học', path: '/classes' },
-  { name: 'Đăng ký thi', path: '/exam-registration' },
   { name: 'Quản lý đăng ký thi', path: '/exam-registration-management' },
-  { name: 'Lịch Học', path: '/view-schedule' },
-
   { name: 'Kết quả thi', path: '/exam-results' },
 ];
 
 // Learner pages
 const learnerPages = [
   { name: 'Lịch thi của tôi', path: '/my-exam-schedules'},
-  // { name: 'Lịch học', path: '/my-class-schedules' },
+  { name: 'Lịch học', path: '/my-class-schedules' },
   { name: 'Kết quả thi của tôi', path: 'my-exam-results'},
 ];
 
 const staffPages = [
   { name: 'Lịch Học', path: '/view-schedule' },
+  { name: 'Đăng ký thi', path: '/exam-registration' },
   { name: 'Kết quả thi', path: '/exam-results' },
+
 ];
 
 function ResponsiveAppBar() {

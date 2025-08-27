@@ -87,7 +87,7 @@ export default function Login() {
             } else if (userRole === "ROLE_INSTRUCTOR") {
                 navigate("/instructors");
             } else {
-                navigate("/users");
+                navigate("/view-schedule");
             }
         } catch (error) {
             console.error("Login failed:", error);
