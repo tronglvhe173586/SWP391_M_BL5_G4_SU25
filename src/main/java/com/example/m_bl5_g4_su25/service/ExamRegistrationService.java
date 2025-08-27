@@ -48,7 +48,15 @@ public class ExamRegistrationService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Exam Schedule not found with id: " + request.getExamScheduleId()));
 
+        if (learners == null || learners.isEmpty()) {
+            throw new AppException(ErrorCode.COURSE_NO_ENROLLED_LEARNERS);
+        }
+
         for (User learner : learners) {
+            boolean alreadyRegistered = examRegistrationRepository.existsByLearnerAndExamSchedule(learner, examSchedule);
+            if (alreadyRegistered) {
+                continue;
+            }
             ExamRegistration examRegistration = new ExamRegistration();
             examRegistration.setLearner(learner);
             examRegistration.setExamSchedule(examSchedule);

@@ -25,7 +25,7 @@ public enum ErrorCode {
     EXAM_RESULT_ALREADY_EXISTS(1016, "Exam result already exists for this learner and exam schedule",
             HttpStatus.BAD_REQUEST),
     EXAM_RESULT_NOT_FOUND(1017, "Exam result not found", HttpStatus.NOT_FOUND),
-    ;
+    COURSE_NO_ENROLLED_LEARNERS(1018,"Course has no enrolled learners. Please enroll learners before registering.", HttpStatus.BAD_REQUEST);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
