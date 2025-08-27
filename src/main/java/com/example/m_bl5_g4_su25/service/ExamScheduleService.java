@@ -46,6 +46,9 @@ public class ExamScheduleService implements IExamScheduleService {
         @Autowired
         private ExamResultRepository examResultRepository;
 
+        @Autowired
+        private ExamScheduleRepository scheduleRepository;
+
         @Override
         public List<ExamScheduleResponse> getAllExamSchedules() {
                 List<ExamSchedule> examSchedules = examScheduleRepository.findAll();
@@ -145,24 +148,15 @@ public class ExamScheduleService implements IExamScheduleService {
 
         @Override
         public List<LearnerExamScheduleResponse> getExamSchedulesForLearner(Long learnerId) {
-                // Validate learner exists
                 User learner = userRepository.findById(learnerId)
-                                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+                        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-                // Get all driving classes where the learner is enrolled in
-                List<ExamSchedule> examSchedules = examScheduleRepository.findByClassFieldLearnersId(learner.getId());
+                List<ExamSchedule> confirmedSchedules =
+                        scheduleRepository.findByClassFieldLearnersId(learner.getId(), "CONFIRMED");
 
-                // Check if learner is enrolled in any classes
-                if (examSchedules.isEmpty()) {
-                        // Return empty list instead of throwing exception - learner might not be
-                        // enrolled yet
-                        return List.of();
-                }
-
-                return examSchedules.stream()
-                                .map(examSchedule -> convertToLearnerExamScheduleResponse(examSchedule,
-                                                learner.getId()))
-                                .collect(Collectors.toList());
+                return confirmedSchedules.stream()
+                        .map(schedule -> convertToLearnerExamScheduleResponse(schedule, learner.getId()))
+                        .collect(Collectors.toList());
         }
 
         private ExamScheduleResponse convertToResponse(ExamSchedule examSchedule) {
