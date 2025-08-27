@@ -20,4 +20,6 @@ public interface IExamScheduleService {
 
     List<LearnerExamScheduleResponse> getExamSchedulesForLearner(Long learnerId);
 
+    List<ExamScheduleResponse> getExamSchedulesForInstructor(Long instructorId);
+
 }

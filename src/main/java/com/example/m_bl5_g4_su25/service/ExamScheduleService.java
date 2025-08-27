@@ -3,8 +3,8 @@ package com.example.m_bl5_g4_su25.service;
 import com.example.m_bl5_g4_su25.dto.request.ExamScheduleCreateRequest;
 import com.example.m_bl5_g4_su25.dto.request.ExamScheduleUpdateRequest;
 import com.example.m_bl5_g4_su25.dto.response.ExamScheduleDetailResponse;
-import com.example.m_bl5_g4_su25.dto.response.ExamScheduleResponse;
 import com.example.m_bl5_g4_su25.dto.response.LearnerExamScheduleResponse;
+import com.example.m_bl5_g4_su25.dto.response.ExamScheduleResponse;
 import com.example.m_bl5_g4_su25.entity.DrivingClass;
 import com.example.m_bl5_g4_su25.entity.Exam;
 import com.example.m_bl5_g4_su25.entity.ExamSchedule;
@@ -157,6 +157,14 @@ public class ExamScheduleService implements IExamScheduleService {
                 return confirmedSchedules.stream()
                         .map(schedule -> convertToLearnerExamScheduleResponse(schedule, learner.getId()))
                         .collect(Collectors.toList());
+        }
+
+        public List<ExamScheduleResponse> getExamSchedulesForInstructor(Long instructorId) {
+                User instructor = userRepository.findById(instructorId)
+                        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+                List<ExamSchedule> schedules = scheduleRepository.findSchedulesByInstructorId(instructor.getId());
+                return schedules.stream().map(this::convertToResponse).collect(Collectors.toList());
         }
 
         private ExamScheduleResponse convertToResponse(ExamSchedule examSchedule) {

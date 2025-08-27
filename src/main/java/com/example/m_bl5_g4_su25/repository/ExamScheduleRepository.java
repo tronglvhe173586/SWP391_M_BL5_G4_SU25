@@ -18,4 +18,7 @@ public interface ExamScheduleRepository extends JpaRepository<ExamSchedule, Long
     List<ExamSchedule> findSchedulesByLearnerIdAndConfirmed(
             @Param("learnerId") Long learnerId,
             @Param("status") String status);
+
+    @Query("SELECT s FROM ExamSchedule s WHERE s.instructor.id = :instructorId")
+    List<ExamSchedule> findSchedulesByInstructorId(@Param("instructorId") Long instructorId);
 }
