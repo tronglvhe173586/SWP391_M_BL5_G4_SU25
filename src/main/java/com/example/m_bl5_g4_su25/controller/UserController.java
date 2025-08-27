@@ -46,6 +46,11 @@ public class UserController {
         userService.addInstructor(request);
         return ResponseEntity.ok("Instructor created successfully");
     }
+    @PostMapping("/add_staff")
+    public ResponseEntity<String> addStaff(@RequestBody AddInstructorRequest request) {
+        userService.addStaff(request);
+        return ResponseEntity.ok("Staff created successfully");
+    }
 
     @GetMapping("/users_pagination")
     public Page<ListUserResponse> getAllUsers(

@@ -133,6 +133,35 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public void addStaff(AddInstructorRequest request) {
+        Provinces province = null;
+        if (request.getProvinceId() != null) {
+            province = provinceRepository.findById(request.getProvinceId())
+                    .orElseThrow(() -> new RuntimeException("Province not found"));
+        }
+        User user = new User();
+        user.setUsername(request.getUsername());
+        user.setPasswordHash(passwordEncoder.encode(request.getPasswordHash()));
+        user.setEmail(request.getEmail());
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setProvince(province);
+        user.setGender(Gender.valueOf(request.getGender()));
+        user.setDateOfBirth(request.getDateOfBirth());
+        user.setRole(Role.STAFF);
+        user.setIsActive(true);
+        userRepository.save(user);
+
+        InstructorProfile profile = new InstructorProfile();
+        profile.setUser(user);
+        profile.setEmployeeId(generateEmployeeId());
+        profile.setHireDate(LocalDate.now());
+        profile.setAddress(request.getAddress());
+        profile.setPhoneNumber(request.getPhoneNumber());
+        instructorProfileRepository.save(profile);
+    }
+
+    @Override
     public Page<ListUserResponse> getAllUsersPagination(String keyword, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
 
