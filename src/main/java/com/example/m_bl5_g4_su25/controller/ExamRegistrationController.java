@@ -19,9 +19,10 @@ public class ExamRegistrationController {
 
     private final ExamRegistrationService examRegistrationService;
 
-    @PostMapping
-    public ResponseEntity<ApiResponse<String>> register(@RequestBody ExamRegistrationCreateRequest request) {
-        return ResponseEntity.ok(examRegistrationService.register(request));
+    @PostMapping("/course/{courseId}")
+    public ResponseEntity<ApiResponse<String>> registerForCourse(@PathVariable Long courseId,
+            @RequestBody ExamRegistrationCreateRequest request) {
+        return ResponseEntity.ok(examRegistrationService.registerForCourse(courseId, request));
     }
 
     @GetMapping
@@ -36,6 +37,15 @@ public class ExamRegistrationController {
         return ResponseEntity.ok(examRegistrationService.updateStatus(id, request));
     }
 
+    @PutMapping("/course/{courseId}/exam-schedule/{examScheduleId}/status")
+    public ResponseEntity<ApiResponse<String>> updateCourseScheduleStatus(
+            @PathVariable Long courseId,
+            @PathVariable Long examScheduleId,
+            @RequestBody UpdateExamRegistrationStatusRequest request) {
+        return ResponseEntity.ok(examRegistrationService
+                .updateCourseScheduleStatus(courseId, examScheduleId, request.getStatus()));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<String>> deleteRegistration(@PathVariable Long id) {
         return ResponseEntity.ok(examRegistrationService.deleteRegistration(id));
@@ -45,6 +55,14 @@ public class ExamRegistrationController {
     public ResponseEntity<ApiResponse<Map<Long, String>>> getStatuses(@RequestParam("examScheduleIds") List<Long> examScheduleIds) {
         return ResponseEntity.ok(examRegistrationService.getStatusesForSchedules(examScheduleIds));
     }
+
+    @GetMapping("/course/{courseId}/statuses")
+    public ResponseEntity<ApiResponse<Map<Long, String>>> getCourseStatuses(
+            @PathVariable Long courseId,
+            @RequestParam("examScheduleIds") List<Long> examScheduleIds) {
+        return ResponseEntity.ok(examRegistrationService.getCourseStatusesForSchedules(courseId, examScheduleIds));
+    }
+
 }
 
 

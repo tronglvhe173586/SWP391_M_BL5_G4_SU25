@@ -82,18 +82,8 @@ export default function UserTable() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      const mappedUsers = (res.data.content || []).map((user) => ({
-      ...user,
-      role:
-        user.role === "LEARNER"
-          ? "HỌC VIÊN"
-          : user.role === "INSTRUCTOR"
-          ? "GIẢNG VIÊN"
-          : user.role === "ADMIN"
-          ? "QUẢN TRỊ VIÊN"
-          : user.role,
-    }));
-      setUsers(mappedUsers);
+
+      setUsers(res.data.content || []);
       setTotalElements(res.data.totalElements || 0);
     } catch (err) {
       console.error("Lỗi khi tải danh sách người dùng:", err);

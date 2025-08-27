@@ -3,8 +3,8 @@ package com.example.m_bl5_g4_su25.service;
 import com.example.m_bl5_g4_su25.dto.request.ExamScheduleCreateRequest;
 import com.example.m_bl5_g4_su25.dto.request.ExamScheduleUpdateRequest;
 import com.example.m_bl5_g4_su25.dto.response.ExamScheduleDetailResponse;
-import com.example.m_bl5_g4_su25.dto.response.ExamScheduleResponse;
 import com.example.m_bl5_g4_su25.dto.response.LearnerExamScheduleResponse;
+import com.example.m_bl5_g4_su25.dto.response.ExamScheduleResponse;
 import com.example.m_bl5_g4_su25.entity.DrivingClass;
 import com.example.m_bl5_g4_su25.entity.Exam;
 import com.example.m_bl5_g4_su25.entity.ExamSchedule;
@@ -46,6 +46,9 @@ public class ExamScheduleService implements IExamScheduleService {
         @Autowired
         private ExamResultRepository examResultRepository;
 
+        @Autowired
+        private ExamScheduleRepository scheduleRepository;
+
         @Override
         public List<ExamScheduleResponse> getAllExamSchedules() {
                 List<ExamSchedule> examSchedules = examScheduleRepository.findAll();
@@ -56,10 +59,12 @@ public class ExamScheduleService implements IExamScheduleService {
 
         @Override
         public ExamScheduleResponse createExamSchedule(ExamScheduleCreateRequest request) {
+                // Validate exam exists
                 Exam exam = examRepository.findById(request.getExamId())
                                 .orElseThrow(() -> new RuntimeException(
                                                 "Exam not found with id: " + request.getExamId()));
 
+                // Create new exam schedule
                 ExamSchedule examSchedule = new ExamSchedule();
                 examSchedule.setExam(exam);
                 examSchedule.setExamDate(request.getExamDate());
@@ -67,6 +72,7 @@ public class ExamScheduleService implements IExamScheduleService {
                 examSchedule.setLocation(request.getLocation());
                 examSchedule.setMaxParticipants(request.getMaxParticipants());
 
+                // Set class if provided
                 if (request.getClassId() != null) {
                         DrivingClass classField = classRepository.findById(request.getClassId())
                                         .orElseThrow(() -> new RuntimeException(
@@ -74,6 +80,7 @@ public class ExamScheduleService implements IExamScheduleService {
                         examSchedule.setClassField(classField);
                 }
 
+                // Set instructor if provided
                 if (request.getInstructorId() != null) {
                         User instructor = userRepository.findById(request.getInstructorId())
                                         .orElseThrow(() -> new RuntimeException(
@@ -81,6 +88,7 @@ public class ExamScheduleService implements IExamScheduleService {
                         examSchedule.setInstructor(instructor);
                 }
 
+                // Save and return
                 ExamSchedule savedExamSchedule = examScheduleRepository.save(examSchedule);
                 return convertToResponse(savedExamSchedule);
         }
@@ -141,18 +149,22 @@ public class ExamScheduleService implements IExamScheduleService {
         @Override
         public List<LearnerExamScheduleResponse> getExamSchedulesForLearner(Long learnerId) {
                 User learner = userRepository.findById(learnerId)
-                                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+                        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-                List<ExamSchedule> examSchedules = examScheduleRepository.findByClassFieldLearnersId(learner.getId());
+                List<ExamSchedule> confirmedSchedules =
+                        scheduleRepository.findSchedulesByLearnerIdAndConfirmed(learner.getId(), "CONFIRMED");
 
-                if (examSchedules.isEmpty()) {
-                        return List.of();
-                }
+                return confirmedSchedules.stream()
+                        .map(schedule -> convertToLearnerExamScheduleResponse(schedule, learner.getId()))
+                        .collect(Collectors.toList());
+        }
 
-                return examSchedules.stream()
-                                .map(examSchedule -> convertToLearnerExamScheduleResponse(examSchedule,
-                                                learner.getId()))
-                                .collect(Collectors.toList());
+        public List<ExamScheduleResponse> getExamSchedulesForInstructor(Long instructorId) {
+                User instructor = userRepository.findById(instructorId)
+                        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+                List<ExamSchedule> schedules = scheduleRepository.findSchedulesByInstructorId(instructor.getId());
+                return schedules.stream().map(this::convertToResponse).collect(Collectors.toList());
         }
 
         private ExamScheduleResponse convertToResponse(ExamSchedule examSchedule) {
@@ -187,15 +199,18 @@ public class ExamScheduleService implements IExamScheduleService {
 
         private LearnerExamScheduleResponse convertToLearnerExamScheduleResponse(ExamSchedule examSchedule,
                         Long learnerId) {
+                // Get registration status for this learner
                 String registrationStatus = "NOT_REGISTERED";
                 String examResult = "N/A";
 
+                // Check if learner has registered for this exam
                 Optional<ExamRegistration> registration = examRegistrationRepository
                                 .findByExamSchedule_IdAndLearner_Id(examSchedule.getId(), learnerId);
 
                 if (registration.isPresent()) {
                         registrationStatus = registration.get().getStatus();
 
+                        // Check if there's an exam result
                         List<ExamResult> results = examResultRepository
                                         .findByLearnerIdAndExamScheduleId(learnerId, examSchedule.getId());
 

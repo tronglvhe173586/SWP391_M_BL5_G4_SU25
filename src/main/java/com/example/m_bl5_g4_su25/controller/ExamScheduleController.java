@@ -4,13 +4,12 @@ import com.example.m_bl5_g4_su25.dto.request.ExamScheduleCreateRequest;
 import com.example.m_bl5_g4_su25.dto.request.ExamScheduleUpdateRequest;
 import com.example.m_bl5_g4_su25.dto.response.ApiResponse;
 import com.example.m_bl5_g4_su25.dto.response.ExamScheduleDetailResponse;
-import com.example.m_bl5_g4_su25.dto.response.ExamScheduleResponse;
 import com.example.m_bl5_g4_su25.dto.response.LearnerExamScheduleResponse;
+import com.example.m_bl5_g4_su25.dto.response.ExamScheduleResponse;
 import com.example.m_bl5_g4_su25.service.IExamScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -88,6 +87,15 @@ public class ExamScheduleController {
         Long learnerId = Long.valueOf(jwt.getClaim("userId").toString());
 
         List<LearnerExamScheduleResponse> response = examScheduleService.getExamSchedulesForLearner(learnerId);
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    @GetMapping("/instructor/my-schedules")
+    public ResponseEntity<ApiResponse<List<ExamScheduleResponse>>> getMyInstructorSchedules() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        Long instructorId = Long.valueOf(jwt.getClaim("userId").toString());
+        List<ExamScheduleResponse> response = examScheduleService.getExamSchedulesForInstructor(instructorId);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 }

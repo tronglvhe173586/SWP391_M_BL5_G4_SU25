@@ -7,6 +7,9 @@ import com.example.m_bl5_g4_su25.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -63,5 +66,21 @@ public class ScheduleController {
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/learner/my-schedules")
+    public ResponseEntity<List<ScheduleResponse>> getMyClassSchedulesForLearner() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        Long learnerId = Long.valueOf(jwt.getClaim("userId").toString());
+        return ResponseEntity.ok(scheduleService.getSchedulesForLearner(learnerId));
+    }
+
+    @GetMapping("/instructor/my-schedules")
+    public ResponseEntity<List<ScheduleResponse>> getMyClassSchedulesForInstructor() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        Long instructorId = Long.valueOf(jwt.getClaim("userId").toString());
+        return ResponseEntity.ok(scheduleService.getSchedulesForInstructor(instructorId));
     }
 }

@@ -20,4 +20,10 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
                                             @Param("date") LocalDate date,
                                             @Param("startTime") LocalTime startTime,
                                             @Param("endTime") LocalTime endTime);
+
+    @Query("SELECT s FROM Schedule s JOIN s.classField c JOIN c.enrollments e WHERE e.learner.id = :learnerId")
+    List<Schedule> findByLearnerId(@Param("learnerId") Long learnerId);
+
+    @Query("SELECT s FROM Schedule s WHERE s.classField.instructor.id = :instructorId")
+    List<Schedule> findByInstructorId(@Param("instructorId") Long instructorId);
 }

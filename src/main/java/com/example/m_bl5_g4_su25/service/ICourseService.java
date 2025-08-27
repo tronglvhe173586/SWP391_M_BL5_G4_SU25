@@ -15,8 +15,5 @@ public interface ICourseService {
     ListCourseResponse addCourse(AddCourseRequest request);
     ListCourseResponse getCourseById(Long id);
     List<ClassResponse> getClassesByCourse(Long courseId);
-
-
-
-
+    List<ListCourseResponse> getAllCourses();
 }

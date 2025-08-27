@@ -35,19 +35,30 @@ const adminPages = [
 
 // Learner pages
 const learnerPages = [
-  { name: 'Lịch thi của tôi', path: '/my-exam-schedules' },
-  { name: 'Kết quả thi của tôi', path: 'my-exam-results'}
+  { name: 'Lịch thi của tôi', path: '/my-exam-schedules'},
+  // { name: 'Lịch học', path: '/my-class-schedules' },
+  { name: 'Kết quả thi của tôi', path: 'my-exam-results'},
 ];
 
-
+const staffPages = [
+  { name: 'Thêm kết quả thi', path: '/exam-results/add'}
+];
 
 function ResponsiveAppBar() {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-  const userRole = localStorage.getItem('userRole') || 'ROLE_LEARNER'; 
-  const pages = userRole === 'ROLE_ADMIN' || userRole === 'ROLE_INSTRUCTOR' ? adminPages : learnerPages;
+  const userRole = localStorage.getItem('userRole') || 'ROLE_LEARNER';
+  let pages = staffPages;
+
+  if (userRole === 'ROLE_ADMIN' || userRole === 'ROLE_INSTRUCTOR') {
+    pages = adminPages;
+  } else if (userRole === 'ROLE_STAFF') {
+    pages = staffPages;
+  } else if (userRole === 'ROLE_LEARNER'){
+    pages = learnerPages;
+  }
 const settings = userRole === 'ROLE_ADMIN' ? ['Logout'] : ['Profile', 'Logout'];
 
   const handleOpenNavMenu = (event) => {
