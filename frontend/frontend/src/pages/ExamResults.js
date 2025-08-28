@@ -62,9 +62,13 @@ const ExamResults = () => {
             headerName: 'Điểm đạt', 
             width: 100,
             renderCell: (params) => (
-                <Typography variant="body2">
-                    {params.value || 'N/A'}
-                </Typography>
+                <Box>
+                    <Chip 
+                        label={params.value || 'N/A'} 
+                        color="default"
+                        variant="outlined"
+                    />
+                </Box>
             )
         },
         { 
