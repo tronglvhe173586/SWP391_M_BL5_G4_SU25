@@ -57,7 +57,7 @@ export default function Authenticate() {
             } else if (userRole === "ROLE_INSTRUCTOR") {
                 navigate("/instructors");
             } else {
-                navigate("/exam-results/add");
+                navigate("/exam-schedules");
             }
         }
     }, [isLoggedin, navigate]);
