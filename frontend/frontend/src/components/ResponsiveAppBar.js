@@ -22,9 +22,6 @@ const adminPages = [
   { name: 'Tài Khoản', path: '/users' },
   { name: 'Khóa Học', path: '/courses' },
   { name: 'Bài Thi', path: '/exams' },
-  {
-    name: 'Lịch Thi', path: '/exam-schedules'
-  },
   { name: 'Lớp học', path: '/classes' },
   { name: 'Đăng ký thi', path: '/exam-registration' },
   { name: 'Quản lý đăng ký thi', path: '/exam-registration-management' },
