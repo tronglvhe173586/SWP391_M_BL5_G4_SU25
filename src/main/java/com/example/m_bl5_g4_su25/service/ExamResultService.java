@@ -20,6 +20,10 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageImpl;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +48,45 @@ public class ExamResultService implements IExamResultService {
                 return examResults.stream()
                                 .map(this::convertToResponse)
                                 .collect(Collectors.toList());
+        }
+
+        @Override
+        public Page<ExamResultResponse> getAllExamResultsPagination(String keyword, int page, int size) {
+                Pageable pageable = PageRequest.of(page, size);
+
+                Page<ExamResult> examResultPage;
+                if (keyword != null && !keyword.trim().isEmpty()) {
+                        examResultPage = examResultRepository.findByKeyword(keyword, pageable);
+                } else {
+                        examResultPage = examResultRepository.findAll(pageable);
+                }
+
+                return examResultPage.map(this::convertToResponse);
+        }
+
+        @Override
+        public Page<ExamResultResponse> getExamResultsByExamSchedulePagination(Long examScheduleId, String keyword,
+                        int page, int size) {
+                Pageable pageable = PageRequest.of(page, size);
+
+                Page<ExamResult> examResultPage;
+                if (keyword != null && !keyword.trim().isEmpty()) {
+                        examResultPage = examResultRepository.findByExamScheduleIdAndKeyword(examScheduleId, keyword,
+                                        pageable);
+                } else {
+                        // For exam schedule specific results without keyword, we need to filter by exam
+                        // schedule ID
+                        List<ExamResult> allResults = examResultRepository.findByExamScheduleId(examScheduleId);
+                        // Convert to page manually since we don't have a direct repository method
+                        int start = (int) pageable.getOffset();
+                        int end = Math.min((start + pageable.getPageSize()), allResults.size());
+
+                        List<ExamResult> pageContent = allResults.subList(start, end);
+                        return new PageImpl<>(pageContent, pageable, allResults.size())
+                                        .map(this::convertToResponse);
+                }
+
+                return examResultPage.map(this::convertToResponse);
         }
 
         @Override

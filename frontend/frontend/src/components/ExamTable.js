@@ -12,6 +12,9 @@ export default function ExamTable() {
   const [exams, setExams] = useState([]);
   const [loading, setLoading] = useState(false);
   const [keyword, setKeyword] = useState("");
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalElements, setTotalElements] = useState(0);
 
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
@@ -53,13 +56,19 @@ export default function ExamTable() {
     setLoading(true);
     try {
       const token = localStorage.getItem("jwtToken");
-      const res = await axios.get("http://localhost:8080/driving-school-management/exams", 
+      const res = await axios.get("http://localhost:8080/driving-school-management/exams/pagination", 
         {
-           headers: { Authorization: `Bearer ${token}` },
+          params: {
+            page: page,
+            size: pageSize,
+            keyword: keyword,
+          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
       
-      setExams(res.data);
+      setExams(res.data.content || []);
+      setTotalElements(res.data.totalElements || 0);
     } catch (err) {
       console.error("Lỗi khi lấy danh sách kỳ thi:", err);
     }
@@ -68,12 +77,7 @@ export default function ExamTable() {
 
   useEffect(() => {
     fetchExams();
-  }, []);
-
-  const filteredExams = exams.filter(exam =>
-    exam.examName.toLowerCase().includes(keyword.toLowerCase()) ||
-    exam.examType.toLowerCase().includes(keyword.toLowerCase())
-  );
+  }, [page, pageSize, keyword]);
 
   return (
     <Paper sx={{ height: 500, width: "100%" }}>
@@ -88,13 +92,15 @@ export default function ExamTable() {
         />
       </Box>
       <DataGrid
-        rows={filteredExams}
+        rows={exams}
         columns={columns}
-        pageSizeOptions={[10, 20]}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 10 },
-          },
+        paginationMode="server"
+        rowCount={totalElements}
+        pageSizeOptions={[10, 20, 50]}
+        paginationModel={{ page, pageSize }}
+        onPaginationModelChange={(model) => {
+          setPage(model.page);
+          setPageSize(model.pageSize);
         }}
         loading={loading}
         disableRowSelectionOnClick

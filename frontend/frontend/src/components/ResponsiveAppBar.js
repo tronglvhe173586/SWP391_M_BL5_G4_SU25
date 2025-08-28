@@ -21,7 +21,7 @@ const adminPages = [
   { name: 'Tài Khoản', path: '/users' },
   { name: 'Khóa Học', path: '/courses' },
   { name: 'Bài Thi', path: '/exams' },
-  { name: 'Lịch Thi', path: '/exam-schedules' },
+
   { name: 'Quản lý đăng ký thi', path: '/exam-registration-management' },
   { name: 'Kết quả thi', path: '/exam-results' },
 ];
@@ -45,6 +45,7 @@ const staffPages = [
   { name: 'Lớp học', path: '/classes' },
   { name: 'Lịch Học', path: '/view-schedule' },
   { name: 'Đăng ký thi', path: '/exam-registration' },
+  { name: 'Lịch Thi', path: '/exam-schedules' },
   { name: 'Kết quả thi', path: '/exam-results' },
 ];
 

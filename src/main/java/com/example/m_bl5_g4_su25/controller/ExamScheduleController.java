@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.data.domain.Page;
 
 @RestController
 @RequestMapping("/exam-schedules")
@@ -29,6 +30,18 @@ public class ExamScheduleController {
     public ResponseEntity<ApiResponse<List<ExamScheduleResponse>>> getAllExamSchedules() {
         List<ExamScheduleResponse> examSchedules = examScheduleService.getAllExamSchedules();
         return ResponseEntity.ok(ApiResponse.<List<ExamScheduleResponse>>builder()
+                .result(examSchedules)
+                .build());
+    }
+
+    @GetMapping("/pagination")
+    public ResponseEntity<ApiResponse<Page<ExamScheduleResponse>>> getAllExamSchedulesPagination(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<ExamScheduleResponse> examSchedules = examScheduleService.getAllExamSchedulesPagination(keyword, page,
+                size);
+        return ResponseEntity.ok(ApiResponse.<Page<ExamScheduleResponse>>builder()
                 .result(examSchedules)
                 .build());
     }
@@ -64,7 +77,8 @@ public class ExamScheduleController {
     }
 
     @GetMapping("/learner/{learnerId}")
-    //@PreAuthorize("hasAuthority('ROLE_LEARNER') and #learnerId == T(java.lang.Long).valueOf(authentication.principal.claims['userId'].toString())")
+    // @PreAuthorize("hasAuthority('ROLE_LEARNER') and #learnerId ==
+    // T(java.lang.Long).valueOf(authentication.principal.claims['userId'].toString())")
     public ResponseEntity<ApiResponse<List<LearnerExamScheduleResponse>>> getExamSchedulesForLearner(
             @PathVariable Long learnerId) {
         List<LearnerExamScheduleResponse> response = examScheduleService.getExamSchedulesForLearner(learnerId);
@@ -72,7 +86,7 @@ public class ExamScheduleController {
     }
 
     @GetMapping("/learner/my-schedules")
-    //@PreAuthorize("hasAuthority('ROLE_LEARNER')")
+    // @PreAuthorize("hasAuthority('ROLE_LEARNER')")
     public ResponseEntity<ApiResponse<List<LearnerExamScheduleResponse>>> getMyExamSchedules() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         System.out.println("Authentication: " + authentication);

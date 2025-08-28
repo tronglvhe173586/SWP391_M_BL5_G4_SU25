@@ -5,10 +5,13 @@ import com.example.m_bl5_g4_su25.dto.request.ExamScheduleUpdateRequest;
 import com.example.m_bl5_g4_su25.dto.response.ExamScheduleDetailResponse;
 import com.example.m_bl5_g4_su25.dto.response.ExamScheduleResponse;
 import com.example.m_bl5_g4_su25.dto.response.LearnerExamScheduleResponse;
+import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface IExamScheduleService {
     List<ExamScheduleResponse> getAllExamSchedules();
+
+    Page<ExamScheduleResponse> getAllExamSchedulesPagination(String keyword, int page, int size);
 
     ExamScheduleResponse getExamScheduleById(Long id);
 

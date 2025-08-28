@@ -6,6 +6,7 @@ import com.example.m_bl5_g4_su25.dto.response.ExamResponse;
 import com.example.m_bl5_g4_su25.entity.Exam;
 import com.example.m_bl5_g4_su25.service.ExamService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,15 @@ public class ExamController {
     @GetMapping
     public ResponseEntity<List<ExamResponse>> getAllExams() {
         List<ExamResponse> exams = examService.getAllExams();
+        return ResponseEntity.ok(exams);
+    }
+
+    @GetMapping("/pagination")
+    public ResponseEntity<Page<ExamResponse>> getAllExamsPagination(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<ExamResponse> exams = examService.getAllExamsPagination(keyword, page, size);
         return ResponseEntity.ok(exams);
     }
 
@@ -44,16 +54,14 @@ public class ExamController {
     }
 
     @PutMapping("/{examId}")
-    public ResponseEntity<ExamResponse> updateExam(
-            @PathVariable Long examId,
+    public ResponseEntity<ExamResponse> updateExam(@PathVariable Long examId,
             @Valid @RequestBody ExamUpdateRequest examUpdateRequest) {
-        Exam examDetails = new Exam();
-        examDetails.setExamName(examUpdateRequest.getExamName());
-        examDetails.setExamType(examUpdateRequest.getExamType());
-        examDetails.setPassScore(examUpdateRequest.getPassScore());
+        Exam exam = new Exam();
+        exam.setExamName(examUpdateRequest.getExamName());
+        exam.setExamType(examUpdateRequest.getExamType());
+        exam.setPassScore(examUpdateRequest.getPassScore());
 
-        ExamResponse updatedExam = examService.updateExam(examId, examDetails);
+        ExamResponse updatedExam = examService.updateExam(examId, exam);
         return ResponseEntity.ok(updatedExam);
     }
 }
-

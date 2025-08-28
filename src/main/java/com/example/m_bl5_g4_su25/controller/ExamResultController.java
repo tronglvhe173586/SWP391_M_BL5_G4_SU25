@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.data.domain.Page;
 
 @RestController
 @RequestMapping("/exam-results")
@@ -32,12 +33,38 @@ public class ExamResultController {
                                 .build());
         }
 
+        @GetMapping("/pagination")
+        // @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+        public ResponseEntity<ApiResponse<Page<ExamResultResponse>>> getAllExamResultsPagination(
+                        @RequestParam(required = false) String keyword,
+                        @RequestParam(defaultValue = "0") int page,
+                        @RequestParam(defaultValue = "10") int size) {
+                Page<ExamResultResponse> results = examResultService.getAllExamResultsPagination(keyword, page, size);
+                return ResponseEntity.ok(ApiResponse.<Page<ExamResultResponse>>builder()
+                                .result(results)
+                                .build());
+        }
+
         @GetMapping("/exam-schedule/{examScheduleId}")
         // @PreAuthorize("hasAuthority('ROLE_ADMIN')")
         public ResponseEntity<ApiResponse<List<ExamResultResponse>>> getExamResultsByExamSchedule(
                         @PathVariable Long examScheduleId) {
                 List<ExamResultResponse> results = examResultService.getExamResultsByExamSchedule(examScheduleId);
                 return ResponseEntity.ok(ApiResponse.<List<ExamResultResponse>>builder()
+                                .result(results)
+                                .build());
+        }
+
+        @GetMapping("/exam-schedule/{examScheduleId}/pagination")
+        // @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+        public ResponseEntity<ApiResponse<Page<ExamResultResponse>>> getExamResultsByExamSchedulePagination(
+                        @PathVariable Long examScheduleId,
+                        @RequestParam(required = false) String keyword,
+                        @RequestParam(defaultValue = "0") int page,
+                        @RequestParam(defaultValue = "10") int size) {
+                Page<ExamResultResponse> results = examResultService
+                                .getExamResultsByExamSchedulePagination(examScheduleId, keyword, page, size);
+                return ResponseEntity.ok(ApiResponse.<Page<ExamResultResponse>>builder()
                                 .result(results)
                                 .build());
         }

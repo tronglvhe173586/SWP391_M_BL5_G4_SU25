@@ -28,6 +28,9 @@ const ExamResults = () => {
     const [keyword, setKeyword] = useState('');
     const [selectedExamSchedule, setSelectedExamSchedule] = useState('');
     const [error, setError] = useState('');
+    const [page, setPage] = useState(0);
+    const [pageSize, setPageSize] = useState(25);
+    const [totalElements, setTotalElements] = useState(0);
     const navigate = useNavigate();
 
     const columns = [
@@ -100,34 +103,27 @@ const ExamResults = () => {
         }
     ];
 
-    const fetchExamSchedules = async () => {
-        try {
-            const token = localStorage.getItem('jwtToken');
-            const response = await axios.get(
-                `${configuration.API_BASE_URL}/exam-schedules`,
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-            setExamSchedules(response.data.result || []);
-        } catch (err) {
-            console.error('Lỗi khi lấy danh sách lịch thi:', err);
-        }
-    };
-
     const fetchExamResults = async () => {
         setLoading(true);
         setError('');
         try {
             const token = localStorage.getItem('jwtToken');
-            let url = `${configuration.API_BASE_URL}/exam-results`;
+            let url = `${configuration.API_BASE_URL}/exam-results/pagination`;
             
             if (selectedExamSchedule) {
-                url = `${configuration.API_BASE_URL}/exam-results/exam-schedule/${selectedExamSchedule}`;
+                url = `${configuration.API_BASE_URL}/exam-results/exam-schedule/${selectedExamSchedule}/pagination`;
             }
             
             const response = await axios.get(url, { 
+                params: {
+                    page: page,
+                    size: pageSize,
+                    keyword: keyword,
+                },
                 headers: { Authorization: `Bearer ${token}` } 
             });
-            setExamResults(response.data.result || []);
+            setExamResults(response.data.result.content || []);
+            setTotalElements(response.data.result.totalElements || 0);
         } catch (err) {
             console.error('Lỗi khi lấy kết quả thi:', err);
             setError('Không thể tải dữ liệu kết quả thi. Vui lòng thử lại.');
@@ -136,27 +132,12 @@ const ExamResults = () => {
     };
 
     useEffect(() => {
-        fetchExamSchedules();
-    }, []);
-
-    useEffect(() => {
         fetchExamResults();
-    }, [selectedExamSchedule]);
-
-    const filteredRows = examResults.filter((result) => {
-        const q = keyword.toLowerCase();
-        return (
-            (result.learnerName || '').toLowerCase().includes(q) ||
-            (result.learnerEmail || '').toLowerCase().includes(q) ||
-            (result.examName || '').toLowerCase().includes(q) ||
-            (result.className || '').toLowerCase().includes(q) ||
-            (result.location || '').toLowerCase().includes(q) ||
-            (result.instructorName || '').toLowerCase().includes(q)
-        );
-    });
+    }, [selectedExamSchedule, page, pageSize, keyword]);
 
     const handleExamScheduleChange = (event) => {
         setSelectedExamSchedule(event.target.value);
+        setPage(0); // Reset to first page when changing exam schedule
     };
 
     return (
@@ -213,21 +194,23 @@ const ExamResults = () => {
                 
                 <Typography variant="body2" color="text.secondary">
                     {selectedExamSchedule ? 
-                        `Hiển thị kết quả cho lịch thi đã chọn (${filteredRows.length} kết quả)` :
-                        `Hiển thị tất cả kết quả thi (${filteredRows.length} kết quả)`
+                        `Hiển thị kết quả cho lịch thi đã chọn (${totalElements} kết quả)` :
+                        `Hiển thị tất cả kết quả thi (${totalElements} kết quả)`
                     }
                 </Typography>
             </Paper>
 
             <Paper sx={{ height: 600, width: '100%' }}>
                 <DataGrid
-                    rows={filteredRows}
+                    rows={examResults}
                     columns={columns}
+                    paginationMode="server"
+                    rowCount={totalElements}
                     pageSizeOptions={[10, 25, 50]}
-                    initialState={{
-                        pagination: {
-                            paginationModel: { page: 0, pageSize: 25 },
-                        },
+                    paginationModel={{ page, pageSize }}
+                    onPaginationModelChange={(model) => {
+                        setPage(model.page);
+                        setPageSize(model.pageSize);
                     }}
                     loading={loading}
                     disableRowSelectionOnClick

@@ -6,6 +6,9 @@ import com.example.m_bl5_g4_su25.exception.ExamNotFoundException;
 import com.example.m_bl5_g4_su25.exception.ExamValidationException;
 import com.example.m_bl5_g4_su25.repository.ExamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +26,20 @@ public class ExamService implements IExamService {
         return exams.stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<ExamResponse> getAllExamsPagination(String keyword, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Exam> examPage;
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            examPage = examRepository.findByExamNameContainingIgnoreCase(keyword, pageable);
+        } else {
+            examPage = examRepository.findAll(pageable);
+        }
+
+        return examPage.map(this::convertToResponse);
     }
 
     @Override

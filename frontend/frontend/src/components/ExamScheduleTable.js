@@ -13,6 +13,9 @@ const ExamScheduleTable = () => {
     const [examSchedules, setExamSchedules] = useState([]);
     const [loading, setLoading] = useState(false);
     const [keyword, setKeyword] = useState('');
+    const [page, setPage] = useState(0);
+    const [pageSize, setPageSize] = useState(10);
+    const [totalElements, setTotalElements] = useState(0);
     const navigate = useNavigate();
 
     const columns = [
@@ -61,10 +64,18 @@ const ExamScheduleTable = () => {
         try {
             const token = localStorage.getItem('jwtToken');
             const response = await axios.get(
-                `${configuration.API_BASE_URL}/exam-schedules`,
-                { headers: { Authorization: `Bearer ${token}` } }
+                `${configuration.API_BASE_URL}/exam-schedules/pagination`,
+                { 
+                    params: {
+                        page: page,
+                        size: pageSize,
+                        keyword: keyword,
+                    },
+                    headers: { Authorization: `Bearer ${token}` } 
+                }
             );
-            setExamSchedules(response.data.result || []);
+            setExamSchedules(response.data.result.content || []);
+            setTotalElements(response.data.result.totalElements || 0);
         } catch (err) {
             console.error('Lỗi khi lấy danh sách lịch thi:', err);
         }
@@ -73,22 +84,7 @@ const ExamScheduleTable = () => {
 
     useEffect(() => {
         fetchExamSchedules();
-    }, []);
-
-
-
-    const filteredRows = examSchedules.filter((s) => {
-        const q = keyword.toLowerCase();
-        return (
-            (s.examName || '').toLowerCase().includes(q) ||
-            (s.className || '').toLowerCase().includes(q) ||
-            (s.location || '').toLowerCase().includes(q) ||
-            (s.instructorName || '').toLowerCase().includes(q) ||
-            (String(s.maxParticipants || '')).includes(q) ||
-            (s.examDate || '').toLowerCase().includes(q) ||
-            (s.startTime || '').toLowerCase().includes(q)
-        );
-    });
+    }, [page, pageSize, keyword]);
 
     return (
         <Container maxWidth="lg" sx={{ mt: 4 }}>
@@ -107,11 +103,15 @@ const ExamScheduleTable = () => {
                     />
                 </Box>
                 <DataGrid
-                    rows={filteredRows}
+                    rows={examSchedules}
                     columns={columns}
-                    pageSizeOptions={[10, 20]}
-                    initialState={{
-                        pagination: { paginationModel: { page: 0, pageSize: 10 } },
+                    paginationMode="server"
+                    rowCount={totalElements}
+                    pageSizeOptions={[10, 20, 50]}
+                    paginationModel={{ page, pageSize }}
+                    onPaginationModelChange={(model) => {
+                        setPage(model.page);
+                        setPageSize(model.pageSize);
                     }}
                     loading={loading}
                     disableRowSelectionOnClick

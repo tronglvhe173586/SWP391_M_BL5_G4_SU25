@@ -17,6 +17,9 @@ import com.example.m_bl5_g4_su25.exception.ErrorCode;
 import com.example.m_bl5_g4_su25.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,6 +58,22 @@ public class ExamScheduleService implements IExamScheduleService {
                 return examSchedules.stream()
                                 .map(this::convertToResponse)
                                 .collect(Collectors.toList());
+        }
+
+        @Override
+        public Page<ExamScheduleResponse> getAllExamSchedulesPagination(String keyword, int page, int size) {
+                Pageable pageable = PageRequest.of(page, size);
+
+                Page<ExamSchedule> examSchedulePage;
+                if (keyword != null && !keyword.trim().isEmpty()) {
+                        examSchedulePage = examScheduleRepository
+                                        .findByExamExamNameContainingIgnoreCaseOrClassFieldClassNameContainingIgnoreCase(
+                                                        keyword, keyword, pageable);
+                } else {
+                        examSchedulePage = examScheduleRepository.findAll(pageable);
+                }
+
+                return examSchedulePage.map(this::convertToResponse);
         }
 
         @Override
@@ -149,19 +168,19 @@ public class ExamScheduleService implements IExamScheduleService {
         @Override
         public List<LearnerExamScheduleResponse> getExamSchedulesForLearner(Long learnerId) {
                 User learner = userRepository.findById(learnerId)
-                        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+                                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-                List<ExamSchedule> confirmedSchedules =
-                        scheduleRepository.findSchedulesByLearnerIdAndConfirmed(learner.getId(), "CONFIRMED");
+                List<ExamSchedule> confirmedSchedules = scheduleRepository
+                                .findSchedulesByLearnerIdAndConfirmed(learner.getId(), "CONFIRMED");
 
                 return confirmedSchedules.stream()
-                        .map(schedule -> convertToLearnerExamScheduleResponse(schedule, learner.getId()))
-                        .collect(Collectors.toList());
+                                .map(schedule -> convertToLearnerExamScheduleResponse(schedule, learner.getId()))
+                                .collect(Collectors.toList());
         }
 
         public List<ExamScheduleResponse> getExamSchedulesForInstructor(Long instructorId) {
                 User instructor = userRepository.findById(instructorId)
-                        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+                                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
                 List<ExamSchedule> schedules = scheduleRepository.findSchedulesByInstructorId(instructor.getId());
                 return schedules.stream().map(this::convertToResponse).collect(Collectors.toList());
