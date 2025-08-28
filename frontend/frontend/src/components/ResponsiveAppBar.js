@@ -28,6 +28,8 @@ const adminPages = [
 
 const instructorPages = [
   { name: 'Lớp học', path: '/classes' },
+  { name: 'Lịch dạy', path: '/instructor-class-schedules' },
+
   { name: 'Bài Thi', path: '/exams' },
   { name: 'Lịch Thi', path: '/exam-schedules' },
   { name: 'Kết quả thi', path: '/exam-results' },

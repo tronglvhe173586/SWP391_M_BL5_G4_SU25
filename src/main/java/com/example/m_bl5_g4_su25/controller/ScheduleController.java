@@ -70,17 +70,10 @@ public class ScheduleController {
 
     @GetMapping("/learner/my-schedules")
     public ResponseEntity<List<ScheduleResponse>> getMyClassSchedulesForLearner() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-        Long learnerId = Long.valueOf(jwt.getClaim("userId").toString());
-        return ResponseEntity.ok(scheduleService.getSchedulesForLearner(learnerId));
+        return ResponseEntity.ok(scheduleService.getSchedulesForLearner());
     }
-
     @GetMapping("/instructor/my-schedules")
     public ResponseEntity<List<ScheduleResponse>> getMyClassSchedulesForInstructor() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-        Long instructorId = Long.valueOf(jwt.getClaim("userId").toString());
-        return ResponseEntity.ok(scheduleService.getSchedulesForInstructor(instructorId));
+        return ResponseEntity.ok(scheduleService.getSchedulesForInstructor());
     }
 }

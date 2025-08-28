@@ -4,6 +4,9 @@ import com.example.m_bl5_g4_su25.dto.response.ScheduleResponse;
 import com.example.m_bl5_g4_su25.entity.Schedule;
 import com.example.m_bl5_g4_su25.repository.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -73,7 +76,14 @@ public class ScheduleService {
         }
     }
 
-    public List<ScheduleResponse> getSchedulesForLearner(Long learnerId) {
+    public List<ScheduleResponse> getSchedulesForLearner() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !(authentication.getPrincipal() instanceof Jwt jwt)) {
+            throw new RuntimeException("Không xác định được user đang đăng nhập");
+        }
+
+        Long learnerId = Long.valueOf(jwt.getClaim("userId").toString());
+
         return scheduleRepository.findByLearnerId(learnerId).stream()
                 .map(s -> new ScheduleResponse(
                         s.getId(),
@@ -87,7 +97,14 @@ public class ScheduleService {
                 .toList();
     }
 
-    public List<ScheduleResponse> getSchedulesForInstructor(Long instructorId) {
+    public List<ScheduleResponse> getSchedulesForInstructor() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !(authentication.getPrincipal() instanceof Jwt jwt)) {
+            throw new RuntimeException("Không xác định được user đang đăng nhập");
+        }
+
+        Long instructorId = Long.valueOf(jwt.getClaim("userId").toString());
+
         return scheduleRepository.findByInstructorId(instructorId).stream()
                 .map(s -> new ScheduleResponse(
                         s.getId(),

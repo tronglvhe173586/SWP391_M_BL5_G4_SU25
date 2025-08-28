@@ -43,6 +43,8 @@ import MyExamResults from './pages/MyExamResults.js';
 import ViewSchedule from "./pages/ViewSchedule";
 import LearnerClassSchedule from './pages/LearnerClassSchedule';
 import AddStaff from './pages/AddStaff.js';
+import InstructorClassSchedule from './pages/InstructorClassSchedule';
+
 
 function AppContent() {
   const location = useLocation();
@@ -101,6 +103,8 @@ function AppContent() {
 
         <Route path="/view-schedule" element={<ViewSchedule />} />
         <Route path="/my-class-schedules" element={<LearnerClassSchedule />} />
+        <Route path="/instructor-class-schedules" element={<InstructorClassSchedule />} />
+
 
       </Routes>
     </>
