@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Paper, TextField, Box, IconButton, Tooltip } from "@mui/material";
+import { Paper, TextField, Box, IconButton, Tooltip, Snackbar, Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { viVN } from "@mui/x-data-grid/locales";
 import axios from "axios";
@@ -13,13 +13,25 @@ export default function LearnerTable({ classId }) {
   const [learners, setLearners] = useState([]);
   const [loading, setLoading] = useState(false);
   const [keyword, setKeyword] = useState("");
+  const [error, setError] = useState(null);
+
+  const statusTranslations = {
+    ENROLLED: "Đã Đăng Ký",
+    DROPPED: "Đã Rút",
+    COMPLETED: "Đã Hoàn Thành",
+  };
 
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
     { field: "learnerName", headerName: "Tên Học Viên", width: 200 },
     { field: "className", headerName: "Tên Lớp", width: 200 },
     { field: "enrollmentDate", headerName: "Ngày Đăng Ký", width: 150 },
-    { field: "status", headerName: "Trạng Thái", width: 120 },
+    {
+      field: "status",
+      headerName: "Trạng Thái",
+      width: 120,
+      renderCell: (params) => statusTranslations[params.value] || params.value,
+    },
     {
       field: "actions",
       headerName: "Hành Động",
@@ -30,7 +42,7 @@ export default function LearnerTable({ classId }) {
             <IconButton
               color="primary"
               size="small"
-              onClick={() => navigate(`/enrollments/${params.row.id}`)}
+              onClick={() => navigate(`/enrollments/${params.row.id}?classId=${classId}`)}
             >
               <VisibilityIcon />
             </IconButton>
@@ -39,7 +51,7 @@ export default function LearnerTable({ classId }) {
             <IconButton
               color="warning"
               size="small"
-              onClick={() => navigate(`/enrollments/edit/${params.row.id}`)}
+              onClick={() => navigate(`/enrollments/edit/${params.row.id}?classId=${classId}`)}
             >
               <EditIcon />
             </IconButton>
@@ -59,8 +71,10 @@ export default function LearnerTable({ classId }) {
         headers: { Authorization: `Bearer ${token}` },
       });
       setLearners(res.data);
+      setError(null);
     } catch (err) {
       console.error("Lỗi khi lấy danh sách học viên:", err);
+      setError(`Lỗi khi lấy danh sách học viên: ${err.response?.data?.message || err.message}`);
     }
     setLoading(false);
   };
@@ -70,8 +84,8 @@ export default function LearnerTable({ classId }) {
   }, [classId]);
 
   const filteredLearners = learners.filter((learner) =>
-    learner.learnerName.toLowerCase().includes(keyword.toLowerCase()) ||
-    learner.className.toLowerCase().includes(keyword.toLowerCase())
+    (learner.learnerName.toLowerCase().includes(keyword.toLowerCase()) ||
+     learner.className.toLowerCase().includes(keyword.toLowerCase()))
   );
 
   return (
@@ -99,6 +113,11 @@ export default function LearnerTable({ classId }) {
         disableRowSelectionOnClick
         localeText={viVN.components.MuiDataGrid.defaultProps.localeText}
       />
+      <Snackbar open={!!error} autoHideDuration={6000} onClose={() => setError(null)}>
+        <Alert severity="error" onClose={() => setError(null)}>
+          {error}
+        </Alert>
+      </Snackbar>
     </Paper>
   );
 }

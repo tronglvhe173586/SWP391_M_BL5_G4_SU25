@@ -1,26 +1,16 @@
 import React, { useState, useEffect } from "react";
-import {
-  Container,
-  TextField,
-  Button,
-  Typography,
-  Box,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel
-} from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
+import { Container, TextField, Button, Typography, Box, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import axios from "axios";
 
-const EditLearner = () => {
+export default function EditLearner() {
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
+  const classId = searchParams.get("classId") || "";
   const navigate = useNavigate();
-
   const [form, setForm] = useState({
-    status: "ENROLLED"
+    status: "ENROLLED",
   });
-
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -30,14 +20,11 @@ const EditLearner = () => {
         const res = await axios.get(
           `http://localhost:8080/driving-school-management/enrollments/${id}`,
           {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
+            headers: { Authorization: `Bearer ${token}` },
           }
         );
-
         setForm({
-          status: res.data.status
+          status: res.data.status,
         });
         setLoading(false);
       } catch (err) {
@@ -53,7 +40,7 @@ const EditLearner = () => {
     const { name, value } = e.target;
     setForm((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -61,23 +48,18 @@ const EditLearner = () => {
     e.preventDefault();
     try {
       const updateData = {
-        status: form.status
+        status: form.status,
       };
-
       const token = localStorage.getItem("jwtToken");
-
-      const res = await axios.put(
+      await axios.put(
         `http://localhost:8080/driving-school-management/enrollments/${id}`,
         updateData,
         {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-
       alert("Cập nhật đăng ký thành công!");
-      navigate(`/enrollments?classId={form.classId}`)
+      navigate(`/enrollments?classId=${classId}`);
     } catch (err) {
       console.error("Error updating enrollment:", err);
       alert(`Cập nhật đăng ký thất bại: ${err.response?.data?.message || err.message}`);
@@ -109,20 +91,17 @@ const EditLearner = () => {
             <MenuItem value="COMPLETED">Đã Hoàn Thành</MenuItem>
           </Select>
         </FormControl>
-
         <Button variant="contained" color="primary" type="submit">
           Cập nhật
         </Button>
         <Button
           variant="outlined"
           color="secondary"
-          onClick={() => navigate(`/enrollments?classId={form.classId}`)}
+          onClick={() => navigate(`/enrollments?classId=${classId}`)}
         >
           Hủy
         </Button>
       </Box>
     </Container>
   );
-};
-
-export default EditLearner;
+}
