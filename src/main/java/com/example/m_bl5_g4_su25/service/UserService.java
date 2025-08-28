@@ -46,7 +46,8 @@ public class UserService implements IUserService {
 
     @Override
     public List<ListUserResponse> getAllUsers() {
-        return userRepository.findAll().stream()
+        return userRepository.findAll().stream().
+                filter(user -> user.getRole() == Role.LEARNER)
                 .map(user -> new ListUserResponse(
                         user.getId(),
                         user.getUsername(),
@@ -100,6 +101,11 @@ public class UserService implements IUserService {
                 updated.getIsActive(),
                 updated.getGender(),
                 updated.getDateOfBirth());
+    }
+
+    @Override
+    public List<ListUserResponse> getUsersByRole(String role) {
+        return List.of();
     }
 
     @Override

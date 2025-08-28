@@ -72,9 +72,6 @@ public class SecurityConfig {
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
 
-        // System.out.println("JwtAuthenticationConverter configured with:");
-        // System.out.println(" - Authority prefix: ROLE_");
-        // System.out.println(" - Authorities claim name: role");
 
         return jwtAuthenticationConverter;
     }
