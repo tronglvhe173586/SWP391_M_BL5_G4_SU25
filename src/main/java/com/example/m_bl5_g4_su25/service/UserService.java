@@ -37,7 +37,7 @@ public class UserService implements IUserService {
     private final ProvinceRepository provinceRepository;
 
     public UserService(UserRepository userRepository, InstructorProfileRepository instructorProfileRepository,
-            PasswordEncoder passwordEncoder, ProvinceRepository provinceRepository) {
+                       PasswordEncoder passwordEncoder, ProvinceRepository provinceRepository) {
         this.userRepository = userRepository;
         this.instructorProfileRepository = instructorProfileRepository;
         this.passwordEncoder = passwordEncoder;

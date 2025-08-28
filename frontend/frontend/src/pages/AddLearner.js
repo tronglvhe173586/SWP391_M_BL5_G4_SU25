@@ -21,10 +21,10 @@ export default function AddLearner() {
         const token = localStorage.getItem("jwtToken");
         const [learnerRes, classRes] = await Promise.all([
           axios.get("http://localhost:8080/driving-school-management/users?role=LEARNER", {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: 'Bearer ${token}' },
           }),
           axios.get("http://localhost:8080/driving-school-management/classes", {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: 'Bearer ${token}' },
           }),
         ]);
         if (learnerRes.data.length === 0) {
@@ -72,10 +72,10 @@ export default function AddLearner() {
         learnerId: "",
         classId: preFilledClassId,
       });
-      navigate(`/enrollments?classId=${form.classId}`);
+      navigate('/enrollments?classId=${form.classId}');
     } catch (error) {
       console.error(error);
-      setError(`Thêm học viên thất bại: ${error.response?.data?.message || error.message}`);
+      setError('Thêm học viên thất bại: ${error.response?.data?.message || error.message}');
     }
   };
 
@@ -130,7 +130,7 @@ export default function AddLearner() {
         <Button
           variant="outlined"
           color="secondary"
-          onClick={() => navigate(`/enrollments?classId=${form.classId}`)}
+          onClick={() => navigate('/enrollments?classId=${form.classId}')}
         >
           Hủy
         </Button>

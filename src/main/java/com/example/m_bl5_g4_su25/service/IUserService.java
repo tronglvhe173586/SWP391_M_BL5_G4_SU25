@@ -17,7 +17,7 @@ public interface IUserService {
     List<ListUserResponse> getLearners();
 
     ListUserResponse editUser(Long id, EditUserRequest request);
-    List<ListUserResponse> getUsersByRole(String role);
+
     void addInstructor(AddInstructorRequest request);
     void addStaff(AddInstructorRequest request);
     Page<ListUserResponse> getAllUsersPagination(String keyword, int page, int size);
