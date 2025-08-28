@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/driving-school-management/enrollments")
+@RequestMapping("/enrollments")
 public class EnrollmentController {
 
     @Autowired

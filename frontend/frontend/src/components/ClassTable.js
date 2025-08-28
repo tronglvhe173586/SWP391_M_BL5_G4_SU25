@@ -63,7 +63,7 @@ export default function ClassTable() {
           <IconButton
             color="secondary"
             size="small"
-            onClick={() => navigate(`/class/${params.row.id}/learners`)}
+            onClick={() => navigate(`/enrollments?classId=${params.row.id}`)}
           >
             <PeopleIcon />
           </IconButton>

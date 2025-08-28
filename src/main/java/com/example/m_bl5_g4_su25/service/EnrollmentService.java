@@ -32,11 +32,17 @@ public class EnrollmentService implements IEnrollmentService {
 
     @Override
     public List<EnrollmentResponse> listLearnersInClass(Long classId) {
-        List<Enrollment> enrollments = enrollmentRepository.findByClassId(classId);
+        List<Enrollment> enrollments;
+        if (classId != null) {
+            enrollments = enrollmentRepository.findByClassId(classId);
+        } else {
+            enrollments = enrollmentRepository.findAll();
+        }
         return enrollments.stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public EnrollmentResponse addEnrollment(AddEnrollmentRequest request) {

@@ -32,8 +32,12 @@ public class Attendance {
     private LocalDate date;
 
     @NotNull
-    @Lob
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private String status;
+    private Status status;
+    public enum Status {
+        PRESENT,
+        ABSENT
+    }
 
 }

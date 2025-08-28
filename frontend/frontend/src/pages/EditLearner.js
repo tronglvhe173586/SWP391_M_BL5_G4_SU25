@@ -77,7 +77,7 @@ const EditLearner = () => {
       );
 
       alert("Cập nhật đăng ký thành công!");
-      navigate("/class/:id/learners");
+      navigate(`/enrollments?classId={form.classId}`)
     } catch (err) {
       console.error("Error updating enrollment:", err);
       alert(`Cập nhật đăng ký thất bại: ${err.response?.data?.message || err.message}`);
@@ -116,7 +116,7 @@ const EditLearner = () => {
         <Button
           variant="outlined"
           color="secondary"
-          onClick={() => navigate("/class/:id/learners")}
+          onClick={() => navigate(`/enrollments?classId={form.classId}`)}
         >
           Hủy
         </Button>
