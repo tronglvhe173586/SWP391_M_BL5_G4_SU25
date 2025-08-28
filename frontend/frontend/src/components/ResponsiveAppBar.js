@@ -17,33 +17,34 @@ import axios from 'axios';
 import { getToken, removeToken } from '../services/localStorageService';
 import { decodeToken } from '../helpers/jwtDecode';
 
-// Admin/Instructor pages
 const adminPages = [
   { name: 'Tài Khoản', path: '/users' },
   { name: 'Khóa Học', path: '/courses' },
   { name: 'Bài Thi', path: '/exams' },
-  { name: 'Lớp học', path: '/classes' },
-  { name: 'Đăng ký thi', path: '/exam-registration' },
+  { name: 'Lịch Thi', path: '/exam-schedules' },
   { name: 'Quản lý đăng ký thi', path: '/exam-registration-management' },
-  { name: 'Lịch Học', path: '/view-schedule' },
-
+  { name: 'Kết quả thi', path: '/exam-results' },
 ];
 
-// Learner pages
+const instructorPages = [
+  { name: 'Lớp học', path: '/classes' },
+  { name: 'Bài Thi', path: '/exams' },
+  { name: 'Lịch Thi', path: '/exam-schedules' },
+  { name: 'Kết quả thi', path: '/exam-results' },
+];
+
 const learnerPages = [
   { name: 'Lịch thi của tôi', path: '/my-exam-schedules'},
   { name: 'Lịch học', path: '/my-class-schedules' },
-  { name: 'Kết quả thi của tôi', path: 'my-exam-results'},
+  { name: 'Kết quả thi của tôi', path: '/my-exam-results'},
 ];
 
+
 const staffPages = [
-  {
-    name: 'Lịch Thi', path: '/exam-schedules'
-  },
+  { name: 'Lớp học', path: '/classes' },
   { name: 'Lịch Học', path: '/view-schedule' },
   { name: 'Đăng ký thi', path: '/exam-registration' },
   { name: 'Kết quả thi', path: '/exam-results' },
-
 ];
 
 function ResponsiveAppBar() {
@@ -54,14 +55,17 @@ function ResponsiveAppBar() {
   const userRole = localStorage.getItem('userRole') || 'ROLE_LEARNER';
   let pages = staffPages;
 
-  if (userRole === 'ROLE_ADMIN' || userRole === 'ROLE_INSTRUCTOR') {
+  if (userRole === 'ROLE_ADMIN') {
     pages = adminPages;
+  } else if (userRole === 'ROLE_INSTRUCTOR') {
+    pages = instructorPages;
   } else if (userRole === 'ROLE_STAFF') {
     pages = staffPages;
   } else if (userRole === 'ROLE_LEARNER'){
     pages = learnerPages;
   }
-const settings = userRole === 'ROLE_ADMIN' ? ['Logout'] : ['Profile', 'Logout'];
+
+  const settings = userRole === 'ROLE_ADMIN' ? ['Logout'] : ['Profile', 'Logout'];
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -75,6 +79,7 @@ const settings = userRole === 'ROLE_ADMIN' ? ['Logout'] : ['Profile', 'Logout'];
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
   const token = getToken();
   const decoded = decodeToken(token);
   const userId = decoded?.userId;
@@ -85,7 +90,7 @@ const settings = userRole === 'ROLE_ADMIN' ? ['Logout'] : ['Profile', 'Logout'];
         await axios.post('http://localhost:8080/driving-school-management/auth/logout', { token });
       }
     } catch (e) {
-
+      console.error(e);
     } finally {
       removeToken();
       localStorage.removeItem('userRole');
@@ -95,14 +100,13 @@ const settings = userRole === 'ROLE_ADMIN' ? ['Logout'] : ['Profile', 'Logout'];
   };
 
   const handleSettingClick = (setting) => {
-  handleCloseUserMenu();
-  if (setting === 'Logout') {
-    handleLogout();
-  } else if (setting === 'Profile' && userId) {
-    navigate(`/users/${userId}/profile`);
-  }
-};
-
+    handleCloseUserMenu();
+    if (setting === 'Logout') {
+      handleLogout();
+    } else if (setting === 'Profile' && userId) {
+      navigate(`/users/${userId}/profile`);
+    }
+  };
 
   return (
     <AppBar position="static">
@@ -180,4 +184,5 @@ const settings = userRole === 'ROLE_ADMIN' ? ['Logout'] : ['Profile', 'Logout'];
     </AppBar>
   );
 }
+
 export default ResponsiveAppBar;
