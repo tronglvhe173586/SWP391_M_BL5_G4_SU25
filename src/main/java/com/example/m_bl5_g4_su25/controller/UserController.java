@@ -24,12 +24,14 @@ public class UserController {
     private final IUserService userService;
 
     @GetMapping
-    public ResponseEntity<List<ListUserResponse>> getAllUsers() {
+    public ResponseEntity<List<ListUserResponse>> getAllUsers(@RequestParam(required = false) String role) {
+        if (role != null && !role.isEmpty()) {
+            return ResponseEntity.ok(userService.getUsersByRole(role));
+        }
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping("/learners")
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<List<ListUserResponse>> getLearners() {
         return ResponseEntity.ok(userService.getLearners());
     }
@@ -46,6 +48,7 @@ public class UserController {
         userService.addInstructor(request);
         return ResponseEntity.ok("Instructor created successfully");
     }
+
     @PostMapping("/add_staff")
     public ResponseEntity<String> addStaff(@RequestBody AddInstructorRequest request) {
         userService.addStaff(request);
